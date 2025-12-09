@@ -1,1 +1,213 @@
+{
+  "name": "瑪修.基利艾拉特",
+  "id": 1,
+  "class": "shielder",
+  "policy": "秩序・善",
+  "attribute": "earth",
+  "stats": {
+    "natural": {
+      "hp": 12877,
+      "atk": 8730
+    },
+    "lv100": {
+      "hp": 15619,
+      "atk": 10575
+    },
+    "lv120": {
+      "hp": 18362,
+      "atk": 12419
+    }
+  },
+  "cards": {
+    "deck": [
+      "Quick",
+      "Arts",
+      "Arts",
+      "Buster",
+      "Buster"
+    ],
+    "hits": {
+      "Quick": [
+        25,
+        75
+      ],
+      "Arts": [
+        33,
+        67
+      ],
+      "Buster": [
+        100
+      ],
+      "Extra": [
+        12,
+        25,
+        63
+      ],
+      "NP": [
+        0
+      ]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.84,
+    "np_charge_def": 3,
+    "star_gen": 0.099,
+    "death_rate": 24.5,
+    "star_absorb": 99
+  },
+  "traits": [
+    "騎乘",
+    "天地從者",
+    "人科",
+    "活在當下的人類",
+    "圓桌騎士",
+    "夏日模式從者",
+    "持有靈衣之人",
+    "人型",
+    "EA特攻"
+  ]
+},
+
+{
+  "name": "瑪修.基利艾拉特",
+  "id": 1000,
+  "class": "shielder",
+  "policy": "秩序・善",
+  "attribute": "man",
+  "stats": {
+    "natural": {
+      "hp": 15528,
+      "atk": 10835
+    },
+    "lv100": {
+      "hp": 17012,
+      "atk": 11861
+    },
+    "lv120": {
+      "hp": 19993,
+      "atk": 13922
+    }
+  },
+  "cards": {
+    "deck": [
+      "Quick",
+      "Arts",
+      "Arts",
+      "Buster",
+      "Buster"
+    ],
+    "hits": {
+      "Quick": [
+        33,
+        67
+      ],
+      "Arts": [
+        33,
+        67
+      ],
+      "Buster": [
+        100
+      ],
+      "Extra": [
+        16,
+        33,
+        51
+      ],
+      "NP": [
+        6,
+        13,
+        20,
+        26,
+        35
+      ]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.84,
+    "np_charge_def": 3,
+    "star_gen": 0.099,
+    "death_rate": 24.5,
+    "star_absorb": 99
+  },
+  "traits": [
+    "騎乘",
+    "人科",
+    "活在當下的人類",
+    "持有靈衣之人",
+    "人型"
+  ]
+},
+
+{
+  "name": "阿爾托莉雅·潘德拉剛",
+  "id": 2,
+  "class": "saber",
+  "policy": "秩序・善",
+  "attribute": "earth",
+  "stats": {
+    "natural": {
+      "hp": 15150,
+      "atk": 11221
+    },
+    "lv100": {
+      "hp": 16597,
+      "atk": 12283
+    },
+    "lv120": {
+      "hp": 19506,
+      "atk": 14418
+    }
+  },
+  "cards": {
+    "deck": [
+      "Quick",
+      "Arts",
+      "Arts",
+      "Buster",
+      "Buster"
+    ],
+    "hits": {
+      "Quick": [
+        33,
+        67
+      ],
+      "Arts": [
+        33,
+        67
+      ],
+      "Buster": [
+        100
+      ],
+      "Extra": [
+        12,
+        25,
+        63
+      ],
+      "NP": [
+        100
+      ]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.86,
+    "np_charge_def": 3,
+    "star_gen": 0.1,
+    "death_rate": 21,
+    "star_absorb": 102
+  },
+  "traits": [
+    "騎乘",
+    "龍",
+    "阿爾托莉雅臉",
+    "天地從者",
+    "亞瑟",
+    "王",
+    "人科",
+    "圆桌騎士",
+    "FSN從者",
+    "持有靈衣之人",
+    "人型",
+    "EA特攻"
+  ]
+}
 
