@@ -1,0 +1,132 @@
+{
+  "class_constants": {
+    "saber":     { "atk_mod": 1.00, "star_absorb": 100, "star_gen": 0.10, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.10, "star_enemy_mod": 0.00 },
+    "archer":    { "atk_mod": 0.95, "star_absorb": 150, "star_gen": 0.08, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.20, "star_enemy_mod": 0.05 },
+    "lancer":    { "atk_mod": 1.05, "star_absorb":  90, "star_gen": 0.12, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.10, "star_enemy_mod": -0.05 },
+    "rider":     { "atk_mod": 1.00, "star_absorb": 200, "star_gen": 0.09, "np_enemy_mod": 1.1, "enemy_crit_rate": 0.15, "star_enemy_mod": 0.10 },
+    "caster":    { "atk_mod": 0.90, "star_absorb":  50, "star_gen": 0.11, "np_enemy_mod": 1.2, "enemy_crit_rate": 0.10, "star_enemy_mod": 0.00 },
+    "assassin":  { "atk_mod": 0.90, "star_absorb": 100, "star_gen": 0.25, "np_enemy_mod": 0.9, "enemy_crit_rate": 0.30, "star_enemy_mod": -0.10 },
+    "berserker": { "atk_mod": 1.10, "star_absorb":  10, "star_gen": 0.05, "np_enemy_mod": 0.8, "enemy_crit_rate": 0.10, "star_enemy_mod": 0.00 },
+    "shielder":  { "atk_mod": 1.00, "star_absorb": 100, "star_gen": 0.10, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.10, "star_enemy_mod": 0.00 },
+    "ruler":     { "atk_mod": 1.10, "star_absorb": 100, "star_gen": 0.10, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.10, "star_enemy_mod": 0.00 },
+    "avenger":   { "atk_mod": 1.10, "star_absorb":  30, "star_gen": 0.06, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.10, "star_enemy_mod": -0.10 },
+    "alterego":   { "atk_mod": 1.00, "star_absorb":  100, "star_gen": 0.10, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.15, "star_enemy_mod": 0.05 },
+    "mooncancer":   { "atk_mod": 1.00, "star_absorb":  50, "star_gen": 0.15, "np_enemy_mod": 1.2, "enemy_crit_rate": 0.10, "star_enemy_mod": 0.00 },
+    "foreigner":   { "atk_mod": 1.00, "star_absorb":  150, "star_gen": 0.15, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.20, "star_enemy_mod": 0.20 },
+    "pretender":   { "atk_mod": 1.00, "star_absorb":  100, "star_gen": 0.20, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.30, "star_enemy_mod": -0.10 },
+    "beast":   { "atk_mod": 1.00, "star_absorb":  150, "star_gen": 0.10, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.10, "star_enemy_mod": 0.0 },
+    "unbeast":   { "atk_mod": 1.00, "star_absorb":  100, "star_gen": 0.10, "np_enemy_mod": 1.0, "enemy_crit_rate": 0.10, "star_enemy_mod": 0.0 },
+    "snarler":   { "atk_mod": 1.10, "star_absorb":  150, "star_gen": 0.06, "np_enemy_mod": 1.2, "enemy_crit_rate": 0.30, "star_enemy_mod": 0.05 },
+    "cannibal":   { "atk_mod": 1.00, "star_absorb":  70, "star_gen": 0.13, "np_enemy_mod": 0.9, "enemy_crit_rate": 0.15, "star_enemy_mod": -0.05 },
+    "conqueror":   { "atk_mod": 1.00, "star_absorb":  250, "star_gen": 0.15, "np_enemy_mod": 1.1, "enemy_crit_rate": 0.20, "star_enemy_mod": 0.0 }
+    // 其他特殊職階
+  },
+
+  "class_affinity": {
+    "saber":    { "archer": 0.5, "lancer": 2.0, "berserker": 2.0, "ruler": 0.5, "beast": 0.8, "beast_draco": 0.5, "unbeast": 0.5 },
+    "archer":   { "saber": 2.0, "lancer": 0.5, "berserker": 2.0, "ruler": 0.5, "beast": 0.8, "beast_draco": 0.5, "unbeast": 0.5 },
+    "lancer":   { "archer": 2.0, "saber": 0.5, "berserker": 2.0, "ruler": 0.5, "beast": 0.8, "beast_draco": 0.5, "unbeast": 0.5 },
+    "rider":   { "caster": 2.0, "assassin": 0.5, "berserker": 2.0, "ruler": 0.5, "beast": 0.8, "beast_draco": 0.5, "unbeast": 0.5 },
+    "caster":   { "rider": 0.5, "assassin": 2.0, "berserker": 2.0, "ruler": 0.5, "beast": 0.2, "beast_draco": 0.5, "unbeast": 0.5 },
+    "assassin":   { "rider": 2.0, "caster": 0.5, "berserker": 2.0, "ruler": 0.5, "beast": 0.8, "beast_draco": 0.5, "unbeast": 0.5 },
+    "berserker": { "saber": 1.5, "archer": 1.5, "lancer": 1.5, "rider": 1.5, "caster": 1.5, "assassin": 1.5, "berserker": 1.5, "ruler": 1.5, "avenger": 1.5, "alterego": 1.5, "mooncancer": 1.5, "foreigner": 0.5, "pretender": 1.5, "beast": 0.8, "beast_draco": 0.5, "unbeast": 1.5 },
+    "shielder":   {  },
+    "ruler":   { "berserker": 2.0, "avenger": 0.5, "mooncancer": 2.0, "beast": 0.2, "beast_draco": 2.0, "beast_ereshkigal": 0.5 },
+    "avenger":   { "berserker": 2.0, "ruler": 2.0, "mooncancer": 0.5, "beast": 0.2, "beast_draco": 2.0, "beast_ereshkigal": 2.0, "unbeast": 2.0 },
+    "alterego":   { "saber": 0.5, "archer": 0.5, "lancer": 0.5, "rider": 1.5, "caster": 1.5, "assassin": 1.5, "berserker": 2.0, "foreigner": 2.0, "pretender": 0.5, "beast": 0.8, "beast_draco": 2.0, "beast_ereshkigal": 0.5 },
+    "mooncancer":   { "berserker": 2.0, "ruler": 0.5, "avenger": 2.0, "beast": 0.8, "beast_draco": 2.0, "beast_ereshkigal": 0.5, "unbeast": 0.5 },
+    "foreigner":   { "berserker": 2.0, "alterego": 0.5, "foreigner": 2.0, "pretender": 2.0, "beast": 2.0, "beast_draco": 2.0, "beast_ereshkigal": 0.5, "unbeast": 2.0 },
+    "pretender":   { "saber": 1.5, "archer": 1.5, "lancer": 1.5, "rider": 0.5, "caster": 0.5, "assassin": 0.5, "berserker": 2.0, "alterego": 2.0, "foreigner": 0.5, "beast": 2.0, "beast_draco": 2.0, "beast_ereshkigal": 0.5 },
+    "beast":   { "saber": 1.2, "archer": 1.2, "lancer": 1.2, "rider": 1.2, "caster": 2.0, "assassin": 1.2, "berserker": 1.2, "ruler": 2.0, "avenger": 2.0, "mooncancer": 1.2, "alterego": 1.2, "foreigner": 0.5, "pretender": 0.5 },
+    "beast_draco":   { "saber": 1.5, "archer": 1.5, "lancer": 1.5, "rider": 1.5, "caster": 1.5, "assassin": 1.5, "berserker": 2.0,"ruler": 0.5, "avenger": 0.5, "mooncancer": 0.5, "alterego": 0.5, "foreigner": 0.5, "pretender": 0.5 },
+    "beast_ereshkigal":   { "ruler": 1.5, "avenger": 0.5, "alterego": 1.5, "mooncancer": 1.5, "foreigner": 1.5, "pretender": 1.5 },
+    "unbeast":   { "berserker": 2.0, "avenger": 0.5, "mooncancer": 2.0, "foreigner": 2.0 },
+    "snarler":   { "caster": 2.0, "assassin": 2.0, "alterego": 0.5, "berserker": 2.0, "cannibal": 2.0, "conqueror": 0.5 },
+    "cannibal":   { "foreigner": 2.0, "pretender": 2.0, "mooncancer": 0.5, "berserker": 2.0, "conqueror": 2.0, "snarler": 0.5 },
+    "conqueror":   { "shielder": 2.0, "ruler": 2.0, "avenger": 0.5, "berserker": 2.0, "snarler": 2.0, "cannibal": 0.5 }
+  },
+
+  "attribute_affinity": {
+    "sky":   { "earth": 1.1, "man": 0.9, "sky": 1.0, "star": 1.0, "beast": 1.0 },
+    "earth": { "man": 1.1, "sky": 0.9, "earth": 1.0, "star": 1.0, "beast": 1.0 },
+    "man":   { "sky": 1.1, "earth": 0.9, "man": 1.0, "star": 1.0, "beast": 1.0 },
+    "star":  { "beast": 1.1 },
+    "beast": { "star": 1.1 }
+  },
+
+  "card_performance": {
+    "Buster": { 
+      "damage": [1.5, 1.8, 2.1], 
+      "np": [0, 0, 0],           
+      "star": [0.10, 0.15, 0.20] 
+    },
+    "Arts": { 
+      "damage": [1.0, 1.2, 1.4], 
+      "np": [3.0, 4.5, 6.0],     
+      "star": [0, 0, 0] 
+    },
+    "Quick": { 
+      "damage": [0.8, 0.96, 1.12], 
+      "np": [1.0, 1.5, 2.0],     
+      "star": [0.80, 1.30, 1.80] 
+    },
+    "Extra": {
+      "damage": [2.0],
+      "np": [1.0],
+      "star": [1.0]
+    }
+  },
+
+  "game_mechanics": {
+    "version": "post_7th_anniversary", // 七週年後的規則
+
+    // 1. 首位染色效果 (First Card Bonus)
+    "first_card_bonus": {
+      "Buster": { 
+        "damage_mod": 0.5          // 傷害倍率 +0.5
+      },
+      "Arts": { 
+        "np_card_constant": 1.0    // NP獲得公式中的首位加成 (通常是+1.0)
+      },
+      "Quick": { 
+        "star_gen_mod": 0.20,      // 掉星率 +20%
+        "crit_rate_mod": 0.20      // 指令卡暴擊率 +20%
+      }
+    },
+
+    // 2. Chain Bonus
+    "chain_bonus": {
+      "Buster": { 
+        "damage_flat_mult": 0.2    // ATK * 0.2 的固定傷害加成
+      },
+      "Arts": { 
+        "team_np_charge": 20       // 全隊 NP +20%
+      },
+      "Quick": { 
+        "stars_flat": 20           // 獲得 20 顆暴擊星
+      }
+    },
+
+    // 3. 特殊連攜規則
+    "special_chains": {
+      "brave_chain": {
+        "extra_card_mod": 3.5      // 同色 Brave Chain 的 EX 卡倍率
+      },
+      "mighty_chain": {
+        "enabled": true,
+        "description": "Trigger all 3 First Card Bonuses", // 效果：同時觸發紅藍綠三種首位加成
+        "condition": "3_different_colors" // 觸發條件：紅藍綠各一張
+      }
+    },
+
+    // 4. 其他通用核心參數
+    "common_rules": {
+        "extra_card_default_mod": 2.0,  // 普通 EX 卡倍率
+        "crit_damage_base": 2.0,        // 暴擊時基礎傷害 x2
+        "overkill": {
+            "np_mod": 1.5,              // 鞭屍 NP x1.5
+            "star_mod": 0.30            // 鞭屍掉星 +30%
+        }
+    }
+  }
+}
