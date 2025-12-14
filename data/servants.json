@@ -712,5 +712,39 @@
     "traits": [
       "神性", "天地從者", "人科", "人型", "EA特攻", "豬化有效"
     ]
-  }
+  },
+  {
+  "name": "列奧尼達一世",
+  "id": 21,
+  "cost": 4,
+  "class": "lancer",
+  "gender": "男性",
+  "policy": "秩序·中庸",
+  "attribute": "man",
+  "stats": {
+    "natural": { "hp": 7959, "atk": 6583 },
+    "lv100": { "hp": 11486, "atk": 9539 },
+    "lv120": { "hp": 13508, "atk": 11234 }
+  },
+  "cards": {
+    "deck": ["Quick", "Quick", "Arts", "Buster", "Buster"],
+    "hits": {
+      "Quick": [33, 67],
+      "Arts": [33, 67],
+      "Buster": [100],
+      "Extra": [12, 25, 63],
+      "NP": [0]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 1.07,
+    "np_charge_def": 4,
+    "star_gen": 0.118,
+    "death_rate": 32,
+    "star_absorb": 89
+  },
+  "traits": [
+    "王", "人科", "人型", "EA特攻", "豬化有效"
+  ]
+}
 ]
