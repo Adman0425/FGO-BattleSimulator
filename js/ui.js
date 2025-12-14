@@ -9,9 +9,9 @@ const UI = {
 
     // 圖片路徑配置 (請在這裡替換你之後上傳的 Arts/Quick 圖片)
     cardImages: {
-        'Buster': 'image_602ad8.png', // 你剛剛上傳的圖片
-        'Arts': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Blue_color.svg/200px-Blue_color.svg.png', // 暫時用藍色方塊代替
-        'Quick': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Green_color.svg/200px-Green_color.svg.png', // 暫時用綠色方塊代替
+        'Buster': 'data/Buster.png', // 你剛剛上傳的圖片
+        'Arts': 'data/Arts.png', // 暫時用藍色方塊代替
+        'Quick': 'data/Quick.png', // 暫時用綠色方塊代替
         'NP': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Purple_color.svg/200px-Purple_color.svg.png'
     },
 
