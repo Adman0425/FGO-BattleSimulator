@@ -1,1 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>FGO 戰鬥模擬器 v3.0</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
+    <div class="header">
+        <h1>FGO Battle Simulator v3.0</h1>
+    </div>
+
+    <div class="setup-panel">
+        <div class="setup-group">
+            <label>我方從者：</label>
+            <select id="player-select"></select>
+            
+            <label>練度設定：</label>
+            <select id="level-select">
+                <option value="natural">預設滿級 (+1000芙)</option>
+                <option value="lv100">Lv.100 (+2000芙)</option>
+                <option value="lv120">Lv.120 (+2000芙)</option>
+            </select>
+        </div>
+
+        <div style="font-weight:bold; color:#888;">VS</div>
+
+        <div class="setup-group">
+            <label>敵方靶子：</label>
+            <select id="enemy-select"></select>
+        </div>
+
+        <button class="btn-start" onclick="UI.initBattle()">戰鬥開始 / 重置</button>
+    </div>
+
+    <div class="battle-field">
+        <div class="character-card" id="player-card">
+            <div class="hp-bar-container">
+                <div class="hp-text">HP: <span id="p-hp-current">0</span> / <span id="p-hp-max">0</span></div>
+                <div id="p-hp-bar" class="hp-fill"></div>
+            </div>
+            <div class="avatar-area">
+                <div class="servant-img" id="p-avatar">🛡️</div>
+            </div>
+            <h3 id="p-name">Servant</h3>
+            <div class="tags">
+                <span id="p-class" class="tag class-tag">CLASS</span>
+                <span id="p-attr" class="tag attr-tag">ATTR</span>
+            </div>
+            <div class="status-row">
+                <div>ATK: <span id="p-atk">0</span></div>
+                <div class="np-gauge">NP: <span id="p-np">0</span>%</div>
+            </div>
+        </div>
+
+        <div class="character-card enemy-card" id="enemy-card">
+             <div class="hp-bar-container">
+                <div class="hp-text">HP: <span id="e-hp-current">0</span> / <span id="e-hp-max">0</span></div>
+                <div id="e-hp-bar" class="hp-fill enemy-fill"></div>
+            </div>
+            <div class="avatar-area">
+                <div class="servant-img" id="e-avatar">💀</div>
+            </div>
+            <h3 id="e-name">Enemy</h3>
+            <div class="tags">
+                <span id="e-class" class="tag class-tag">CLASS</span>
+                <span id="e-attr" class="tag attr-tag">ATTR</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <h3>選擇指令卡 (測試)</h3>
+        <div class="card-area">
+            <button class="cmd-card buster" onclick="UI.handleAttack('Buster')">Buster</button>
+            <button class="cmd-card arts" onclick="UI.handleAttack('Arts')">Arts</button>
+            <button class="cmd-card quick" onclick="UI.handleAttack('Quick')">Quick</button>
+            <button class="cmd-card extra" onclick="UI.handleAttack('Extra')">Extra</button>
+            <button class="cmd-card np" onclick="UI.handleAttack('NP')">寶具 (NP)</button>
+        </div>
+        <div style="margin-top: 10px; font-size: 12px; color: #aaa;">
+            * 模擬為該卡片置於首卡的狀況
+        </div>
+    </div>
+
+    <div class="log-box" id="battle-log">
+        <div class="log-entry">系統就緒。請選擇角色。</div>
+    </div>
+
+    <script src="js/data_loader.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
