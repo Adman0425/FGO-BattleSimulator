@@ -5,25 +5,23 @@
     "recommend_level": 90,
     "ap_cost": 40,
     "background": "bg_treasure_room",
-    
     "waves": [
-      // --- Wave 1 ---
       {
         "wave_no": 1,
         "enemies": [
-          { 
-            "id": "enemy_door_silver", // 參照 enemies.json 的 ID
+          {
+            "id": "enemy_door_silver",
             "lvl": 30,
-            "hp": 23000,               // 覆蓋掉預設血量
+            "hp": 23000,
             "position": 1
           },
-          { 
+          {
             "id": "enemy_door_gold",
             "lvl": 35,
             "hp": 28000,
             "position": 2
           },
-          { 
+          {
             "id": "enemy_door_silver",
             "lvl": 30,
             "hp": 23000,
@@ -31,24 +29,36 @@
           }
         ]
       },
-      // --- Wave 2 ---
       {
         "wave_no": 2,
         "enemies": [
-          { "id": "enemy_door_gold", "hp": 35000, "position": 1 },
-          { "id": "enemy_door_gold", "hp": 35000, "position": 2 },
-          { "id": "enemy_door_gold", "hp": 35000, "position": 3 }
+          {
+            "id": "enemy_door_gold",
+            "hp": 35000,
+            "position": 1
+          },
+          {
+            "id": "enemy_door_gold",
+            "hp": 35000,
+            "position": 2
+          },
+          {
+            "id": "enemy_door_gold",
+            "hp": 35000,
+            "position": 3
+          }
         ]
       },
-      // --- Wave 3 ---
       {
         "wave_no": 3,
         "enemies": [
-          { 
-            "id": "enemy_door_rainbow", // 彩虹門
-            "hp": 150000, 
+          {
+            "id": "enemy_door_rainbow",
+            "hp": 150000,
             "position": 2,
-            "attributes": { "class": "ruler" } // 甚至可以強制改職階
+            "attributes": {
+              "class": "ruler"
+            }
           }
         ]
       }
