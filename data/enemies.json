@@ -1,1 +1,38 @@
-
+[
+  {
+    "id": 1,
+    "name": "骷髏兵",
+    "class": "saber",
+    "attribute": "man",
+    "hp": 20000,
+    "atk": 5000,
+    "traits": [
+      "人型",
+      "死靈"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "影從者 (Lancer)",
+    "class": "lancer",
+    "attribute": "sky",
+    "hp": 80000,
+    "atk": 7000,
+    "traits": [
+      "人型",
+      "從者",
+      "EA特攻"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "魔神柱",
+    "class": "beast",
+    "attribute": "beast",
+    "hp": 500000,
+    "atk": 10000,
+    "traits": [
+      "超巨大"
+    ]
+  }
+]
