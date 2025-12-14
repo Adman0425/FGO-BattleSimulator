@@ -1,6 +1,7 @@
 {
   "name": "瑪修.基利艾拉特",
   "id": 1,
+  "cost": 0,
   "class": "shielder",
   "policy": "秩序・善",
   "attribute": "earth",
@@ -71,6 +72,7 @@
 {
   "name": "瑪修.基利艾拉特",
   "id": 1000,
+  "cost": 16,
   "class": "shielder",
   "policy": "秩序・善",
   "attribute": "man",
@@ -141,6 +143,7 @@
 {
   "name": "阿爾托莉雅·潘德拉剛",
   "id": 2,
+  "cost": 16,
   "class": "saber",
   "policy": "秩序・善",
   "attribute": "earth",
@@ -208,6 +211,150 @@
     "持有靈衣之人",
     "人型",
     "EA特攻"
+  ]
+},
+
+{
+  "name": "阿爾托莉雅·潘德拉剛〔Alter〕",
+  "id": 3,
+  "cost": 12,
+  "class": "saber",
+  "policy": "秩序·惡",
+  "attribute": "man",
+  "stats": {
+    "natural": {
+      "hp": 11589,
+      "atk": 10248
+    },
+    "lv100": {
+      "hp": 14051,
+      "atk": 12408
+    },
+    "lv120": {
+      "hp": 16514,
+      "atk": 14569
+    }
+  },
+  "cards": {
+    "deck": [
+      "Quick",
+      "Arts",
+      "Arts",
+      "Buster",
+      "Buster"
+    ],
+    "hits": {
+      "Quick": [
+        33,
+        67
+      ],
+      "Arts": [
+        33,
+        67
+      ],
+      "Buster": [
+        100
+      ],
+      "Extra": [
+        12,
+        25,
+        63
+      ],
+      "NP": [
+        16,
+        33,
+        51
+      ]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.86,
+    "np_charge_def": 3,
+    "star_gen": 0.099,
+    "death_rate": 19.2,
+    "star_absorb": 99
+  },
+  "traits": [
+    "龍",
+    "阿爾托莉雅臉",
+    "亞瑟",
+    "王",
+    "人科",
+    "圓桌騎士",
+    "FSN從者",
+    "持有靈衣之人",
+    "人型",
+    "EA特攻"
+  ]
+},
+
+{
+  "name": "阿爾托莉雅·潘德拉剛〔Lily〕",
+  "id": 4,
+  "cost": 12,
+  "class": "saber",
+  "policy": "秩序·善",
+  "attribute": "earth",
+  "stats": {
+    "natural": {
+      "hp": 10623,
+      "atk": 7726
+    },
+    "lv100": {
+      "hp": 0,
+      "atk": 0
+    },
+    "lv120": {
+      "hp": 0,
+      "atk": 0
+    }
+  },
+  "cards": {
+    "deck": [
+      "Quick",
+      "Arts",
+      "Arts",
+      "Buster",
+      "Buster"
+    ],
+    "hits": {
+      "Quick": [
+        33,
+        67
+      ],
+      "Arts": [
+        33,
+        67
+      ],
+      "Buster": [
+        33,
+        67
+      ],
+      "Extra": [
+        12,
+        25,
+        63
+      ],
+      "NP": [
+        100
+      ]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.86,
+    "np_charge_def": 3,
+    "star_gen": 0.1,
+    "death_rate": 21,
+    "star_absorb": 102
+  },
+  "traits": [
+    "騎乘",
+    "龙",
+    "阿爾托莉雅脸",
+    "天地從者",
+    "亞瑟",
+    "王",
+    "人科"
   ]
 }
 
