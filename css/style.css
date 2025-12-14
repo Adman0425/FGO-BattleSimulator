@@ -40,3 +40,98 @@ select { padding: 5px; border-radius: 4px; background: #eee; border: none; }
 .dmg-text { color: #ffeb3b; font-weight: bold; }
 .np-text { color: #40c4ff; }
 .star-text { color: #ffd700; }
+
+/* --- 指令卡戰鬥介面 --- */
+.command-phase {
+    background: #2a2a2a;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 20px;
+    border: 2px solid #555;
+}
+
+/* 1. 已選卡槽 */
+.selected-slots {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    height: 100px;
+}
+
+.card-slot {
+    width: 80px;
+    height: 100px;
+    border: 2px dashed #666;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    cursor: pointer;
+    background-size: cover;
+    position: relative;
+}
+
+/* 2. 手牌區 */
+.hand-area {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.command-card-img {
+    width: 90px;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.2s;
+    border-radius: 5px;
+    border: 2px solid transparent;
+}
+
+.command-card-img:hover {
+    transform: translateY(-10px);
+    border-color: #ffd700;
+}
+
+/* 選中後的卡片變暗 */
+.command-card-img.used {
+    filter: grayscale(100%) brightness(0.4);
+    pointer-events: none;
+    transform: none;
+}
+
+/* 3. Attack 按鈕 */
+.btn-attack {
+    background: linear-gradient(to bottom, #ff5722, #bf360c);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 10px 40px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #870000;
+    transition: 0.1s;
+}
+
+.btn-attack:active {
+    box-shadow: 0 0 0 #870000;
+    transform: translateY(4px);
+}
+
+.btn-attack:disabled {
+    background: #555;
+    box-shadow: none;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* 寶具切換按鈕狀態 */
+.np-active {
+    background: linear-gradient(135deg, #f06292, #880e4f) !important;
+    box-shadow: 0 0 10px #f06292;
+    border: 2px solid #fff !important;
+}
