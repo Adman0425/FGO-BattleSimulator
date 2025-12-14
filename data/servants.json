@@ -1,1559 +1,716 @@
-{
-  "name": "瑪修.基利艾拉特",
-  "id": 1,
-  "cost": 0,
-  "class": "shielder",
-  "gender": "女性",
-  "policy": "秩序・善",
-  "attribute": "earth",
-  "stats": {
-    "natural": {
-      "hp": 12877,
-      "atk": 8730
+[
+  {
+    "name": "瑪修.基利艾拉特",
+    "id": 1,
+    "cost": 0,
+    "class": "shielder",
+    "gender": "女性",
+    "policy": "秩序・善",
+    "attribute": "earth",
+    "stats": {
+      "natural": { "hp": 12877, "atk": 8730 },
+      "lv100": { "hp": 15619, "atk": 10575 },
+      "lv120": { "hp": 18362, "atk": 12419 }
     },
-    "lv100": {
-      "hp": 15619,
-      "atk": 10575
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [25, 75],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [0]
+      }
     },
-    "lv120": {
-      "hp": 18362,
-      "atk": 12419
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        25,
-        75
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        0
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.84,
-    "np_charge_def": 3,
-    "star_gen": 0.099,
-    "death_rate": 24.5,
-    "star_absorb": 99
-  },
-  "traits": [
-    "騎乘",
-    "天地從者",
-    "人科",
-    "活在當下的人類",
-    "圓桌騎士",
-    "夏日模式從者",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "瑪修.基利艾拉特",
-  "id": 1000,
-  "cost": 16,
-  "class": "shielder",
-  "gender": "女性",
-  "policy": "秩序・善",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 15528,
-      "atk": 10835
+    "hidden_stats": {
+      "np_charge_atk": 0.84,
+      "np_charge_def": 3,
+      "star_gen": 0.099,
+      "death_rate": 24.5,
+      "star_absorb": 99
     },
-    "lv100": {
-      "hp": 17012,
-      "atk": 11861
+    "traits": [
+      "騎乘", "天地從者", "人科", "活在當下的人類", "圓桌騎士", "夏日模式從者", "持有靈衣之人", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "瑪修.基利艾拉特 (奧特瑙斯)",
+    "id": 1000,
+    "cost": 16,
+    "class": "shielder",
+    "gender": "女性",
+    "policy": "秩序・善",
+    "attribute": "earth",
+    "stats": {
+      "natural": { "hp": 15528, "atk": 10835 },
+      "lv100": { "hp": 17012, "atk": 11861 },
+      "lv120": { "hp": 19993, "atk": 13922 }
     },
-    "lv120": {
-      "hp": 19993,
-      "atk": 13922
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        16,
-        33,
-        51
-      ],
-      "NP": [
-        6,
-        13,
-        20,
-        26,
-        35
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.84,
-    "np_charge_def": 3,
-    "star_gen": 0.099,
-    "death_rate": 24.5,
-    "star_absorb": 99
-  },
-  "traits": [
-    "騎乘",
-    "人科",
-    "活在當下的人類",
-    "持有靈衣之人",
-    "人型",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "阿爾托莉亞.潘德拉剛",
-  "id": 2,
-  "cost": 16,
-  "class": "saber",
-  "gender": "女性",
-  "policy": "秩序・善",
-  "attribute": "earth",
-  "stats": {
-    "natural": {
-      "hp": 15150,
-      "atk": 11221
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [16, 33, 51],
+        "NP": [6, 13, 20, 26, 35]
+      }
     },
-    "lv100": {
-      "hp": 16597,
-      "atk": 12283
+    "hidden_stats": {
+      "np_charge_atk": 0.84,
+      "np_charge_def": 3,
+      "star_gen": 0.099,
+      "death_rate": 24.5,
+      "star_absorb": 99
     },
-    "lv120": {
-      "hp": 19506,
-      "atk": 14418
-    }
+    "traits": [
+      "騎乘", "人科", "活在當下的人類", "持有靈衣之人", "人型", "豬化有效"
+    ]
   },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.86,
-    "np_charge_def": 3,
-    "star_gen": 0.1,
-    "death_rate": 21,
-    "star_absorb": 102
-  },
-  "traits": [
-    "騎乘",
-    "龍",
-    "阿爾托莉雅臉",
-    "天地從者",
-    "亞瑟",
-    "王",
-    "人科",
-    "圆桌騎士",
-    "FSN從者",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "阿爾托莉亞.潘德拉剛〔Alter〕",
-  "id": 3,
-  "cost": 12,
-  "class": "saber",
-  "gender": "女性",
-  "policy": "秩序·惡",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 11589,
-      "atk": 10248
+  {
+    "name": "阿爾托莉亞.潘德拉剛",
+    "id": 2,
+    "cost": 16,
+    "class": "saber",
+    "gender": "女性",
+    "policy": "秩序・善",
+    "attribute": "earth",
+    "stats": {
+      "natural": { "hp": 15150, "atk": 11221 },
+      "lv100": { "hp": 16597, "atk": 12283 },
+      "lv120": { "hp": 19506, "atk": 14418 }
     },
-    "lv100": {
-      "hp": 14051,
-      "atk": 12408
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [100]
+      }
     },
-    "lv120": {
-      "hp": 16514,
-      "atk": 14569
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        16,
-        33,
-        51
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.86,
-    "np_charge_def": 3,
-    "star_gen": 0.099,
-    "death_rate": 19.2,
-    "star_absorb": 99
-  },
-  "traits": [
-    "龍",
-    "阿爾托莉雅臉",
-    "亞瑟",
-    "王",
-    "人科",
-    "圓桌騎士",
-    "FSN從者",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "阿爾托莉亞.潘德拉剛〔Lily〕",
-  "id": 4,
-  "cost": 12,
-  "class": "saber",
-  "gender": "女性",
-  "policy": "秩序·善",
-  "attribute": "earth",
-  "stats": {
-    "natural": {
-      "hp": 10623,
-      "atk": 7726
+    "hidden_stats": {
+      "np_charge_atk": 0.86,
+      "np_charge_def": 3,
+      "star_gen": 0.1,
+      "death_rate": 21,
+      "star_absorb": 102
     },
-    "lv100": {
-      "hp": 12880,
-      "atk": 9355
+    "traits": [
+      "騎乘", "龍", "阿爾托莉雅臉", "天地從者", "亞瑟", "王", "人科", "圆桌騎士", "FSN從者", "持有靈衣之人", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "阿爾托莉亞.潘德拉剛〔Alter〕",
+    "id": 3,
+    "cost": 12,
+    "class": "saber",
+    "gender": "女性",
+    "policy": "秩序·惡",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 11589, "atk": 10248 },
+      "lv100": { "hp": 14051, "atk": 12408 },
+      "lv120": { "hp": 16514, "atk": 14569 }
     },
-    "lv120": {
-      "hp": 15138,
-      "atk": 10984
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        2,
-        5,
-        8,
-        11,
-        13,
-        16,
-        19,
-        26
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.86,
-    "np_charge_def": 3,
-    "star_gen": 0.1,
-    "death_rate": 21,
-    "star_absorb": 102
-  },
-  "traits": [
-    "騎乘",
-    "龍",
-    "阿爾托莉雅臉",
-    "天地從者",
-    "亞瑟",
-    "王",
-    "人科",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "尼祿.克勞狄烏斯",
-  "id": 5,
-  "cost": 12,
-  "class": "saber",
-  "gender": "女性",
-  "policy": "混沌·善",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 11753,
-      "atk": 9449
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [16, 33, 51]
+      }
     },
-    "lv100": {
-      "hp": 14250,
-      "atk": 11441
+    "hidden_stats": {
+      "np_charge_atk": 0.86,
+      "np_charge_def": 3,
+      "star_gen": 0.099,
+      "death_rate": 19.2,
+      "star_absorb": 99
     },
-    "lv120": {
-      "hp": 16748,
-      "atk": 13433
-    }
+    "traits": [
+      "龍", "阿爾托莉雅臉", "亞瑟", "王", "人科", "圓桌騎士", "FSN從者", "持有靈衣之人", "人型", "EA特攻", "豬化有效"
+    ]
   },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        6,
-        13,
-        33,
-        20,
-        28
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.84,
-    "np_charge_def": 3,
-    "star_gen": 0.101,
-    "death_rate": 24.5,
-    "star_absorb": 102
-  },
-  "traits": [
-    "羅馬",
-    "阿爾托莉雅臉",
-    "騎乘",
-    "王",
-    "人科",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "齊格飛",
-  "id": 6,
-  "cost": 12,
-  "class": "saber",
-  "gender": "男性",
-  "policy": "混沌·善",
-  "attribute": "earth",
-  "stats": {
-    "natural": {
-      "hp": 14165,
-      "atk": 8181
+  {
+    "name": "阿爾托莉亞.潘德拉剛〔Lily〕",
+    "id": 4,
+    "cost": 12,
+    "class": "saber",
+    "gender": "女性",
+    "policy": "秩序·善",
+    "attribute": "earth",
+    "stats": {
+      "natural": { "hp": 10623, "atk": 7726 },
+      "lv100": { "hp": 12880, "atk": 9355 },
+      "lv120": { "hp": 15138, "atk": 10984 }
     },
-    "lv100": {
-      "hp": 17175,
-      "atk": 9905
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [2, 5, 8, 11, 13, 16, 19, 26]
+      }
     },
-    "lv120": {
-      "hp": 20185,
-      "atk": 11630
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.83,
-    "np_charge_def": 3,
-    "star_gen": 0.1,
-    "death_rate": 28,
-    "star_absorb": 97
-  },
-  "traits": [
-    "龍",
-    "騎乘",
-    "天地從者",
-    "所愛之人",
-    "王",
-    "人科",
-    "夏日模式從者",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "蓋烏斯.尤利烏斯.凱撒",
-  "id": 7,
-  "cost": 7,
-  "class": "saber",
-  "gender": "男性",
-  "policy": "中立·中庸",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 9595,
-      "atk": 7497
+    "hidden_stats": {
+      "np_charge_atk": 0.86,
+      "np_charge_def": 3,
+      "star_gen": 0.1,
+      "death_rate": 21,
+      "star_absorb": 102
     },
-    "lv100": {
-      "hp": 13009,
-      "atk": 10146
+    "traits": [
+      "騎乘", "龍", "阿爾托莉雅臉", "天地從者", "亞瑟", "王", "人科", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "尼祿.克勞狄烏斯",
+    "id": 5,
+    "cost": 12,
+    "class": "saber",
+    "gender": "女性",
+    "policy": "混沌·善",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 11753, "atk": 9449 },
+      "lv100": { "hp": 14250, "atk": 11441 },
+      "lv120": { "hp": 16748, "atk": 13433 }
     },
-    "lv120": {
-      "hp": 15291,
-      "atk": 11917
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Quick",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        1,
-        3,
-        5,
-        7,
-        9,
-        10,
-        12,
-        14,
-        16,
-        23
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 1.1,
-    "np_charge_def": 3,
-    "star_gen": 0.1,
-    "death_rate": 31.5,
-    "star_absorb": 99
-  },
-  "traits": [
-    "神性",
-    "羅馬",
-    "騎乘",
-    "所愛之人",
-    "王",
-    "人科",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "阿蒂拉",
-  "id": 8,
-  "cost": 16,
-  "class": "saber",
-  "gender": "女性",
-  "policy": "混沌·善",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 13907,
-      "atk": 12343
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [6, 13, 33, 20, 28],
+        "NP": [100]
+      }
     },
-    "lv100": {
-      "hp": 15236,
-      "atk": 13511
+    "hidden_stats": {
+      "np_charge_atk": 0.84,
+      "np_charge_def": 3,
+      "star_gen": 0.101,
+      "death_rate": 24.5,
+      "star_absorb": 102
     },
-    "lv120": {
-      "hp": 17906,
-      "atk": 15859
-    }
+    "traits": [
+      "羅馬", "阿爾托莉雅臉", "騎乘", "王", "人科", "持有靈衣之人", "人型", "EA特攻", "豬化有效"
+    ]
   },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        25,
-        75
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.84,
-    "np_charge_def": 3,
-    "star_gen": 0.101,
-    "death_rate": 24.5,
-    "star_absorb": 102
-  },
-  "traits": [
-    "神性",
-    "騎乘",
-    "王",
-    "人科",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "吉爾.德.萊斯",
-  "id": 9,
-  "cost": 7,
-  "class": "saber",
-  "gender": "男性",
-  "policy": "秩序·善",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 10498,
-      "atk": 6615
+  {
+    "name": "齊格飛",
+    "id": 6,
+    "cost": 12,
+    "class": "saber",
+    "gender": "男性",
+    "policy": "混沌·善",
+    "attribute": "earth",
+    "stats": {
+      "natural": { "hp": 14165, "atk": 8181 },
+      "lv100": { "hp": 17175, "atk": 9905 },
+      "lv120": { "hp": 20185, "atk": 11630 }
     },
-    "lv100": {
-      "hp": 14234,
-      "atk": 8952
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [100]
+      }
     },
-    "lv120": {
-      "hp": 16730,
-      "atk": 10515
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        0
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.82,
-    "np_charge_def": 3,
-    "star_gen": 0.099,
-    "death_rate": 31.5,
-    "star_absorb": 98
-  },
-  "traits": [
-    "騎乘",
-    "所愛之人",
-    "人科",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "騎士德翁",
-  "id": 10,
-  "cost": 12,
-  "class": "saber",
-  "gender": "不明",
-  "policy": "中立·中庸",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 13256,
-      "atk": 8765
+    "hidden_stats": {
+      "np_charge_atk": 0.83,
+      "np_charge_def": 3,
+      "star_gen": 0.1,
+      "death_rate": 28,
+      "star_absorb": 97
     },
-    "lv100": {
-      "hp": 16073,
-      "atk": 10613
+    "traits": [
+      "龍", "騎乘", "天地從者", "所愛之人", "王", "人科", "夏日模式從者", "持有靈衣之人", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "蓋烏斯.尤利烏斯.凱撒",
+    "id": 7,
+    "cost": 7,
+    "class": "saber",
+    "gender": "男性",
+    "policy": "中立·中庸",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 9595, "atk": 7497 },
+      "lv100": { "hp": 13009, "atk": 10146 },
+      "lv120": { "hp": 15291, "atk": 11917 }
     },
-    "lv120": {
-      "hp": 18890,
-      "atk": 12461
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        0
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.83,
-    "np_charge_def": 3,
-    "star_gen": 0.1,
-    "death_rate": 28,
-    "star_absorb": 102
-  },
-  "traits": [
-    "騎乘",
-    "人科",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "Emiya",
-  "id": 11,
-  "cost": 12,
-  "class": "archer",
-  "gender": "男性",
-  "policy": "中立·中庸",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 11521,
-      "atk": 9398
+    "cards": {
+      "deck": ["Quick", "Quick", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [1, 3, 5, 7, 9, 10, 12, 14, 16, 23]
+      }
     },
-    "lv100": {
-      "hp": 13969,
-      "atk": 11379
+    "hidden_stats": {
+      "np_charge_atk": 1.1,
+      "np_charge_def": 3,
+      "star_gen": 0.1,
+      "death_rate": 31.5,
+      "star_absorb": 99
     },
-    "lv120": {
-      "hp": 16418,
-      "atk": 13360
-    }
+    "traits": [
+      "神性", "羅馬", "騎乘", "所愛之人", "王", "人科", "人型", "EA特攻", "豬化有效"
+    ]
   },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Arts",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        16,
-        33,
-        51
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        6,
-        13,
-        20,
-        26,
-        35
-      ],
-      "NP": [
-        3,
-        3,
-        5,
-        7,
-        8,
-        10,
-        12,
-        14,
-        16,
-        22
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.51,
-    "np_charge_def": 3,
-    "star_gen": 0.079,
-    "death_rate": 31.5,
-    "star_absorb": 145
-  },
-  "traits": [
-    "所愛之人",
-    "人科",
-    "夏日模式從者",
-    "FSN從者",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "基爾迦梅修",
-  "id": 12,
-  "cost": 16,
-  "class": "archer",
-  "gender": "男性",
-  "policy": "混沌·善",
-  "attribute": "sky",
-  "stats": {
-    "natural": {
-      "hp": 13097,
-      "atk": 12280
+  {
+    "name": "阿蒂拉",
+    "id": 8,
+    "cost": 16,
+    "class": "saber",
+    "gender": "女性",
+    "policy": "混沌·善",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 13907, "atk": 12343 },
+      "lv100": { "hp": 15236, "atk": 13511 },
+      "lv120": { "hp": 17906, "atk": 15859 }
     },
-    "lv100": {
-      "hp": 14348,
-      "atk": 13442
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [25, 75],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [100]
+      }
     },
-    "lv120": {
-      "hp": 16863,
-      "atk": 15779
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        7,
-        15,
-        23,
-        15,
-        40
-      ],
-      "Arts": [
-        6,
-        13,
-        20,
-        26,
-        35
-      ],
-      "Buster": [
-        27,
-        22,
-        13,
-        4,
-        34
-      ],
-      "Extra": [
-        10,
-        14,
-        17,
-        3,
-        10,
-        14,
-        7,
-        25
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.34,
-    "np_charge_def": 3,
-    "star_gen": 0.079,
-    "death_rate": 31.5,
-    "star_absorb": 153
-  },
-  "traits": [
-    "神性",
-    "天地從者",
-    "王",
-    "人科",
-    "FSN從者",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "羅賓漢",
-  "id": 13,
-  "cost": 7,
-  "class": "archer",
-  "gender": "男性",
-  "policy": "中立·善",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 10187,
-      "atk": 6715
+    "hidden_stats": {
+      "np_charge_atk": 0.84,
+      "np_charge_def": 3,
+      "star_gen": 0.101,
+      "death_rate": 24.5,
+      "star_absorb": 102
     },
-    "lv100": {
-      "hp": 13812,
-      "atk": 9088
+    "traits": [
+      "神性", "騎乘", "王", "人科", "持有靈衣之人", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "吉爾.德.萊斯",
+    "id": 9,
+    "cost": 7,
+    "class": "saber",
+    "gender": "男性",
+    "policy": "秩序·善",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 10498, "atk": 6615 },
+      "lv100": { "hp": 14234, "atk": 8952 },
+      "lv120": { "hp": 16730, "atk": 10515 }
     },
-    "lv120": {
-      "hp": 16235,
-      "atk": 10673
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        16,
-        33,
-        51
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.87,
-    "np_charge_def": 3,
-    "star_gen": 0.08,
-    "death_rate": 31.5,
-    "star_absorb": 150
-  },
-  "traits": [
-    "所愛之人",
-    "人科",
-    "童話特性的從者",
-    "夏日模式從者",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "阿塔蘭塔",
-  "id": 14,
-  "cost": 12,
-  "class": "archer",
-  "gender": "女性",
-  "policy": "中立·惡",
-  "attribute": "earth",
-  "stats": {
-    "natural": {
-      "hp": 12476,
-      "atk": 8633
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [0]
+      }
     },
-    "lv100": {
-      "hp": 15127,
-      "atk": 10453
+    "hidden_stats": {
+      "np_charge_atk": 0.82,
+      "np_charge_def": 3,
+      "star_gen": 0.099,
+      "death_rate": 31.5,
+      "star_absorb": 98
     },
-    "lv120": {
-      "hp": 17778,
-      "atk": 12273
-    }
+    "traits": [
+      "騎乘", "所愛之人", "人科", "人型", "EA特攻", "豬化有效"
+    ]
   },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        16,
-        33,
-        51
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        3,
-        5,
-        3,
-        7,
-        8,
-        10,
-        12,
-        14,
-        16,
-        22
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.5,
-    "np_charge_def": 3,
-    "star_gen": 0.08,
-    "death_rate": 31.5,
-    "star_absorb": 148
-  },
-  "traits": [
-    "天地從者",
-    "阿爾戈號相關人員",
-    "人科",
-    "獸科",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "尤瑞艾莉",
-  "id": 15,
-  "cost": 7,
-  "class": "archer",
-  "gender": "女性",
-  "policy": "混沌·善",
-  "attribute": "sky",
-  "stats": {
-    "natural": {
-      "hp": 9506,
-      "atk": 7032
+  {
+    "name": "騎士德翁",
+    "id": 10,
+    "cost": 12,
+    "class": "saber",
+    "gender": "不明",
+    "policy": "中立·中庸",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 13256, "atk": 8765 },
+      "lv100": { "hp": 16073, "atk": 10613 },
+      "lv120": { "hp": 18890, "atk": 12461 }
     },
-    "lv100": {
-      "hp": 12889,
-      "atk": 9517
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [0]
+      }
     },
-    "lv120": {
-      "hp": 15149,
-      "atk": 11177
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        16,
-        33,
-        51
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.9,
-    "np_charge_def": 3,
-    "star_gen": 0.079,
-    "death_rate": 22.5,
-    "star_absorb": 156
-  },
-  "traits": [
-    "神性",
-    "天地從者",
-    "神靈",
-    "持有靈衣之人",
-    "人型",
-    "EA特攻"
-  ]
-},
-
-{
-  "name": "阿拉什",
-  "id": 16,
-  "cost": 3,
-  "class": "archer",
-  "gender": "男性",
-  "policy": "混沌·中庸",
-  "attribute": "earth",
-  "stats": {
-    "natural": {
-      "hp": 7122,
-      "atk": 5816
+    "hidden_stats": {
+      "np_charge_atk": 0.83,
+      "np_charge_def": 3,
+      "star_gen": 0.1,
+      "death_rate": 28,
+      "star_absorb": 102
     },
-    "lv100": {
-      "hp": 10979,
-      "atk": 9037
+    "traits": [
+      "騎乘", "人科", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "Emiya",
+    "id": 11,
+    "cost": 12,
+    "class": "archer",
+    "gender": "男性",
+    "policy": "中立·中庸",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 11521, "atk": 9398 },
+      "lv100": { "hp": 13969, "atk": 11379 },
+      "lv120": { "hp": 16418, "atk": 13360 }
     },
-    "lv120": {
-      "hp": 12911,
-      "atk": 10651
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        16,
-        33,
-        51
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.84,
-    "np_charge_def": 3,
-    "star_gen": 0.08,
-    "death_rate": 45,
-    "star_absorb": 147
-  },
-  "traits": [
-    "天地從者",
-    "所愛之人",
-    "人科",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "庫.夫林",
-  "id": 17,
-  "cost": 7,
-  "class": "lancer",
-  "gender": "男性",
-  "policy": "秩序·中庸",
-  "attribute": "sky",
-  "stats": {
-    "natural": {
-      "hp": 9593,
-      "atk": 7239
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Arts", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [16, 33, 51],
+        "Buster": [100],
+        "Extra": [6, 13, 20, 26, 35],
+        "NP": [3, 3, 5, 7, 8, 10, 12, 14, 16, 22]
+      }
     },
-    "lv100": {
-      "hp": 13007,
-      "atk": 9797
+    "hidden_stats": {
+      "np_charge_atk": 0.51,
+      "np_charge_def": 3,
+      "star_gen": 0.079,
+      "death_rate": 31.5,
+      "star_absorb": 145
     },
-    "lv120": {
-      "hp": 15288,
-      "atk": 11506
-    }
+    "traits": [
+      "所愛之人", "人科", "夏日模式從者", "FSN從者", "持有靈衣之人", "人型", "EA特攻", "豬化有效"
+    ]
   },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Quick",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        100
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 1.07,
-    "np_charge_def": 4,
-    "star_gen": 0.121,
-    "death_rate": 32,
-    "star_absorb": 87
-  },
-  "traits": [
-    "神性",
-    "天地從者",
-    "所愛之人",
-    "人科",
-    "FSN從者",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "伊莉莎白.巴托里",
-  "id": 18,
-  "cost": 12,
-  "class": "lancer",
-  "gender": "女性",
-  "policy": "混沌·惡",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 11870,
-      "atk": 9122
+  {
+    "name": "基爾迦梅修",
+    "id": 12,
+    "cost": 16,
+    "class": "archer",
+    "gender": "男性",
+    "policy": "混沌·善",
+    "attribute": "sky",
+    "stats": {
+      "natural": { "hp": 13097, "atk": 12280 },
+      "lv100": { "hp": 14348, "atk": 13442 },
+      "lv120": { "hp": 16863, "atk": 15779 }
     },
-    "lv100": {
-      "hp": 14392,
-      "atk": 11045
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [7, 15, 23, 15, 40],
+        "Arts": [6, 13, 20, 26, 35],
+        "Buster": [27, 22, 13, 4, 34],
+        "Extra": [10, 14, 17, 3, 10, 14, 7, 25],
+        "NP": [100]
+      }
     },
-    "lv120": {
-      "hp": 16915,
-      "atk": 12968
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Quick",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        6,
-        13,
-        20,
-        26,
-        35
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 1.1,
-    "np_charge_def": 4,
-    "star_gen": 0.118,
-    "death_rate": 24,
-    "star_absorb": 90
-  },
-  "traits": [
-    "龍",
-    "人科",
-    "伊莉莎白",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "武藏坊弁慶",
-  "id": 19,
-  "cost": 4,
-  "class": "lancer",
-  "gender": "男性",
-  "policy": "混沌·善",
-  "attribute": "man",
-  "stats": {
-    "natural": {
-      "hp": 9149,
-      "atk": 5801
+    "hidden_stats": {
+      "np_charge_atk": 0.34,
+      "np_charge_def": 3,
+      "star_gen": 0.079,
+      "death_rate": 31.5,
+      "star_absorb": 153
     },
-    "lv100": {
-      "hp": 13204,
-      "atk": 8406
+    "traits": [
+      "神性", "天地從者", "王", "人科", "FSN從者", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "羅賓漢",
+    "id": 13,
+    "cost": 7,
+    "class": "archer",
+    "gender": "男性",
+    "policy": "中立·善",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 10187, "atk": 6715 },
+      "lv100": { "hp": 13812, "atk": 9088 },
+      "lv120": { "hp": 16235, "atk": 10673 }
     },
-    "lv120": {
-      "hp": 15528,
-      "atk": 9900
-    }
-  },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Quick",
-      "Arts",
-      "Arts",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        0
-      ]
-    }
-  },
-  "hidden_stats": {
-    "np_charge_atk": 0.79,
-    "np_charge_def": 4,
-    "star_gen": 0.119,
-    "death_rate": 36,
-    "star_absorb": 89
-  },
-  "traits": [
-    "所愛之人",
-    "人科",
-    "源氏",
-    "童話特性的從者",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
-{
-  "name": "庫.夫林〔Prototype〕",
-  "id": 20,
-  "cost": 7,
-  "class": "lancer",
-  "gender": "男性",
-  "policy": "秩序·中庸",
-  "attribute": "sky",
-  "stats": {
-    "natural": {
-      "hp": 10098,
-      "atk": 7082
+    "cards": {
+      "deck": ["Quick", "Quick", "Arts", "Arts", "Buster"],
+      "hits": {
+        "Quick": [16, 33, 51],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [100]
+      }
     },
-    "lv100": {
-      "hp": 13691,
-      "atk": 9584
+    "hidden_stats": {
+      "np_charge_atk": 0.87,
+      "np_charge_def": 3,
+      "star_gen": 0.08,
+      "death_rate": 31.5,
+      "star_absorb": 150
     },
-    "lv120": {
-      "hp": 16093,
-      "atk": 11257
-    }
+    "traits": [
+      "所愛之人", "人科", "童話特性的從者", "夏日模式從者", "持有靈衣之人", "人型", "EA特攻", "豬化有效"
+    ]
   },
-  "cards": {
-    "deck": [
-      "Quick",
-      "Quick",
-      "Arts",
-      "Buster",
-      "Buster"
-    ],
-    "hits": {
-      "Quick": [
-        33,
-        67
-      ],
-      "Arts": [
-        33,
-        67
-      ],
-      "Buster": [
-        100
-      ],
-      "Extra": [
-        12,
-        25,
-        63
-      ],
-      "NP": [
-        100
-      ]
-    }
+  {
+    "name": "阿塔蘭塔",
+    "id": 14,
+    "cost": 12,
+    "class": "archer",
+    "gender": "女性",
+    "policy": "中立·惡",
+    "attribute": "earth",
+    "stats": {
+      "natural": { "hp": 12476, "atk": 8633 },
+      "lv100": { "hp": 15127, "atk": 10453 },
+      "lv120": { "hp": 17778, "atk": 12273 }
+    },
+    "cards": {
+      "deck": ["Quick", "Quick", "Arts", "Arts", "Buster"],
+      "hits": {
+        "Quick": [16, 33, 51],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [3, 5, 3, 7, 8, 10, 12, 14, 16, 22]
+      }
+    },
+    "hidden_stats": {
+      "np_charge_atk": 0.5,
+      "np_charge_def": 3,
+      "star_gen": 0.08,
+      "death_rate": 31.5,
+      "star_absorb": 148
+    },
+    "traits": [
+      "天地從者", "阿爾戈號相關人員", "人科", "獸科", "人型", "EA特攻", "豬化有效"
+    ]
   },
-  "hidden_stats": {
-    "np_charge_atk": 1.08,
-    "np_charge_def": 4,
-    "star_gen": 0.121,
-    "death_rate": 28,
-    "star_absorb": 88
+  {
+    "name": "尤瑞艾莉",
+    "id": 15,
+    "cost": 7,
+    "class": "archer",
+    "gender": "女性",
+    "policy": "混沌·善",
+    "attribute": "sky",
+    "stats": {
+      "natural": { "hp": 9506, "atk": 7032 },
+      "lv100": { "hp": 12889, "atk": 9517 },
+      "lv120": { "hp": 15149, "atk": 11177 }
+    },
+    "cards": {
+      "deck": ["Quick", "Quick", "Arts", "Arts", "Buster"],
+      "hits": {
+        "Quick": [16, 33, 51],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [100]
+      }
+    },
+    "hidden_stats": {
+      "np_charge_atk": 0.9,
+      "np_charge_def": 3,
+      "star_gen": 0.079,
+      "death_rate": 22.5,
+      "star_absorb": 156
+    },
+    "traits": [
+      "神性", "天地從者", "神靈", "持有靈衣之人", "人型", "EA特攻"
+    ]
   },
-  "traits": [
-    "神性",
-    "天地從者",
-    "人科",
-    "人型",
-    "EA特攻",
-    "豬化有效"
-  ]
-},
-
+  {
+    "name": "阿拉什",
+    "id": 16,
+    "cost": 3,
+    "class": "archer",
+    "gender": "男性",
+    "policy": "混沌·中庸",
+    "attribute": "earth",
+    "stats": {
+      "natural": { "hp": 7122, "atk": 5816 },
+      "lv100": { "hp": 10979, "atk": 9037 },
+      "lv120": { "hp": 12911, "atk": 10651 }
+    },
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [16, 33, 51],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [100]
+      }
+    },
+    "hidden_stats": {
+      "np_charge_atk": 0.84,
+      "np_charge_def": 3,
+      "star_gen": 0.08,
+      "death_rate": 45,
+      "star_absorb": 147
+    },
+    "traits": [
+      "天地從者", "所愛之人", "人科", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "庫.夫林",
+    "id": 17,
+    "cost": 7,
+    "class": "lancer",
+    "gender": "男性",
+    "policy": "秩序·中庸",
+    "attribute": "sky",
+    "stats": {
+      "natural": { "hp": 9593, "atk": 7239 },
+      "lv100": { "hp": 13007, "atk": 9797 },
+      "lv120": { "hp": 15288, "atk": 11506 }
+    },
+    "cards": {
+      "deck": ["Quick", "Quick", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [100]
+      }
+    },
+    "hidden_stats": {
+      "np_charge_atk": 1.07,
+      "np_charge_def": 4,
+      "star_gen": 0.121,
+      "death_rate": 32,
+      "star_absorb": 87
+    },
+    "traits": [
+      "神性", "天地從者", "所愛之人", "人科", "FSN從者", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "伊莉莎白.巴托里",
+    "id": 18,
+    "cost": 12,
+    "class": "lancer",
+    "gender": "女性",
+    "policy": "混沌·惡",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 11870, "atk": 9122 },
+      "lv100": { "hp": 14392, "atk": 11045 },
+      "lv120": { "hp": 16915, "atk": 12968 }
+    },
+    "cards": {
+      "deck": ["Quick", "Quick", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [6, 13, 20, 26, 35]
+      }
+    },
+    "hidden_stats": {
+      "np_charge_atk": 1.1,
+      "np_charge_def": 4,
+      "star_gen": 0.118,
+      "death_rate": 24,
+      "star_absorb": 90
+    },
+    "traits": [
+      "龍", "人科", "伊莉莎白", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "武藏坊弁慶",
+    "id": 19,
+    "cost": 4,
+    "class": "lancer",
+    "gender": "男性",
+    "policy": "混沌·善",
+    "attribute": "man",
+    "stats": {
+      "natural": { "hp": 9149, "atk": 5801 },
+      "lv100": { "hp": 13204, "atk": 8406 },
+      "lv120": { "hp": 15528, "atk": 9900 }
+    },
+    "cards": {
+      "deck": ["Quick", "Quick", "Arts", "Arts", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [0]
+      }
+    },
+    "hidden_stats": {
+      "np_charge_atk": 0.79,
+      "np_charge_def": 4,
+      "star_gen": 0.119,
+      "death_rate": 36,
+      "star_absorb": 89
+    },
+    "traits": [
+      "所愛之人", "人科", "源氏", "童話特性的從者", "人型", "EA特攻", "豬化有效"
+    ]
+  },
+  {
+    "name": "庫.夫林〔Prototype〕",
+    "id": 20,
+    "cost": 7,
+    "class": "lancer",
+    "gender": "男性",
+    "policy": "秩序·中庸",
+    "attribute": "sky",
+    "stats": {
+      "natural": { "hp": 10098, "atk": 7082 },
+      "lv100": { "hp": 13691, "atk": 9584 },
+      "lv120": { "hp": 16093, "atk": 11257 }
+    },
+    "cards": {
+      "deck": ["Quick", "Quick", "Arts", "Buster", "Buster"],
+      "hits": {
+        "Quick": [33, 67],
+        "Arts": [33, 67],
+        "Buster": [100],
+        "Extra": [12, 25, 63],
+        "NP": [100]
+      }
+    },
+    "hidden_stats": {
+      "np_charge_atk": 1.08,
+      "np_charge_def": 4,
+      "star_gen": 0.121,
+      "death_rate": 28,
+      "star_absorb": 88
+    },
+    "traits": [
+      "神性", "天地從者", "人科", "人型", "EA特攻", "豬化有效"
+    ]
+  }
+]
