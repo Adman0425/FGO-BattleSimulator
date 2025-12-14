@@ -91,5 +91,29 @@
     <script src="js/data_loader.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/ui.js"></script>
+
+    <script>
+        // 覆寫原本 ui.js 的設定，改由這裡控制流程
+        window.onload = async () => {
+            const logBox = document.getElementById('battle-log');
+            
+            try {
+                // 1. 先等待資料讀取 (這一步會去 fetch 你的 json 檔)
+                logBox.innerHTML += '<div class="log-entry" style="color:#aaa">正在讀取從者與關卡資料...</div>';
+                
+                await DataLoader.loadAll(); // 這行會暫停程式，直到資料讀完
+
+                // 2. 資料讀到了，再建立介面
+                UI.init();
+                
+                logBox.innerHTML += '<div class="log-entry" style="color:#4caf50">系統就緒。請選擇角色。</div>';
+                logBox.scrollTop = logBox.scrollHeight;
+
+            } catch (e) {
+                console.error(e);
+                logBox.innerHTML += `<div class="log-entry" style="color:red">讀取失敗：${e.message}<br>請確認是否使用伺服器模式開啟 (Live Server)。</div>`;
+            }
+        };
+    </script>
 </body>
 </html>
