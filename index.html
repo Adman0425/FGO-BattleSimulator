@@ -70,17 +70,24 @@
         </div>
     </div>
 
-    <div class="controls">
-        <h3>選擇指令卡 (測試)</h3>
-        <div class="card-area">
-            <button class="cmd-card buster" onclick="UI.handleAttack('Buster')">Buster</button>
-            <button class="cmd-card arts" onclick="UI.handleAttack('Arts')">Arts</button>
-            <button class="cmd-card quick" onclick="UI.handleAttack('Quick')">Quick</button>
-            <button class="cmd-card extra" onclick="UI.handleAttack('Extra')">Extra</button>
-            <button class="cmd-card np" onclick="UI.handleAttack('NP')">寶具 (NP)</button>
+    <div class="command-phase">
+        <h3>指令卡選擇 (Select 3 Cards)</h3>
+        
+        <div class="selected-slots">
+            <div class="card-slot" id="slot-0" onclick="UI.deselectCard(0)">1st</div>
+            <div class="card-slot" id="slot-1" onclick="UI.deselectCard(1)">2nd</div>
+            <div class="card-slot" id="slot-2" onclick="UI.deselectCard(2)">3rd</div>
         </div>
-        <div style="margin-top: 10px; font-size: 12px; color: #aaa;">
-            * 模擬為該卡片置於首卡的狀況
+
+        <button id="btn-execute" class="btn-attack" onclick="UI.executeTurn()" disabled>
+            ATTACK!
+        </button>
+
+        <div class="hand-area" id="hand-container">
+            </div>
+        
+        <div class="np-trigger">
+            <button class="cmd-card np" onclick="UI.toggleNP()">發動寶具 (未選取)</button>
         </div>
     </div>
 
