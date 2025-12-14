@@ -19,7 +19,6 @@
     "snarler":   { "atk_mod": 1.10, "star_absorb":  150, "star_gen": 0.06, "np_enemy_mod": 1.2, "enemy_crit_rate": 0.30, "star_enemy_mod": 0.05 },
     "cannibal":   { "atk_mod": 1.00, "star_absorb":  70, "star_gen": 0.13, "np_enemy_mod": 0.9, "enemy_crit_rate": 0.15, "star_enemy_mod": -0.05 },
     "conqueror":   { "atk_mod": 1.00, "star_absorb":  250, "star_gen": 0.15, "np_enemy_mod": 1.1, "enemy_crit_rate": 0.20, "star_enemy_mod": 0.0 }
-    // 其他特殊職階
   },
 
   "class_affinity": {
@@ -74,58 +73,55 @@
       "damage": [2.0],
       "np": [1.0],
       "star": [1.0]
-    }
+    },
+    "NP": { "damage": [1.0], "np": [1.0], "star": [0] }
   },
 
   "game_mechanics": {
-    "version": "post_7th_anniversary", // 七週年後的規則
+    "version": "post_7th_anniversary", 
 
-    // 1. 首位染色效果 (First Card Bonus)
     "first_card_bonus": {
       "Buster": { 
-        "damage_mod": 0.5          // 傷害倍率 +0.5
+        "damage_mod": 0.5          
       },
       "Arts": { 
-        "np_card_constant": 1.0    // NP獲得公式中的首位加成 (通常是+1.0)
+        "np_card_constant": 1.0    
       },
       "Quick": { 
-        "star_gen_mod": 0.20,      // 掉星率 +20%
-        "crit_rate_mod": 0.20      // 指令卡暴擊率 +20%
+        "star_gen_mod": 0.20,      
+        "crit_rate_mod": 0.20      
       }
     },
 
-    // 2. Chain Bonus
     "chain_bonus": {
       "Buster": { 
-        "damage_flat_mult": 0.2    // ATK * 0.2 的固定傷害加成
+        "damage_flat_mult": 0.2    
       },
       "Arts": { 
-        "team_np_charge": 20       // 全隊 NP +20%
+        "team_np_charge": 20       
       },
       "Quick": { 
-        "stars_flat": 20           // 獲得 20 顆暴擊星
+        "stars_flat": 20           
       }
     },
 
-    // 3. 特殊連攜規則
     "special_chains": {
       "brave_chain": {
-        "extra_card_mod": 3.5      // 同色 Brave Chain 的 EX 卡倍率
+        "extra_card_mod": 3.5      
       },
       "mighty_chain": {
         "enabled": true,
-        "description": "Trigger all 3 First Card Bonuses", // 效果：同時觸發紅藍綠三種首位加成
-        "condition": "3_different_colors" // 觸發條件：紅藍綠各一張
+        "description": "Trigger all 3 First Card Bonuses", 
+        "condition": "3_different_colors" 
       }
     },
 
-    // 4. 其他通用核心參數
     "common_rules": {
-        "extra_card_default_mod": 2.0,  // 普通 EX 卡倍率
-        "crit_damage_base": 2.0,        // 暴擊時基礎傷害 x2
+        "extra_card_default_mod": 2.0,  
+        "crit_damage_base": 2.0,        
         "overkill": {
-            "np_mod": 1.5,              // 鞭屍 NP x1.5
-            "star_mod": 0.30            // 鞭屍掉星 +30%
+            "np_mod": 1.5,              
+            "star_mod": 0.30            
         }
     }
   }
