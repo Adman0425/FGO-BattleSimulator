@@ -79,13 +79,25 @@
         </div>
 
         <div class="area-action">
-            <div class="crit-stars">
-                <i class="fas fa-star"></i> <span id="star-count">0</span>
+            <div class="attack-container" onclick="UI.openCommandPhase()">
+                <div class="attack-cross"></div>
+                
+                <div class="attack-orb">
+                    <span class="attack-main">Attack</span>
+                    <span class="attack-sub">Next Phase</span>
+                </div>
+
+                <div class="crit-star-container">
+                    <svg class="star-icon" viewBox="0 0 24 24">
+                        <path d="M12 0 L15 9 L24 12 L15 15 L12 24 L9 15 L0 12 L9 9 Z" />
+                    </svg>
+                    <div class="crit-text">
+                        <span class="x-mark">×</span>
+                        <span id="star-count">0</span>
+                        <div class="crit-label">CRITICAL</div>
+                    </div>
+                </div>
             </div>
-            <button class="big-attack-btn" onclick="UI.openCommandPhase()">
-                Attack
-                <span class="attack-text">Next Phase</span>
-            </button>
         </div>
 
     </div>
