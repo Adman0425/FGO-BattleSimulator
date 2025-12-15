@@ -94,47 +94,50 @@ select { padding: 5px; border-radius: 4px; background: #eee; border: none; }
     border-radius: 10px;
     text-align: center;
     border: 2px solid #555;
-    max-width: 800px;
+    max-width: 900px; /* 稍微加寬以容納大卡片 */
     margin: 0 auto;
 }
 
-/* 1. 已選卡槽 */
+/* 1. 已選卡槽 (Selected Slots) */
 .selected-slots {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    height: 130px; /* 增加高度容納卡片 */
+    gap: 20px;
+    margin-bottom: 25px;
+    height: 160px; /* 增加高度容納 140px 卡片 */
     align-items: center;
 }
 
 .card-slot {
-    width: 90px;
-    height: 120px;
+    width: 140px;  /* 修正為 140px */
+    height: 140px; /* 修正為 140px */
     border: 2px dashed #666;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #555;
-    background-size: cover;
+    background-size: cover; /* 確保背景圖充滿 */
+    background-repeat: no-repeat;
     position: relative;
+    box-sizing: content-box; /* 避免邊框吃掉圖片空間 */
 }
 
 /* 2. 手牌區 & 卡片容器 */
 .hand-area {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 15px;
+    margin-top: 15px;
     flex-wrap: wrap;
-    min-height: 140px;
+    min-height: 150px;
 }
 
-/* 卡片容器 (包裹 圖片 + 徽章) */
+/* 卡片容器 */
 .card-container {
     position: relative;
-    width: 90px;
+    width: 140px; /* 修正為 140px */
+    height: 140px;
     cursor: pointer;
     transition: transform 0.1s;
 }
@@ -149,26 +152,27 @@ select { padding: 5px; border-radius: 4px; background: #eee; border: none; }
     transform: none;
 }
 
-/* 卡片底圖 (Buster/Arts/Quick) */
+/* 卡片圖片本體 */
 .command-card-img {
-    width: 100%;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    width: 140px;  /* 修正為 140px */
+    height: 140px; /* 修正為 140px */
+    border-radius: 8px;
+    /* 移除 box-shadow 以免視覺干擾，改由容器控制 */
 }
 
-/* 從者徽章 (左上角小頭像) */
+/* 從者徽章 (調整位置適配大卡片) */
 .owner-badge {
     position: absolute;
-    top: -10px;
-    left: -10px;
-    width: 35px;
-    height: 35px;
+    top: -12px;
+    left: -12px;
+    width: 45px; /* 稍微放大 */
+    height: 45px;
     border-radius: 50%;
     border: 2px solid #ffd700;
     background: #000;
     object-fit: cover;
-    z-index: 2;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 /* 3. Attack 按鈕 */
