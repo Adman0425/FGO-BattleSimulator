@@ -810,5 +810,101 @@
     "star_absorb": 194
   },
   "traits": ["神性", "騎乘", "天地從者", "神靈", "FSN從者", "蛇", "持有靈衣之人", "人型", "EA特攻", "豬化有效"]
+},
+{
+  "name": "聖喬治",
+  "id": 24,
+  "cost": 4,
+  "class": "rider",
+  "gender": "男性",
+  "policy": "秩序·善",
+  "attribute": "man",
+  "stats": {
+    "natural": { "hp": 9200, "atk": 5236 },
+    "lv100": { "hp": 13278, "atk": 7587 },
+    "lv120": { "hp": 15615, "atk": 8935 }
+  },
+  "cards": {
+    "deck": ["Quick", "Quick", "Arts", "Arts", "Buster"],
+    "hits": {
+      "Quick": [33, 67],
+      "Arts": [33, 67],
+      "Buster": [100],
+      "Extra": [12, 25, 63],
+      "NP": [10, 20, 30, 40]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.85,
+    "np_charge_def": 3,
+    "star_gen": 0.089,
+    "death_rate": 45,
+    "star_absorb": 205
+  },
+  "traits": ["人型", "騎乘", "所愛之人", "人科", "EA特攻", "豬化有效"]
+},
+{
+  "name": "愛德華.蒂奇",
+  "id": 25,
+  "cost": 4,
+  "class": "rider",
+  "gender": "男性",
+  "policy": "混沌·惡",
+  "attribute": "man",
+  "stats": {
+    "natural": { "hp": 7907, "atk": 6188 },
+    "lv100": { "hp": 11411, "atk": 8967 },
+    "lv120": { "hp": 13420, "atk": 10561 }
+  },
+  "cards": {
+    "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+    "hits": {
+      "Quick": [25, 75],
+      "Arts": [16, 33, 51],
+      "Buster": [100],
+      "Extra": [12, 25, 63],
+      "NP": [6, 13, 20, 26, 35]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.56,
+    "np_charge_def": 3,
+    "star_gen": 0.088,
+    "death_rate": 45,
+    "star_absorb": 198
+  },
+  "traits": ["EA特攻", "人型", "人科", "持有靈衣之人", "夏日模式從者", "豬化有效"]
+},
+{
+  "name": "布狄卡",
+  "id": 26,
+  "cost": 7,
+  "class": "rider",
+  "gender": "女性",
+  "policy": "中立·善",
+  "attribute": "man",
+  "stats": {
+    "natural": { "hp": 10130, "atk": 6289 },
+    "lv100": { "hp": 13735, "atk": 8511 },
+    "lv120": { "hp": 16144, "atk": 9996 }
+  },
+  "cards": {
+    "deck": ["Quick", "Quick", "Arts", "Arts", "Buster"],
+    "hits": {
+      "Quick": [33, 67],
+      "Arts": [33, 67],
+      "Buster": [100],
+      "Extra": [12, 25, 63],
+      "NP": [0]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.85,
+    "np_charge_def": 3,
+    "star_gen": 0.089,
+    "death_rate": 45,
+    "star_absorb": 196
+  },
+  "traits": ["EA特攻", "人型", "騎乘", "王", "人科", "豬化有效"]
 }
 ]
