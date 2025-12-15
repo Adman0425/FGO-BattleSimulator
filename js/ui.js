@@ -187,25 +187,36 @@ const UI = {
 
         slots.forEach(i => {
             const el = document.getElementById(`slot-${i}`);
-            el.innerHTML = ''; // 清空
-            el.style.backgroundImage = 'none';
-            el.style.border = '2px dashed #666';
+            el.innerHTML = ''; // 清空內容
+            el.className = 'card-slot'; // 重置 class
 
             if (i < selected.length) {
                 const cardIndex = selected[i];
                 const card = hand[cardIndex];
-                el.style.backgroundImage = `url('${UI.cardImages[card.type]}')`;
-                el.style.border = '2px solid #fff';
 
+                // 1. 添加 .filled 樣式 (變實線邊框)
+                el.classList.add('filled');
+
+                // 2. 插入卡片圖 (不再用 background-image)
+                const cardImg = document.createElement('img');
+                cardImg.src = UI.cardImages[card.type];
+                cardImg.className = 'slot-card-img';
+                el.appendChild(cardImg);
+
+                // 3. 插入徽章
                 const badge = document.createElement('img');
-                badge.className = 'owner-badge';
                 badge.src = UI.getServantIcon(card.ownerId);
+                badge.className = 'slot-badge';
                 badge.onerror = () => { badge.src = 'https://placehold.co/40x40?text=?'; };
                 el.appendChild(badge);
+
             } else {
+                // 空槽位顯示文字
                 el.innerText = `${i + 1}nd`;
             }
         });
+
+        // 按鈕狀態控制
         document.getElementById('btn-execute').disabled = (selected.length !== 3);
     },
 
