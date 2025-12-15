@@ -128,7 +128,6 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
 /* 3. 戰鬥日誌 */
 
 /* 4. Action 區域 (Attack 按鈕 & 星星) */
-/* --- 4. Action 區域 (FGO 風格 Attack 按鈕) --- */
 .area-action {
     grid-column: 3 / 4;
     grid-row: 2 / 3;
@@ -145,7 +144,6 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
     height: 140px;
     cursor: pointer;
     transition: transform 0.1s;
-    /* 讓它稍微往上浮一點，避免星星被切掉 */
     transform: translateY(-10px); 
 }
 
@@ -162,7 +160,7 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
     top: 10px; left: 10px;
     width: 120px; height: 120px;
     border-radius: 50%;
-    /* 仿 FGO 的藍色立體漸層 */
+    /* 立體漸層 */
     background: radial-gradient(circle at 35% 30%, 
         #4fc3f7 0%, 
         #039be5 40%, 
@@ -179,7 +177,7 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
     z-index: 2;
 }
 
-/* 背後的十字/金屬框 (模擬 FGO 按鈕後的十字芒) */
+/* 背後的十字/金屬框 */
 .attack-cross {
     position: absolute;
     top: 0; left: 0;
@@ -187,7 +185,6 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
     z-index: 1;
     border-radius: 50%;
 }
-/* 透過偽元素畫出突出的尖角 */
 .attack-cross::before, .attack-cross::after {
     content: '';
     position: absolute;
@@ -195,92 +192,110 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
-/* 垂直尖角 */
-.attack-cross::before {
+.attack-cross::before { /* 垂直 */
     width: 16px; height: 160px;
     left: 50%; top: -10px;
     transform: translateX(-50%);
     clip-path: polygon(50% 0, 100% 15%, 100% 85%, 50% 100%, 0 85%, 0 15%);
 }
-/* 水平尖角 */
-.attack-cross::after {
+.attack-cross::after { /* 水平 */
     width: 160px; height: 16px;
     top: 50%; left: -10px;
     transform: translateY(-50%);
     clip-path: polygon(15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%, 0 50%);
 }
 
-/* 字體樣式 */
+/* 字體樣式 (修正大小) */
 .attack-main {
-    font-family: "Times New Roman", serif; /* 襯線體 */
-    font-size: 32px;
-    font-weight: 900; /* 極粗 */
+    font-family: "Times New Roman", serif;
+    font-size: 38px; /* 放大字體 */
+    font-weight: 900;
     color: #fff;
     font-style: italic;
     text-shadow: 
-        2px 2px 0px #01579b, 
+        3px 3px 0px #01579b, 
         0 0 10px rgba(255,255,255,0.8);
     line-height: 1;
     margin-top: 5px;
+    letter-spacing: -1px; /* 讓字母緊湊一點更像 Logo */
 }
 
 .attack-sub {
     font-family: sans-serif;
-    font-size: 10px;
-    color: rgba(255,255,255,0.7);
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-top: 2px;
+    margin-top: 4px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
-/* --- 暴擊星區域 (Crit Stars) --- */
+/* --- 暴擊星區域 (Crit Stars) - 修正定位 --- */
 .crit-star-container {
     position: absolute;
-    bottom: -5px;
-    left: -20px;
-    z-index: 10; /* 最上層 */
+    bottom: -15px; /* 往下移 */
+    left: -25px;   /* 往左移 */
+    z-index: 10;
     display: flex;
-    align-items: flex-end;
-    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.8)); /* 整體陰影 */
+    align-items: center; /* 改為 center 對齊 */
+    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.8));
+    /* 這裡不需要 justify-content，靠內容撐開 */
 }
 
 /* 四角星 SVG */
 .star-icon {
-    width: 45px;
-    height: 45px;
-    fill: url(#starGradient); /* 如果不支援漸層，會吃下面的 background */
+    width: 55px; /* 星星稍微放大 */
+    height: 55px;
     fill: #ffd700;
-    /* 簡單的黃金漸層效果 */
     filter: drop-shadow(0 0 5px #ffb300);
 }
 
+/* 文字群組 (修正錯位) */
 .crit-text {
     display: flex;
     flex-direction: column;
-    margin-left: -5px;
-    margin-bottom: 5px;
+    margin-left: -8px; /* 讓文字稍微疊在星星右邊 */
+    margin-top: 5px;   /* 微調垂直位置 */
+    align-items: flex-start; /* 靠左對齊 */
 }
 
-.crit-text span {
-    font-family: "Times New Roman", serif;
-    color: #fff;
+/* 上半部：x 數字 */
+.crit-value-row {
+    display: flex;
+    align-items: baseline; /* 讓 x 和 數字底部對齊 */
     line-height: 1;
+}
+
+.x-mark { 
+    font-family: sans-serif;
+    font-size: 16px; 
+    font-weight: bold; 
+    color: #ddd; 
+    margin-right: 2px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+#star-count { 
+    font-family: "Times New Roman", serif;
+    font-size: 36px; /* 數字放大 */
+    font-weight: bold; 
+    font-style: italic; 
+    color: #fff;
     text-shadow: 2px 2px 0 #000;
 }
 
-.x-mark { font-size: 14px; font-weight: bold; margin-bottom: -5px; color: #ccc;}
-#star-count { font-size: 32px; font-weight: bold; font-style: italic; color: #fff;}
-
+/* 下半部：CRITICAL 字樣 */
 .crit-label {
-    font-size: 8px;
+    font-size: 10px;
     color: #ffb300;
-    font-weight: bold;
+    font-weight: 900;
     letter-spacing: 0.5px;
-    margin-top: -3px;
+    margin-top: -2px; /* 往上拉近一點 */
     text-shadow: 1px 1px 0 #000;
     font-family: sans-serif;
+    text-transform: uppercase;
+    margin-left: 5px; /* 對齊數字 */
 }
-
 /* --- 指令卡選擇覆蓋層 (Overlay) --- */
 .command-overlay {
     position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; /* 稍微加高 */
