@@ -2,123 +2,111 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>FGO 戰鬥模擬器 v3.0</title>
+    <title>FGO 戰鬥模擬器 v3.1</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div class="header">
-        <h1>FGO Battle Simulator v3.0</h1>
+        <h1>FGO Battle Simulator v3.1</h1>
     </div>
 
     <div class="setup-panel">
         <div class="setup-group">
-            <label>我方從者：</label>
+            <label>我方從者 (Position 1)：</label>
             <select id="player-select"></select>
-            
-            <label>練度設定：</label>
             <select id="level-select">
-                <option value="natural">預設滿級 (+1000芙)</option>
-                <option value="lv100">Lv.100 (+2000芙)</option>
-                <option value="lv120">Lv.120 (+2000芙)</option>
+                <option value="natural">預設滿級</option>
+                <option value="lv100">Lv.100</option>
+                <option value="lv120">Lv.120</option>
             </select>
         </div>
-
         <div style="font-weight:bold; color:#888;">VS</div>
-
         <div class="setup-group">
-            <label>敵方靶子：</label>
+            <label>敵方目標：</label>
             <select id="enemy-select"></select>
         </div>
-
         <button class="btn-start" onclick="UI.initBattle()">戰鬥開始 / 重置</button>
     </div>
 
     <div class="battle-field">
-        <div class="character-card" id="player-card">
-            <div class="hp-bar-container">
-                <div class="hp-text">HP: <span id="p-hp-current">0</span> / <span id="p-hp-max">0</span></div>
-                <div id="p-hp-bar" class="hp-fill"></div>
-            </div>
-            <div class="avatar-area">
-                <div class="servant-img" id="p-avatar">🛡️</div>
-            </div>
-            <h3 id="p-name">Servant</h3>
-            <div class="tags">
-                <span id="p-class" class="tag class-tag">CLASS</span>
-                <span id="p-attr" class="tag attr-tag">ATTR</span>
-            </div>
-            <div class="status-row">
-                <div>ATK: <span id="p-atk">0</span></div>
-                <div class="np-gauge">NP: <span id="p-np">0</span>%</div>
+        
+        <div class="enemy-area">
+            <div class="character-card enemy-card" id="enemy-card">
+                <img src="" class="avatar-img enemy-avatar" id="e-avatar" alt="Enemy">
+                <div class="enemy-info">
+                    <h3 id="e-name" style="margin:0 0 5px 0;">Enemy</h3>
+                    <div class="tags">
+                        <span id="e-class" class="tag">CLASS</span>
+                        <span id="e-attr" class="tag">ATTR</span>
+                    </div>
+                    <div class="hp-bar-container">
+                        <div class="hp-fill enemy-fill" id="e-hp-bar"></div>
+                    </div>
+                    <div style="font-size:12px; text-align:right;">HP: <span id="e-hp-current">0</span></div>
+                </div>
             </div>
         </div>
 
-        <div class="character-card enemy-card" id="enemy-card">
-             <div class="hp-bar-container">
-                <div class="hp-text">HP: <span id="e-hp-current">0</span> / <span id="e-hp-max">0</span></div>
-                <div id="e-hp-bar" class="hp-fill enemy-fill"></div>
-            </div>
-            <div class="avatar-area">
-                <div class="servant-img" id="e-avatar">💀</div>
-            </div>
-            <h3 id="e-name">Enemy</h3>
-            <div class="tags">
-                <span id="e-class" class="tag class-tag">CLASS</span>
-                <span id="e-attr" class="tag attr-tag">ATTR</span>
+        <div class="player-area">
+            <div class="character-card servant-card" id="player-card-1">
+                <img src="" class="avatar-img" id="p1-avatar" alt="Servant">
+                <div style="margin-top:5px; font-weight:bold; font-size:14px;" id="p1-name">Servant</div>
+                
+                <div class="hp-bar-container">
+                    <div class="hp-fill" id="p1-hp-bar"></div>
+                </div>
+                <div style="font-size:10px;">HP: <span id="p1-hp-current">0</span></div>
+                
+                <div class="np-bar-container">
+                    <div class="np-fill" id="p1-np-bar"></div>
+                </div>
+                <div style="font-size:10px; color:#4fc3f7;">NP: <span id="p1-np-val">0</span>%</div>
             </div>
         </div>
+
     </div>
 
     <div class="command-phase">
-        <h3>指令卡選擇 (Select 3 Cards)</h3>
-        
         <div class="selected-slots">
-            <div class="card-slot" id="slot-0" onclick="UI.deselectCard(0)">1st</div>
-            <div class="card-slot" id="slot-1" onclick="UI.deselectCard(1)">2nd</div>
-            <div class="card-slot" id="slot-2" onclick="UI.deselectCard(2)">3rd</div>
+            <div id="slot-0" class="card-slot" onclick="UI.deselectCard(0)">1st</div>
+            <div id="slot-1" class="card-slot" onclick="UI.deselectCard(1)">2nd</div>
+            <div id="slot-2" class="card-slot" onclick="UI.deselectCard(2)">3rd</div>
         </div>
 
-        <button id="btn-execute" class="btn-attack" onclick="UI.executeTurn()" disabled>
-            ATTACK!
-        </button>
+        <button id="btn-execute" class="btn-attack" onclick="UI.executeTurn()" disabled>ATTACK!</button>
 
         <div class="hand-area" id="hand-container">
             </div>
-        
-        <div class="np-trigger">
-            <button class="cmd-card np" onclick="UI.toggleNP()">發動寶具 (未選取)</button>
+
+        <div style="margin-top:10px;">
+            <button onclick="UI.toggleNP()" style="background:#6a1b9a; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
+                寶具開關 (Demo)
+            </button>
         </div>
     </div>
 
     <div class="log-box" id="battle-log">
-        <div class="log-entry">系統就緒。請選擇角色。</div>
+        <div class="log-entry">系統就緒。請使用 Live Server 啟動。</div>
     </div>
 
     <script src="js/data_loader.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/ui.js"></script>
-
+    
     <script>
-        // 覆寫原本 ui.js 的設定，改由這裡控制流程
+        // 啟動腳本
         window.onload = async () => {
             const logBox = document.getElementById('battle-log');
-            
             try {
-                // 1. 先等待資料讀取 (這一步會去 fetch 你的 json 檔)
-                logBox.innerHTML += '<div class="log-entry" style="color:#aaa">正在讀取從者與關卡資料...</div>';
-                
-                await DataLoader.loadAll(); // 這行會暫停程式，直到資料讀完
-
-                // 2. 資料讀到了，再建立介面
+                logBox.innerHTML += '<div class="log-entry" style="color:#aaa">正在讀取資料庫...</div>';
+                await DataLoader.loadAll();
                 UI.init();
-                
-                logBox.innerHTML += '<div class="log-entry" style="color:#4caf50">系統就緒。請選擇角色。</div>';
+                logBox.innerHTML += '<div class="log-entry" style="color:#4caf50">資料庫載入完成。</div>';
                 logBox.scrollTop = logBox.scrollHeight;
-
             } catch (e) {
                 console.error(e);
-                logBox.innerHTML += `<div class="log-entry" style="color:red">讀取失敗：${e.message}<br>請確認是否使用伺服器模式開啟 (Live Server)。</div>`;
+                logBox.innerHTML += `<div class="log-entry" style="color:red">讀取失敗：${e.message}</div>`;
             }
         };
     </script>
