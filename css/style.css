@@ -1,200 +1,159 @@
 /* 全局設定 */
-body { font-family: "Microsoft JhengHei", sans-serif; background: #202020; color: #eee; margin: 0; padding: 20px; }
+body { font-family: "Microsoft JhengHei", sans-serif; background: #1a1a1a; color: #eee; margin: 0; padding: 20px; height: 100vh; overflow: hidden; box-sizing: border-box; }
 
-/* 頂部標題與設定 */
-.header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #444; }
-.setup-panel { background: #333; padding: 15px; border-radius: 8px; display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px; }
-.setup-group { display: flex; flex-direction: column; gap: 5px; }
-select { padding: 5px; border-radius: 4px; background: #eee; border: none; }
-.btn-start { background: #E91E63; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-.btn-start:hover { background: #C2185B; }
+/* 頂部標題與設定 (平時隱藏，滑鼠移過去顯示，以免干擾戰鬥畫面) */
+.header-area { 
+    position: absolute; top: 0; left: 0; width: 100%; z-index: 100; 
+    background: rgba(0,0,0,0.8); transform: translateY(-90%); transition: 0.3s; padding: 10px;
+}
+.header-area:hover { transform: translateY(0); }
+.setup-panel { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+.setup-group { display: flex; flex-direction: column; gap: 2px; font-size: 12px; }
+select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
 
-/* --- 戰鬥場地 (Battle Field) - 改為上下佈局 --- */
-.battle-field { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 30px; 
-    margin-bottom: 30px; 
-    position: relative;
-    min-height: 400px;
-    /* 背景圖可以在這裡加 background-image: url(...) */
+/* --- 核心佈局：六宮格 Grid System --- */
+/* Row 1: [1: Enemy Area (span 2)] [3: Log Area]
+   Row 2: [4-5: Party Area (span 2)] [6: Action Area]
+*/
+.main-stage {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr; /* 左右寬，右邊窄一點放 Log/按鈕 */
+    grid-template-rows: 1fr 1fr;          /* 上下各一半 */
+    height: 90vh;
+    gap: 10px;
+    padding-top: 40px; /* 避開 Header */
 }
 
-/* 角色卡片通用 */
-.character-card { 
-    background: rgba(0, 0, 0, 0.6); 
-    border-radius: 10px; 
-    padding: 10px; 
-    text-align: center; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-    border: 2px solid transparent; 
-    transition: 0.2s; 
-    position: relative;
-}
-
-/* 敵方 (上方) */
-.enemy-area { 
-    display: flex; 
-    justify-content: center; 
-    width: 100%;
-}
-.enemy-card { 
-    width: 400px; 
-    border-color: #d32f2f; 
+/* 區域 1 & 2: 敵人 (左上 + 中上) */
+.area-enemy {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
     display: flex;
-    flex-direction: row; /* 橫向排列 */
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
+    align-items: center; /* 垂直置中 */
+    justify-content: flex-start; /* 靠左 */
+    padding-left: 50px;
 }
-.enemy-info { flex: 1; text-align: left; }
 
-/* 我方 (下方) */
-.player-area { 
-    display: flex; 
-    justify-content: center; 
-    gap: 15px; 
-    width: 100%;
+/* 區域 3: 戰鬥日誌 (右上) */
+.area-log {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    display: flex;
+    flex-direction: column;
 }
-.servant-card {
-    width: 140px; /* 變窄，因為要放3個人 */
-    border-color: #42a5f5;
+
+/* 區域 4 & 5 & 6左: 我方隊伍 (左下 + 中下) */
+.area-party {
+    grid-column: 1 / 3;
+    grid-row: 2 / 3;
+    display: flex;
+    align-items: flex-end; /* 靠底 */
+    justify-content: center;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+/* 區域 6右: 行動按鈕 (右下) */
+.area-action {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
-/* 狀態條 */
-.hp-bar-container { background: #111; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 5px; position: relative; width: 100%; }
+/* --- 元件樣式 --- */
+
+/* 1. 敵人卡片 (極簡化) */
+.enemy-card { 
+    width: 450px;
+    background: transparent; /* 去掉背景框 */
+    border: none;
+    box-shadow: none;
+    text-align: left;
+    position: relative;
+}
+/* 隱藏頭像與標籤 */
+.enemy-avatar, .enemy-info .tags, .enemy-info #e-class, .enemy-info #e-attr { display: none; }
+
+.enemy-info h3 { 
+    font-size: 24px; margin: 0 0 5px 0; text-shadow: 2px 2px 4px #000; 
+}
+.hp-bar-container { background: rgba(0,0,0,0.5); height: 15px; border-radius: 8px; overflow: hidden; border: 1px solid #555; }
 .hp-fill { height: 100%; background: linear-gradient(90deg, #66bb6a, #43a047); width: 100%; transition: width 0.3s; }
 .enemy-fill { background: linear-gradient(90deg, #ef5350, #c62828); }
-.np-bar-container { background: #111; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 4px; width: 100%; }
-.np-fill { height: 100%; background: linear-gradient(90deg, #42a5f5, #1e88e5); width: 0%; transition: width 0.3s; }
 
-/* 頭像 */
-.avatar-img { 
-    width: 80px; 
-    height: 80px; 
-    border-radius: 50%; 
-    border: 2px solid #fff; 
-    object-fit: cover;
-    background: #000;
-}
-.enemy-avatar { width: 100px; height: 100px; border-color: #d32f2f; }
-
-/* 標籤 */
-.tags { margin-top: 5px; display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
-.tag { font-size: 10px; padding: 1px 4px; border-radius: 3px; background: #222; }
-
-/* --- 指令卡戰鬥介面 (Command Phase) --- */
-.command-phase {
-    background: #2a2a2a;
-    padding: 20px;
-    border-radius: 10px;
+/* 2. 我方從者卡片 */
+.servant-card {
+    width: 140px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+    padding: 10px;
     text-align: center;
-    border: 2px solid #555;
-    max-width: 900px; /* 稍微加寬以容納大卡片 */
-    margin: 0 auto;
-}
-
-/* 1. 已選卡槽 (Selected Slots) */
-.selected-slots {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 25px;
-    height: 160px; /* 增加高度容納 140px 卡片 */
-    align-items: center;
-}
-
-.card-slot {
-    width: 140px;  /* 修正為 140px */
-    height: 140px; /* 修正為 140px */
-    border: 2px dashed #666;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #555;
-    background-size: cover; /* 確保背景圖充滿 */
-    background-repeat: no-repeat;
     position: relative;
-    box-sizing: content-box; /* 避免邊框吃掉圖片空間 */
+    border: 1px solid #444;
 }
+.avatar-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #fff; object-fit: cover; background: #000; box-shadow: 0 4px 8px rgba(0,0,0,0.8); }
+.np-bar-container { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+.np-fill { height: 100%; background: linear-gradient(90deg, #42a5f5, #1e88e5); width: 0%; }
 
-/* 2. 手牌區 & 卡片容器 */
-.hand-area {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-    min-height: 150px;
+/* 3. 戰鬥日誌 */
+.log-box { 
+    background: rgba(0,0,0,0.7); 
+    color: #81c784; 
+    font-family: monospace; 
+    height: 100%; 
+    overflow-y: auto; 
+    padding: 10px; 
+    border-left: 2px solid #444; 
+    font-size: 13px;
 }
+.log-entry { margin-bottom: 5px; border-bottom: 1px solid #333; }
 
-/* 卡片容器 */
-.card-container {
-    position: relative;
-    width: 140px; /* 修正為 140px */
-    height: 140px;
-    cursor: pointer;
-    transition: transform 0.1s;
+/* 4. Action 區域 (Attack 按鈕 & 星星) */
+.crit-stars {
+    font-size: 24px; color: #ffd700; font-weight: bold; margin-bottom: 20px;
+    text-shadow: 0 0 10px #ffb300; display: flex; align-items: center; gap: 10px;
 }
-
-.card-container:hover {
-    transform: translateY(-10px);
-}
-
-.card-container.used {
-    filter: grayscale(100%) brightness(0.4);
-    pointer-events: none;
-    transform: none;
-}
-
-/* 卡片圖片本體 */
-.command-card-img {
-    width: 140px;  /* 修正為 140px */
-    height: 140px; /* 修正為 140px */
-    border-radius: 8px;
-    /* 移除 box-shadow 以免視覺干擾，改由容器控制 */
-}
-
-/* 從者徽章 (調整位置適配大卡片) */
-.owner-badge {
-    position: absolute;
-    top: -12px;
-    left: -12px;
-    width: 45px; /* 稍微放大 */
-    height: 45px;
+.big-attack-btn {
+    width: 130px; height: 130px;
     border-radius: 50%;
-    border: 2px solid #ffd700;
-    background: #000;
-    object-fit: cover;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.8);
-}
-
-/* 3. Attack 按鈕 */
-.btn-attack {
-    background: linear-gradient(to bottom, #ff5722, #bf360c);
+    background: radial-gradient(circle, #03a9f4, #01579b);
+    border: 4px solid #81d4fa;
     color: white;
-    font-size: 20px;
+    font-size: 28px;
     font-weight: bold;
-    padding: 10px 40px;
-    border: none;
-    border-radius: 30px;
+    font-style: italic;
     cursor: pointer;
-    box-shadow: 0 4px 0 #870000;
-    transition: 0.1s;
-    margin-bottom: 10px;
+    box-shadow: 0 0 20px rgba(3, 169, 244, 0.6);
+    transition: transform 0.1s, box-shadow 0.2s;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-.btn-attack:active { box-shadow: 0 0 0 #870000; transform: translateY(4px); }
-.btn-attack:disabled { background: #555; box-shadow: none; color: #888; cursor: not-allowed; }
+.big-attack-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(3, 169, 244, 0.9); }
+.big-attack-btn:active { transform: scale(0.95); }
+.attack-text { font-size: 14px; font-weight: normal; margin-top: -5px; }
 
-/* Log */
-.log-box { background: #000; color: #0f0; font-family: monospace; height: 150px; overflow-y: auto; padding: 10px; border-radius: 5px; border: 1px solid #333; max-width: 800px; margin: 20px auto; }
-.log-entry { margin-bottom: 4px; border-bottom: 1px solid #222; padding-bottom: 2px; font-size: 13px; }
-.dmg-text { color: #ffeb3b; font-weight: bold; }
-.np-text { color: #40c4ff; }
-.star-text { color: #ffd700; }
+/* --- 指令卡選擇覆蓋層 (Overlay) --- */
+.command-overlay {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 60%;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.8));
+    z-index: 50;
+    display: none; /* 預設隱藏 */
+    flex-direction: column; align-items: center; justify-content: center;
+    border-top: 2px solid #555;
+    backdrop-filter: blur(5px);
+}
+.command-overlay.active { display: flex; }
+
+/* 覆用之前的卡片樣式，微調位置 */
+.selected-slots { display: flex; gap: 20px; margin-bottom: 30px; }
+.card-slot { width: 120px; height: 120px; border: 2px dashed #666; display: flex; align-items: center; justify-content: center; color: #555; position: relative; }
+.hand-area { display: flex; gap: 15px; }
+.card-container { width: 120px; height: 120px; cursor: pointer; transition: transform 0.2s; position: relative; }
+.card-container:hover { transform: translateY(-20px); }
+.card-container.used { filter: grayscale(100%) brightness(0.3); transform: none; }
+.command-card-img { width: 100%; height: 100%; border-radius: 6px; }
+.owner-badge { position: absolute; top: -10px; left: -10px; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ffd700; background: #000; z-index: 10; }
+
+.btn-back { position: absolute; top: 20px; right: 20px; background: #d32f2f; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; }
