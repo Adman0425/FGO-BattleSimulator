@@ -134,146 +134,94 @@ const Engine = {
     },
 
     // =========================================================================
-    // 4. 核心：NP 回收公式 (NP Gain per Hit)
+    // 4. 核心：NP 回收公式 (修正：四捨五入)
     // =========================================================================
     calculateNPGain: (attacker, defender, cardType, cardPos = 0, damageTotal = 0, isCrit = false) => {
         const C = DB.CONSTANTS;
         const hidden = attacker.hidden_stats;
 
-        // 取得該卡片的 Hit 分佈陣列
-        // 範例: Quick: [25, 75]
         let hitsArr = attacker.cards.hits[cardType];
-        if (!hitsArr) hitsArr = [100]; // 防呆，預設 1 Hit
+        if (!hitsArr) hitsArr = [100];
 
         let totalNp = 0;
-        
-        // 計算「每一 Hit」的傷害 (平均分配總傷害)
-        // 這是為了計算 Overkill。如果這一刀下去怪死了，這刀就是 Overkill。
         let currentEnemyHp = defender.currentHp;
         
-        // 取得基礎參數
-        let baseNpRate = hidden.np_charge_atk / 100; // 轉成小數 (0.84 -> 0.0084) 
-        // 注意：如果你 JSON 裡存的是 0.84，這邊可能要除 100，或者之後乘 100
-        // 通常 JSON 裡是 0.84 (%)，所以計算時要留意單位。
-        // 我們這裡假設 JSON 裡的 0.84 就是 0.84%，計算時用數值運算
-        
-        // 卡片補正 (NP Card Constant)
-        let cardNpVal = 0;
-        if (cardType === 'NP') {
-            cardNpVal = 1.0; // 寶具卡倍率通常不隨位置改變
-        } else if (cardType === 'Extra') {
-            cardNpVal = 1.0;
-        } else {
-            cardNpVal = C.card_performance[cardType].np[Math.min(cardPos, 2)];
-        }
+        let baseNpRate = hidden.np_charge_atk; // JSON若是 0.84，計算時通常不用除100，視實測而定，這裡假設是直接數值
+        // *註：如果發現 NP 暴增 100 倍，請在這裡除以 100。通常 Mooncell 數據 0.84 代表 0.84%
 
-        // 敵方補正 (Enemy Server Mod)
-        // 來自 constants 的 class_constants (例如 術=1.2, 殺=0.9)
+        let cardNpVal = 0;
+        if (cardType === 'NP') cardNpVal = 1.0; 
+        else if (cardType === 'Extra') cardNpVal = 1.0;
+        else cardNpVal = C.card_performance[cardType].np[Math.min(cardPos, 2)];
+
         const enemyNpMod = C.class_constants[defender.class] ? C.class_constants[defender.class].np_enemy_mod : 1.0;
 
-        // 遍歷每一個 Hit 進行計算
         hitsArr.forEach((hitRatio, index) => {
-            // 1. 判斷 Overkill
-            // 該 Hit 造成的傷害
             const hitDamage = Math.floor(damageTotal * (hitRatio / 100));
             
-            // 判斷：攻擊「前」怪已經死了？ 或是 攻擊「後」怪死了？
-            // FGO 邏輯：如果攻擊前血量已經 <= 0，這一下必定 Overkill
-            // 如果攻擊前血量 > 0，但這一下打完 <= 0，這一下算 Overkill (FGO鞭屍判定更複雜，這是簡化版)
             let isOverkill = false;
             if (currentEnemyHp <= 0) {
                 isOverkill = true;
             } else {
                 currentEnemyHp -= hitDamage;
-                if (currentEnemyHp <= 0) isOverkill = true; // 這一下致死也算
+                if (currentEnemyHp <= 0) isOverkill = true;
             }
             const overkillMod = isOverkill ? 1.5 : 1.0;
 
-            // 2. Buff 區塊
-            const cardBuff = 0;   // 魔放
-            const cardResist = 0; // 敵方耐性
-            const npGainBuff = 0; // 黃金律 (NP獲得量提升)
+            const cardBuff = 0;   
+            const cardResist = 0; 
+            const npGainBuff = 0; 
 
-            // 3. 單 Hit NP 公式
-            // NP = 基礎率 * 卡片補正 * 敵補正 * (1 + 魔放 - 耐性) * (1 + 黃金律) * 暴擊補正 * Overkill
-            
-            let hitNp = hidden.np_charge_atk; // 0.84
-            hitNp *= cardNpVal;               // x3.0 (如果是藍卡首位)
-            hitNp *= enemyNpMod;              // x1.0 (打劍職)
+            let hitNp = baseNpRate;
+            hitNp *= cardNpVal;
+            hitNp *= enemyNpMod;
             hitNp *= (1 + cardBuff - cardResist);
             hitNp *= (1 + npGainBuff);
             
-            if (isCrit) hitNp *= 2.0;         // 暴擊 NP 翻倍！
-            hitNp *= overkillMod;             // 鞭屍 x1.5
+            if (isCrit) hitNp *= 2.0;
+            hitNp *= overkillMod;
 
-            // FGO 是每一擊都會進行 floor (捨去小數點後兩位，只留兩位)
-            // 例如算出來 3.456 -> 3.45
-            // 這裡我們先累加，最後再修整
-            totalNp += hitNp;
+            // FGO 機制：每 Hit 計算完後直接 Floor，最後加總？還是加總後 Round？
+            // 修正：FGO 實際運算通常是 每 Hit 計算完後下取整(floor)，
+            // 但使用者要求「NP和爆擊星計算都採四捨五入」，我們依使用者需求調整：
+            totalNp += hitNp; 
         });
 
-        // 寶具如果是 Arts 卡，通常回收量很大，但公式是一樣的
-        // 只是寶具卡本身的 cardNpVal 不同
-
-        return Math.floor(totalNp * 100) / 100; // 回傳保留兩位小數的數字
+        // 最終結果進行四捨五入 (保留兩位小數則 *100 -> round -> /100)
+        // 使用者需求是 "四捨五入"，通常指最終顯示值
+        return Math.round(totalNp * 100) / 100;
     },
 
     // =========================================================================
-    // 5. 核心：打星公式 (Star Generation per Hit)
+    // 5. 核心：打星公式 (修正：四捨五入)
     // =========================================================================
     calculateStarGen: (attacker, defender, cardType, cardPos = 0, isCrit = false) => {
         const C = DB.CONSTANTS;
         const hidden = attacker.hidden_stats;
 
-        // 取得 Hit 分佈
         let hitsArr = attacker.cards.hits[cardType];
         if (!hitsArr) hitsArr = [100];
         
-        let totalStars = 0; // 期望值 (不是實際顆數，因為打星是機率)
+        let totalStars = 0; 
+        const baseStarGen = hidden.star_gen; 
 
-        // 基礎參數
-        const baseStarGen = hidden.star_gen; // 0.1 (10%)
-
-        // 卡片補正 (Star Drop Mod)
         let cardStarVal = 0;
-        if (cardType === 'NP') {
-            cardStarVal = 0; // 寶具卡通常看色卡，這裡簡化
-        } else if (cardType === 'Extra') {
-            cardStarVal = 1.0;
-        } else {
-            cardStarVal = C.card_performance[cardType].star[Math.min(cardPos, 2)];
-        }
+        if (cardType === 'NP') cardStarVal = 0; 
+        else if (cardType === 'Extra') cardStarVal = 1.0;
+        else cardStarVal = C.card_performance[cardType].star[Math.min(cardPos, 2)];
 
-        // 敵方補正 (Server Mod)
         const enemyStarMod = C.class_constants[defender.class] ? C.class_constants[defender.class].star_enemy_mod : 0.0;
-
-        // Buff
-        const starGenBuff = 0; // 千里眼 (掉星率提升)
-        const cardBuff = 0;    // 魔放
-
-        // 遍歷 Hit (雖然打星率通常整張卡一樣，但為了 Overkill 還是要分開算)
-        // 這裡簡化：假設沒有 Overkill，全部算在一起
-        // 每一擊的掉星率 (Drop Rate)
-        // Rate = 基礎 + 卡片 + 敵補正 + (1+魔放) + 掉星Buff + 暴擊補正(20%) + Overkill(30%)
         
-        let dropRate = baseStarGen + cardStarVal + enemyStarMod + starGenBuff;
-        // 注意：魔放對打星的影響比較特殊，通常是 (卡片值 * (1+魔放)) + 其他
-        // 這裡採用簡易公式：
-        
-        if (isCrit) dropRate += 0.2; // 暴擊 +20%
-        // if (isOverkill) dropRate += 0.3; // 鞭屍 +30% (這裡暫時省略 Overkill 判定)
-
-        // 限制：最大 300% (3顆)
+        // 期望值計算
+        let dropRate = baseStarGen + cardStarVal + enemyStarMod;
+        if (isCrit) dropRate += 0.2; 
         if (dropRate > 3.0) dropRate = 3.0;
 
-        // 期望星星數 = 每一擊的機率 * Hit數
-        // 實際模擬應該要跑 Math.random()，這裡回傳「期望獲得顆數」
         totalStars = dropRate * hitsArr.length;
 
-        return Math.floor(totalStars * 10) / 10;
+        // 修正：四捨五入
+        return Math.round(totalStars * 10) / 10;
     },
-
-    // ... 前面的代碼保持不變 ...
 
     // =========================================================================
     // 6. 回合總結算 (Turn Calculation) - 處理 3 張卡 + Extra
