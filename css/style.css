@@ -38,8 +38,27 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
 .area-log {
     grid-column: 3 / 4;
     grid-row: 1 / 2;
-    display: flex;
-    flex-direction: column;
+    
+    /* 佈局與捲動控制 */
+    display: block;    /* 改用 block 讓捲動更穩定 */
+    height: 100%;      /* 強制高度等於 Grid 格子高度 */
+    overflow-y: auto;  /* 內容過多時出現捲動條 */
+    box-sizing: border-box; /* 確保 padding 不會撐破格子 */
+
+    /* 視覺樣式 (原本 .log-box 的設定) */
+    background: rgba(0,0,0,0.7); 
+    color: #81c784; 
+    font-family: monospace; 
+    font-size: 13px;
+    padding: 10px; 
+    border-left: 2px solid #444; 
+}
+
+/* 讓裡面的文字條目也有點間距 */
+.log-entry { 
+    margin-bottom: 5px; 
+    border-bottom: 1px solid #333; 
+    padding-bottom: 2px;
 }
 
 /* 區域 4 & 5 & 6左: 我方隊伍 (左下 + 中下) */
@@ -107,40 +126,160 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
 .np-fill { height: 100%; background: linear-gradient(90deg, #42a5f5, #1e88e5); width: 0%; }
 
 /* 3. 戰鬥日誌 */
-.log-box { 
-    background: rgba(0,0,0,0.7); 
-    color: #81c784; 
-    font-family: monospace; 
-    height: 100%; 
-    overflow-y: auto; 
-    padding: 10px; 
-    border-left: 2px solid #444; 
-    font-size: 13px;
-}
-.log-entry { margin-bottom: 5px; border-bottom: 1px solid #333; }
 
 /* 4. Action 區域 (Attack 按鈕 & 星星) */
-.crit-stars {
-    font-size: 24px; color: #ffd700; font-weight: bold; margin-bottom: 20px;
-    text-shadow: 0 0 10px #ffb300; display: flex; align-items: center; gap: 10px;
+/* --- 4. Action 區域 (FGO 風格 Attack 按鈕) --- */
+.area-action {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
-.big-attack-btn {
-    width: 130px; height: 130px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #03a9f4, #01579b);
-    border: 4px solid #81d4fa;
-    color: white;
-    font-size: 28px;
-    font-weight: bold;
-    font-style: italic;
+
+/* 按鈕容器 (包含按鈕本體與星星) */
+.attack-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
     cursor: pointer;
-    box-shadow: 0 0 20px rgba(3, 169, 244, 0.6);
-    transition: transform 0.1s, box-shadow 0.2s;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: transform 0.1s;
+    /* 讓它稍微往上浮一點，避免星星被切掉 */
+    transform: translateY(-10px); 
 }
-.big-attack-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(3, 169, 244, 0.9); }
-.big-attack-btn:active { transform: scale(0.95); }
-.attack-text { font-size: 14px; font-weight: normal; margin-top: -5px; }
+
+.attack-container:hover {
+    transform: translateY(-12px) scale(1.02);
+}
+.attack-container:active {
+    transform: translateY(-8px) scale(0.98);
+}
+
+/* 藍色寶珠 (Orb) */
+.attack-orb {
+    position: absolute;
+    top: 10px; left: 10px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    /* 仿 FGO 的藍色立體漸層 */
+    background: radial-gradient(circle at 35% 30%, 
+        #4fc3f7 0%, 
+        #039be5 40%, 
+        #01579b 80%, 
+        #002f6c 100%);
+    border: 3px solid #81d4fa;
+    box-shadow: 
+        0 0 10px rgba(3, 169, 244, 0.6),
+        inset 0 0 20px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+/* 背後的十字/金屬框 (模擬 FGO 按鈕後的十字芒) */
+.attack-cross {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    border-radius: 50%;
+}
+/* 透過偽元素畫出突出的尖角 */
+.attack-cross::before, .attack-cross::after {
+    content: '';
+    position: absolute;
+    background: linear-gradient(to bottom, #cfd8dc, #90a4ae);
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+/* 垂直尖角 */
+.attack-cross::before {
+    width: 16px; height: 160px;
+    left: 50%; top: -10px;
+    transform: translateX(-50%);
+    clip-path: polygon(50% 0, 100% 15%, 100% 85%, 50% 100%, 0 85%, 0 15%);
+}
+/* 水平尖角 */
+.attack-cross::after {
+    width: 160px; height: 16px;
+    top: 50%; left: -10px;
+    transform: translateY(-50%);
+    clip-path: polygon(15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%, 0 50%);
+}
+
+/* 字體樣式 */
+.attack-main {
+    font-family: "Times New Roman", serif; /* 襯線體 */
+    font-size: 32px;
+    font-weight: 900; /* 極粗 */
+    color: #fff;
+    font-style: italic;
+    text-shadow: 
+        2px 2px 0px #01579b, 
+        0 0 10px rgba(255,255,255,0.8);
+    line-height: 1;
+    margin-top: 5px;
+}
+
+.attack-sub {
+    font-family: sans-serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+/* --- 暴擊星區域 (Crit Stars) --- */
+.crit-star-container {
+    position: absolute;
+    bottom: -5px;
+    left: -20px;
+    z-index: 10; /* 最上層 */
+    display: flex;
+    align-items: flex-end;
+    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.8)); /* 整體陰影 */
+}
+
+/* 四角星 SVG */
+.star-icon {
+    width: 45px;
+    height: 45px;
+    fill: url(#starGradient); /* 如果不支援漸層，會吃下面的 background */
+    fill: #ffd700;
+    /* 簡單的黃金漸層效果 */
+    filter: drop-shadow(0 0 5px #ffb300);
+}
+
+.crit-text {
+    display: flex;
+    flex-direction: column;
+    margin-left: -5px;
+    margin-bottom: 5px;
+}
+
+.crit-text span {
+    font-family: "Times New Roman", serif;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.x-mark { font-size: 14px; font-weight: bold; margin-bottom: -5px; color: #ccc;}
+#star-count { font-size: 32px; font-weight: bold; font-style: italic; color: #fff;}
+
+.crit-label {
+    font-size: 8px;
+    color: #ffb300;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin-top: -3px;
+    text-shadow: 1px 1px 0 #000;
+    font-family: sans-serif;
+}
 
 /* --- 指令卡選擇覆蓋層 (Overlay) --- */
 .command-overlay {
