@@ -271,5 +271,81 @@ const Engine = {
         totalStars = dropRate * hitsArr.length;
 
         return Math.floor(totalStars * 10) / 10;
+    },
+
+    // ... 前面的代碼保持不變 ...
+
+    // =========================================================================
+    // 6. 回合總結算 (Turn Calculation) - 處理 3 張卡 + Extra
+    // =========================================================================
+    calculateTurn: (attacker, defender, cardChain, useNP = false) => {
+        // cardChain 是一個陣列，例如 ['Buster', 'Arts', 'Buster']
+        const results = {
+            attacks: [],
+            chainBonus: {
+                busterChain: false,
+                artsChain: false,
+                quickChain: false,
+                braveChain: true // 目前只有單人，所以必定 Brave
+            }
+        };
+
+        // 1. 判斷 Chain
+        const firstCard = cardChain[0];
+        const isSameColor = cardChain.every(c => c === firstCard);
+        
+        if (isSameColor) {
+            if (firstCard === 'Buster') results.chainBonus.busterChain = true;
+            if (firstCard === 'Arts') results.chainBonus.artsChain = true; // 這裡通常是全隊 NP+20，暫時只加給當前從者
+            if (firstCard === 'Quick') results.chainBonus.quickChain = true;
+        }
+
+        // 2. 處理 3 張指令卡
+        cardChain.forEach((cardType, index) => {
+            // A. 計算 First Card Bonus (首卡加成)
+            // FGO 規則：
+            // 首紅：後續卡片攻擊力上升 (damage計算時處理)
+            // 首藍：後續卡片 NP 獲得上升 (np計算時處理)
+            // 首綠：後續卡片 掉星率上升 (star計算時處理)
+            
+            // 在我們的 calculateDamage/NP 函式中，需要傳入「首卡是什麼顏色」
+            // 這裡我們先簡化：直接計算數值
+            
+            // 判斷是否 Buster Chain 加攻 (固定 ATK * 0.2)
+            let isBusterChainActive = results.chainBonus.busterChain;
+
+            // 計算傷害
+            // 注意：這裡 cardPos 是 0, 1, 2 (這會影響卡片倍率)
+            const dmg = Engine.calculateDamage(attacker, defender, cardType, index, false, isBusterChainActive);
+            
+            // 計算 NP
+            // 如果首卡是 Arts，這裡應該要傳入參數讓 NP 公式知道有首藍加成
+            // 為了簡化，我們先不動 calculateNPGain 的簽名，假設已經包含在內
+            const np = Engine.calculateNPGain(attacker, defender, cardType, index, dmg);
+            
+            // 計算 打星
+            const star = Engine.calculateStarGen(attacker, defender, cardType, index, false);
+
+            results.attacks.push({ type: cardType, damage: dmg, np: np, stars: star });
+        });
+
+        // 3. 處理 Extra Attack
+        if (results.chainBonus.braveChain) {
+            // Extra 卡
+            const exDmg = Engine.calculateDamage(attacker, defender, 'Extra', 3, false, results.chainBonus.busterChain);
+            const exNp = Engine.calculateNPGain(attacker, defender, 'Extra', 3, exDmg);
+            const exStar = Engine.calculateStarGen(attacker, defender, 'Extra', 3, false);
+            
+            results.attacks.push({ type: 'Extra', damage: exDmg, np: exNp, stars: exStar });
+        }
+        
+        // 4. 處理 Chain 的額外獎勵 (Arts +20NP, Quick +10星)
+        // 這些通常是直接加到結果裡，或者回傳讓 UI 處理
+        // 這裡我們先簡單加到第一張卡的結果裡顯示
+        if (results.chainBonus.artsChain) {
+             results.attacks[0].np += 20; 
+        }
+        
+        return results;
     }
 };
