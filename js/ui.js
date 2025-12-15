@@ -7,6 +7,7 @@ const UI = {
         isNPSelected: false
     },
 
+    // 圖片路徑配置
     cardImages: {
         'Buster': 'data/Buster.png',
         'Arts': 'data/Arts.png',
@@ -14,6 +15,7 @@ const UI = {
         'NP': 'data/NP.png'
     },
 
+    // 取得頭像路徑 helper (將 1 -> "001")
     getServantIcon: (id) => {
         const idStr = String(id).padStart(3, '0');
         return `data/servant_icon/${idStr}.png`; 
@@ -29,7 +31,7 @@ const UI = {
             pSelect.appendChild(opt);
         });
 
-        // Quest Select (改讀 quests.json)
+        // Quest Select (讀取 quests.json)
         const qSelect = document.getElementById('quest-select');
         DB.QUESTS.forEach((q, idx) => {
             const opt = document.createElement('option');
@@ -41,30 +43,23 @@ const UI = {
 
     initBattle: () => {
         const pIndex = document.getElementById('player-select').value;
-        const qIndex = document.getElementById('quest-select').value; // 改抓 quest
+        const qIndex = document.getElementById('quest-select').value;
         const levelSetting = document.getElementById('level-select').value;
 
         const pData = DB.SERVANTS[pIndex];
         
         // 讀取關卡數據
         const quest = DB.QUESTS[qIndex];
-        // 邏輯：抓取 Wave 1 的第 1 隻敵人 (模擬單挑)
-        // 如果未來要做多隻敵人，這裡需要改成陣列
+        // 抓取 Wave 1 的第 1 隻敵人
         const enemyDataRaw = quest.waves[0].enemies[0];
         
-        // 從 enemies.json 裡找對應 ID 的詳細數值，或者直接用 quest 裡的覆蓋值
-        // 這裡假設我們需要用 ID 去 DB.ENEMIES 查表，再用 quest 數值覆蓋
-        // 但目前的 enemies.json 結構和 quest 裡的結構可能需要對應
-        // 簡化：我們直接用 quest 裡的資料生成敵人物件
-        // *注意*：你原本的 quests.json 裡敵人只有 id, hp 等，缺少 class/name 等詳細資料
-        // 正式做法應該是：用 enemyDataRaw.id 去 DB.ENEMIES 撈基底，再把 hp 蓋過去
+        // 嘗試匹配 enemies.json 裡的基底數據，若無則用預設
+        let eBase = DB.ENEMIES.find(e => e.id === enemyDataRaw.id) || DB.ENEMIES[0]; 
         
-        // 暫時解法：因為我們 enemies.json 只有範本，我們先嘗試匹配，匹配不到就用預設
-        let eBase = DB.ENEMIES.find(e => e.id === enemyDataRaw.id) || DB.ENEMIES[0]; // 找不到就用骷髏兵
-        
+        // 混合數據 (優先使用關卡設定的 HP)
         const eData = {
             ...eBase,
-            hp: enemyDataRaw.hp || eBase.hp, // 使用關卡設定的血量
+            hp: enemyDataRaw.hp || eBase.hp, 
             currentHp: enemyDataRaw.hp || eBase.hp,
             maxHp: enemyDataRaw.hp || eBase.hp
         };
@@ -86,7 +81,7 @@ const UI = {
         UI.dealCards();
     },
 
-    // 洗牌演算法 (Fisher-Yates)
+    // 洗牌演算法
     shuffleArray: (array) => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -95,21 +90,18 @@ const UI = {
         return array;
     },
 
+    // 發牌 (含洗牌邏輯)
     dealCards: () => {
         const p = UI.gameState.player;
         if (!p) return;
 
         UI.gameState.currentHand = [];
 
-        // 【修正】牌庫邏輯
-        // 目前是單人 (Solo) 模式：
-        // 規則：每回合都使用該從者的 5 張配卡，只是順序打亂。
-        // 我們直接複製一份配卡陣列，然後洗牌。
-        
-        const deck = [...p.cards.deck]; // 複製 ['Quick', 'Arts', ...]
-        UI.shuffleArray(deck); // 洗牌
+        // 單人 Solo 模式：複製配卡陣列並洗牌
+        const deck = [...p.cards.deck]; 
+        UI.shuffleArray(deck); 
 
-        // 發牌
+        // 發 5 張牌
         for (let i = 0; i < 5; i++) {
             UI.gameState.currentHand.push({
                 type: deck[i],
@@ -123,10 +115,7 @@ const UI = {
         UI.updateSelectedSlots();
     },
 
-    // ... renderHand, selectCard, deselectCard, updateSelectedSlots 保持不變 ...
-    // 請保留 v3.1 版中關於 renderHand (含徽章) 的代碼，這裡不重複貼上以免篇幅過長
-    // 只要修改 dealCards 邏輯即可
-
+    // 渲染手牌 (含徽章)
     renderHand: () => {
         const container = document.getElementById('hand-container');
         container.innerHTML = '';
@@ -137,6 +126,7 @@ const UI = {
             if (UI.gameState.selectedCards.includes(index)) {
                 cardDiv.classList.add('used');
             }
+            // 這裡就是報錯的地方，現在確保 UI.selectCard 是存在的
             cardDiv.onclick = () => UI.selectCard(index);
 
             const img = document.createElement('img');
@@ -154,9 +144,23 @@ const UI = {
         });
     },
 
-    // selectCard, deselectCard, updateSelectedSlots 等與 v3.1 相同，請直接使用 v3.1 的內容
+    // 選擇卡片
+    selectCard: (index) => {
+        if (UI.gameState.selectedCards.length >= 3) return;
+        UI.gameState.selectedCards.push(index);
+        UI.renderHand();
+        UI.updateSelectedSlots();
+    },
 
-    // (為了完整性，這裡列出 updateSelectedSlots 的尺寸修正，確保 Slot 圖片也正確)
+    // 取消選擇
+    deselectCard: (slotIndex) => {
+        if (slotIndex >= UI.gameState.selectedCards.length) return;
+        UI.gameState.selectedCards.splice(slotIndex, 1);
+        UI.renderHand();
+        UI.updateSelectedSlots();
+    },
+
+    // 更新上方卡槽
     updateSelectedSlots: () => {
         const slots = [0, 1, 2];
         const selected = UI.gameState.selectedCards;
@@ -174,7 +178,6 @@ const UI = {
                 const card = hand[cardIndex];
 
                 el.style.backgroundImage = `url('${UI.cardImages[card.type]}')`;
-                // Slot 已經在 CSS 設定 background-size: cover，這裡會自動適配 140px
                 el.style.border = '2px solid #fff'; 
 
                 const badge = document.createElement('img');
@@ -194,11 +197,7 @@ const UI = {
         document.getElementById('btn-execute').disabled = (selected.length !== 3);
     },
 
-    // ... executeTurn, updateDisplay, log 等保持 v3.1 ...
-    // (注意 updateDisplay 裡要抓 e-avatar 的邏輯，現在 eData 是混合出來的)
-    // 這裡記得 executeTurn 的 setTimeout 裡要呼叫 UI.dealCards()
-
-    // 補上 executeTurn 以防萬一
+    // 執行回合
     executeTurn: () => {
         const p = UI.gameState.player;
         const e = UI.gameState.enemy;
@@ -235,7 +234,7 @@ const UI = {
         setTimeout(() => {
             if (e.currentHp > 0) {
                 UI.log("--- Next Turn ---");
-                UI.dealCards(); // 這裡會觸發新的洗牌
+                UI.dealCards(); // 回合結束後重新發牌
             }
         }, 1000);
     },
@@ -247,19 +246,16 @@ const UI = {
         const e = UI.gameState.enemy;
         if(!p || !e) return;
 
-        // Enemy Display
+        // Enemy
         document.getElementById('e-name').innerText = e.name;
-        // 如果 enemy data 裡沒有 class 屬性 (從 quest 來的可能沒有)，要防呆
         document.getElementById('e-class').innerText = (e.class || 'Unknown').toUpperCase();
         document.getElementById('e-attr').innerText = (e.attribute || '').toUpperCase();
         document.getElementById('e-hp-current').innerText = Math.floor(e.currentHp);
         const eHpPct = Math.max(0, (e.currentHp / e.maxHp) * 100);
         document.getElementById('e-hp-bar').style.width = `${eHpPct}%`;
-        
-        // 假圖或從 enemies.json 讀圖片 (目前沒欄位)
         document.getElementById('e-avatar').src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python_logo_notext.svg/121px-Python_logo_notext.svg.png';
 
-        // Player Display
+        // Player
         document.getElementById('p1-name').innerText = p.name;
         document.getElementById('p1-avatar').src = UI.getServantIcon(p.id);
         document.getElementById('p1-hp-current').innerText = Math.floor(p.currentHp);
