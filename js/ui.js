@@ -502,7 +502,7 @@ const UI = {
         
         if (selectedItems.length !== 3) return;
 
-        // 建立 Chain (這裡不綁定 defender，因為每下可能會換目標)
+        // 建立 Chain
         const cardChain = selectedItems.map(item => {
             if (item.type === 'hand') {
                 const card = hand[item.val];
@@ -527,15 +527,12 @@ const UI = {
 
         UI.closeCommandPhase();
 
-        // Chain Bonus 計算 (需要一個假的 defender 跑流程，或者只看 Chain 結果)
-        // 這裡我們只為了拿 chainBonus，傳 null 敵人進去 Engine (如果 Engine 允許)
-        // 為了安全，傳第一隻活著的敵人
+        // 預計算 Chain Bonus
         let target = UI.gameState.enemies[UI.gameState.targetIndex];
         if (!target || target.currentHp <= 0) {
             target = UI.gameState.enemies.find(e => e.currentHp > 0);
         }
         
-        // 預計算 Chain Bonus
         const chainResults = Engine.calculateTurn(null, target, cardChain, false); 
         const bonuses = chainResults.chainBonus;
 
@@ -550,14 +547,11 @@ const UI = {
         }
         if (bonuses.quickChain) { UI.log("【Quick Chain】Stars +10"); UI.gameState.stars += 10; }
 
-        // 逐卡執行攻擊
-        const allAttacks = []; // 為了之後可能的延遲顯示
-        
-        // 1. 普通 3 卡
+        // 整理所有攻擊 (含 Extra)
+        const allAttacks = [];
         cardChain.forEach((cardObj, i) => {
             allAttacks.push({ ...cardObj, index: i, isExtra: false });
         });
-        // 2. Extra Attack (Brave Chain)
         if (bonuses.braveChain) {
             const extraAttacker = cardChain[0].attacker;
             allAttacks.push({
@@ -569,30 +563,53 @@ const UI = {
             });
         }
 
-        // 執行所有攻擊
+        // --- 執行攻擊與寶具 ---
         allAttacks.forEach(atk => {
-            // 每次攻擊前，重新確認目標 (自動切換)
-            // 規則：如果當前鎖定目標活著，打他。如果死了，打下一隻活著的。
+            // 每次行動前確認目標
             let currentTarget = UI.gameState.enemies[UI.gameState.targetIndex];
-            
             if (!currentTarget || currentTarget.currentHp <= 0) {
-                // 尋找下一隻
                 const nextTargetIdx = UI.gameState.enemies.findIndex(e => e.currentHp > 0);
                 if (nextTargetIdx === -1) return; // 全死光了
-                UI.gameState.targetIndex = nextTargetIdx; // 更新鎖定
+                UI.gameState.targetIndex = nextTargetIdx;
                 currentTarget = UI.gameState.enemies[nextTargetIdx];
             }
 
-            // 執行寶具 (AOE 判斷)
+            // 1. 處理寶具 (NP)
             if (atk.isNP) {
                 UI.log(`>> ${atk.attacker.name} 釋放了寶具: ${atk.npData.name}`);
-                atk.attacker.currentNp -= 100;
+                atk.attacker.currentNp -= 100; // 扣 NP
                 if (atk.attacker.currentNp < 0) atk.attacker.currentNp = 0;
 
-                // 判斷單體還是全體
-                // 這裡假設 enemies.json 的 noble_phantasm 裡有 type: 'aoe' | 'single'
+                // 【修正點】判斷是 輔助型 還是 攻擊型
                 const npType = atk.npData.type || 'single';
+
+                if (npType === 'support') {
+                    // --- 輔助寶具邏輯 ---
+                    UI.log(`<span style="color:#4db6ac;">(輔助效果發動)</span>`);
+                    
+                    // 執行效果 (類似 castSkill 的邏輯)
+                    if (atk.npData.effects) {
+                        atk.npData.effects.forEach(effect => {
+                            let effectTargets = [];
+                            // 判斷對象 (輔助寶具通常是對 party 或 self)
+                            if (effect.target === 'party') effectTargets = UI.gameState.party;
+                            else if (effect.target === 'self') effectTargets = [atk.attacker];
+                            else if (effect.target === 'one') effectTargets = [atk.attacker]; // 暫時給自己(如果沒指定)
+                            else if (effect.target === 'enemy_all') effectTargets = UI.gameState.enemies.filter(e => e.currentHp > 0); // 輔助寶具也可能有 Debuff (如孔明)
+
+                            effectTargets.forEach(t => {
+                                // 使用 Engine 施加 Buff/Debuff (但不造成傷害)
+                                const dummySkill = { effects: [effect] };
+                                const res = Engine.useSkill(atk.attacker, t, dummySkill);
+                                // 這裡可以選擇性顯示 log
+                            });
+                        });
+                    }
+                    // 輔助寶具不計算傷害，直接 return
+                    return; 
+                } 
                 
+                // --- 攻擊型寶具邏輯 (AOE / Single) ---
                 let hitTargets = [];
                 if (npType === 'aoe') {
                     hitTargets = UI.gameState.enemies.filter(e => e.currentHp > 0);
@@ -601,7 +618,7 @@ const UI = {
                 }
 
                 hitTargets.forEach(t => {
-                    const dmg = Engine.calculateDamage(atk.attacker, t, atk.type, 0, false, bonuses.busterChain); // NP 卡位算 0? 還是不算? FGO NP 卡不受卡位加成，Engine 有處理
+                    const dmg = Engine.calculateDamage(atk.attacker, t, atk.type, 0, false, bonuses.busterChain);
                     const np = Engine.calculateNPGain(atk.attacker, t, atk.type, 0, dmg, false);
                     const star = Engine.calculateStarGen(atk.attacker, t, atk.type, 0, false);
                     
@@ -610,12 +627,22 @@ const UI = {
                     UI.gameState.stars += star;
                     
                     UI.log(`對 ${t.name}: 傷 ${dmg} | NP+${np}%`);
+
+                    // 攻擊型寶具的附帶效果 (如：奧伯龍的睡眠、孔明的降防)
+                    if (atk.npData.effects) {
+                        atk.npData.effects.forEach(effect => {
+                            if (effect.type !== 'damage') { // 排除純傷害標記
+                                const dummySkill = { effects: [effect] };
+                                Engine.useSkill(atk.attacker, t, dummySkill);
+                            }
+                        });
+                    }
                 });
 
             } else {
-                // 普通攻擊 / Extra
+                // 2. 普通攻擊 / Extra
                 const isCrit = (atk.critChance || 0) > Math.random() * 100;
-                const cardIdx = atk.isExtra ? 3 : atk.index; // Extra算第4張(index 3)
+                const cardIdx = atk.isExtra ? 3 : atk.index; 
                 
                 const dmg = Engine.calculateDamage(atk.attacker, currentTarget, atk.type, cardIdx, isCrit, bonuses.busterChain);
                 const np = Engine.calculateNPGain(atk.attacker, currentTarget, atk.type, cardIdx, dmg, isCrit);
@@ -631,19 +658,18 @@ const UI = {
             }
         });
 
-        // 檢查勝利
+        // 檢查勝利 (Wave Clear)
         const remainingEnemies = UI.gameState.enemies.filter(e => e.currentHp > 0);
         if (remainingEnemies.length === 0) {
-            UI.gameState.enemies.forEach(e => e.currentHp = 0); // 校正顯示
+            UI.gameState.enemies.forEach(e => e.currentHp = 0);
             UI.updateDisplay();
             UI.log(">> Enemy Defeated! Wave Clear!");
-            // 這裡未來可以接 Wave 2
             return;
         }
 
         UI.gameState.party.forEach(p => { if(p.currentNp > 300) p.currentNp = 300; });
 
-        // 回合結束處理
+        // 回合結束
         UI.gameState.party.forEach(p => Engine.processTurnEnd(p));
         UI.gameState.party.forEach(p => {
             if(p.skills) p.skills.forEach(s => { if(s.currentCooldown > 0) s.currentCooldown--; });
