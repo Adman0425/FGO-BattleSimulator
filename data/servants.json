@@ -908,6 +908,196 @@
   "traits": ["EA特攻", "人型", "騎乘", "王", "人科", "豬化有效"]
 },
 {
+  "name": "諸葛孔明〔埃爾梅羅II世〕",
+  "id": 37,
+  "cost": 16,
+  "class": "caster",
+  "gender": "男性",
+  "policy": "中立·善",
+  "attribute": "man",
+  "stats": {
+    "natural": { "hp": 14259, "atk": 10598 },
+    "lv100": { "hp": 15621, "atk": 11601 },
+    "lv120": { "hp": 18359, "atk": 13617 }
+  },
+  "cards": {
+    "deck": ["Quick", "Arts", "Arts", "Arts", "Buster"],
+    "hits": {
+      "Quick": [33, 67],
+      "Arts": [100],
+      "Buster": [100],
+      "Extra": [12, 25, 63],
+      "NP": [0]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 1.64,
+    "np_charge_def": 3,
+    "star_gen": 0.108,
+    "death_rate": 34.5,
+    "star_absorb": 50
+  },
+  "traits": ["EA特攻", "人型", "所愛之人", "人科", "活在當下的人類", "豬化有效"],
+  "skills": [
+      {
+        "name": "時鐘塔的奇寶 EX",
+        "icon": "crit_dmg_up.png",
+        "cd": 6,
+        "description": "己方單體暴擊威力提升[50%](3T) & 寶具威力提升[30%](3T) & 寶具OC上升2級(1次·3T) & NP增加[30%]",
+        "effects": [
+          {
+            "type": "crit_dmg_up",
+            "target": "one",
+            "val": 0.5,
+            "turn": 3
+          },
+          {
+            "type": "np_dmg_up",
+            "target": "one",
+            "val": 0.3,
+            "turn": 3
+          },
+          {
+            "type": "oc_up",
+            "target": "one",
+            "val": 2,
+            "count": 1,
+            "turn": 3,
+            "note": "充能階段上升2級"
+          },
+          {
+            "type": "np_charge",
+            "target": "one",
+            "val": 30,
+            "turn": 0
+          }
+        ]
+      },
+      {
+        "name": "軍師的忠言 A+",
+        "icon": "def_up.png",
+        "cd": 6,
+        "description": "己方全體防禦力提升[30%](3T) & 被傷害減免[500](3T) & NP增加[10%]",
+        "effects": [
+          {
+            "type": "def_up",
+            "target": "party",
+            "val": 0.3,
+            "turn": 3
+          },
+          {
+            "type": "dmg_cut",
+            "target": "party",
+            "val": 500,
+            "turn": 3,
+            "note": "固定減傷"
+          },
+          {
+            "type": "np_charge",
+            "target": "party",
+            "val": 10,
+            "turn": 0
+          }
+        ]
+      },
+      {
+        "name": "軍師的指揮 A+",
+        "icon": "atk_up.png",
+        "cd": 6,
+        "description": "己方全體攻擊力提升[30%](3T) & 傷害附加[500](3T) & NP增加[10%]",
+        "effects": [
+          {
+            "type": "atk_up",
+            "target": "party",
+            "val": 0.3,
+            "turn": 3
+          },
+          {
+            "type": "dmg_plus", 
+            "target": "party",
+            "val": 500,
+            "turn": 3,
+            "note": "固定增傷"
+          },
+          {
+            "type": "np_charge",
+            "target": "party",
+            "val": 10,
+            "turn": 0
+          }
+        ]
+      }
+    ],
+    "passive_skills": [
+      {
+        "name": "陣地建造 A",
+        "description": "自身的Arts指令卡性能提升(10%)",
+        "effects": [
+          {
+            "type": "card_up",
+            "card": "Arts",
+            "target": "self",
+            "val": 0.1
+          }
+        ]
+      },
+      {
+        "name": "道具作成 B",
+        "description": "自身的弱化付與成功率提升(8%)",
+        "effects": [
+          {
+            "type": "debuff_success_up",
+            "target": "self",
+            "val": 0.08
+          }
+        ]
+      }
+    ],
+    "append_skills": [
+      { "id": 1, "name": "追擊技巧提升", "effects": [{ "type": "card_up", "card": "Extra", "target": "self", "val": 0.5 }] },
+      { "id": 2, "name": "魔力裝填", "effects": [{ "type": "start_np", "target": "self", "val": 20 }] },
+      { "id": 3, "name": "對 Caster 攻擊適性", "effects": [{ "type": "atk_up_vs_class", "target": "self", "cond_class": "caster", "val": 0.3 }] },
+      { "id": 4, "name": "特擊技巧提升", "effects": [{ "type": "crit_dmg_up", "target": "self", "val": 0.3 }] },
+      { "id": 5, "name": "技能再裝填", "effects": [{ "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 1, "val": 1 }] }
+    ],
+    "noble_phantasm": {
+      "name": "石兵八陣",
+      "card": "Arts",
+      "type": "debuff", 
+      "hit_count": [], 
+      "description": "敵方全體防禦力大幅下降 & 充能減少1 & 中機率暈眩 & 詛咒",
+      "effects": [
+        {
+          "type": "def_down",
+          "target": "enemy_all",
+          "val": 0.5, 
+          "turn": 3,
+          "note": "寶具Lv5數值 (Lv1為 0.3)"
+        },
+        {
+          "type": "np_drain",
+          "target": "enemy_all",
+          "val": 1,
+          "turn": 0
+        },
+        {
+          "type": "stun",
+          "target": "enemy_all",
+          "val": 0,
+          "turn": 1,
+          "prob": 50, 
+          "note": "OC1 機率50%"
+        },
+        {
+          "type": "curse",
+          "target": "enemy_all",
+          "val": 1000,
+          "turn": 6
+        }
+      ]
+  }
+},
+{
   "name": "阿爾托莉亞・Caster",
   "id": 284,
   "cost": 16,
