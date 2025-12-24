@@ -1043,7 +1043,7 @@
       "effects": [
         {
           "type": "crit_dmg_up",
-          "card": "Arts",  // 注意：限定 Arts 卡
+          "card": "Arts",
           "target": "self",
           "val": 0.1
         }
@@ -1084,7 +1084,7 @@
       "description": "自身以NP已達一定數值的狀態開始戰鬥[20%]",
       "effects": [
         {
-          "type": "start_np", // 特殊類型：戰鬥開始時觸發
+          "type": "start_np",
           "target": "self",
           "val": 20
         }
@@ -1097,7 +1097,7 @@
       "description": "自身對〔Saber〕職階的攻擊力提升[30%]",
       "effects": [
         {
-          "type": "atk_up_vs_class", // 特殊類型：職階特攻
+          "type": "atk_up_vs_class",
           "target": "self",
           "cond_class": "saber",
           "val": 0.3
@@ -1291,7 +1291,7 @@
           "type": "buff_success_down_conditional",
           "target": "party",
           "val": 0.2,
-          "cond_ally_id": 150, // 梅林的 ID (假設梅林是 150)
+          "cond_ally_id": 150,
           "note": "隊伍裡的梅林強化成功率下降"
         }
       ]
@@ -1337,9 +1337,9 @@
       "description": "付與自身精神異常·詛咒無效的狀態",
       "effects": [
         {
-          "type": "debuff_immune", // 核心邏輯：免疫
+          "type": "debuff_immune",
           "target": "self",
-          "immune_tags": ["mental", "curse"], // 指定免疫的標籤
+          "immune_tags": ["mental", "curse"],
           "note": "精神異常包含：魅惑、恐懼、混亂、睡眠等"
         }
       ]
