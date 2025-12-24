@@ -403,3 +403,49 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
 .owner-badge { position: absolute; top: -10px; left: -10px; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ffd700; background: #000; z-index: 10; }
 
 .btn-back { position: absolute; top: 20px; right: 20px; background: #d32f2f; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; z-index: 100; }
+
+/* --- 狀態詳情視窗 (Buff Detail Modal) --- */
+.modal-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 200; /* 比指令卡介面更高 */
+    display: none;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(5px);
+}
+.modal-overlay.active { display: flex; }
+
+.buff-modal {
+    width: 400px;
+    background: #222;
+    border: 2px solid #888;
+    border-radius: 10px;
+    padding: 20px;
+    color: #eee;
+    box-shadow: 0 0 20px #000;
+}
+
+.buff-header {
+    display: flex; align-items: center; gap: 15px;
+    border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 10px;
+}
+.buff-avatar { width: 60px; height: 60px; border-radius: 8px; border: 2px solid #fff; }
+.buff-title h3 { margin: 0; font-size: 20px; }
+.buff-title p { margin: 5px 0 0; color: #aaa; font-size: 12px; }
+
+.buff-list {
+    max-height: 300px; overflow-y: auto;
+    font-size: 14px;
+    display: flex; flex-direction: column; gap: 8px;
+}
+.buff-item {
+    background: #333; padding: 8px; border-radius: 4px;
+    border-left: 4px solid #ffffff; /* 綠色代表 Buff */
+}
+.buff-item.debuff { border-left-color: #ffffff; } /* 紅色代表 Debuff */
+
+.close-modal-btn {
+    margin-top: 15px; width: 100%; padding: 10px;
+    background: #555; border: none; color: white; cursor: pointer; border-radius: 4px;
+}
+.close-modal-btn:hover { background: #777; }
