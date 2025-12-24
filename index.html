@@ -163,5 +163,20 @@
             }
         };
     </script>
+
+    <div class="modal-overlay" id="buff-modal-overlay" onclick="UI.closeBuffModal(event)">
+        <div class="buff-modal" onclick="event.stopPropagation()">
+            <div class="buff-header">
+                <img src="" class="buff-avatar" id="modal-avatar">
+                <div class="buff-title">
+                    <h3 id="modal-name">Servant Name</h3>
+                    <p>狀態列表 (Buffs & Debuffs)</p>
+                </div>
+            </div>
+            <div class="buff-list" id="modal-buff-list">
+                </div>
+            <button class="close-modal-btn" onclick="UI.closeBuffModal()">關閉 (Close)</button>
+        </div>
+    </div>
 </body>
 </html>
