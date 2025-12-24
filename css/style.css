@@ -507,3 +507,39 @@ body.selecting-target .target-cancel-btn {
 .np-btn:hover {
     filter: brightness(1.2);
 }
+
+/* 寶具卡區域 */
+.np-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px; /* 與手牌區隔開 */
+    min-height: 110px;   /* 預留高度，避免沒有寶具時版面跳動 */
+}
+
+/* 寶具卡樣式 (繼承部分 card-container 但微調) */
+.card-container.np-card {
+    border: 2px solid #ffd700; /* 金框 */
+    box-shadow: 0 0 10px #ffeb3b;
+}
+
+/* 讓 NP 卡上面的文字 (寶具名) 漂亮一點 */
+.np-name-overlay {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    color: white;
+    background: rgba(0,0,0,0.6);
+    padding: 2px 0;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* 已使用的卡片 (變暗 + 禁止點擊) */
+.card-container.used {
+    filter: grayscale(100%) brightness(0.4);
+    cursor: not-allowed;
+    pointer-events: none; /* 關鍵：讓它無法再被點擊 */
+}
