@@ -1,38 +1,62 @@
 [
   {
-    "id": 1,
-    "name": "骷髏兵",
-    "class": "saber",
-    "attribute": "man",
-    "hp": 20000,
-    "atk": 5000,
-    "traits": [
-      "人型",
-      "死靈"
-    ]
-  },
-  {
-    "id": 2,
-    "name": "影從者 (Lancer)",
-    "class": "lancer",
+    "id": 2001,
+    "name": "霸者之門",
+    "class": "caster",
     "attribute": "sky",
-    "hp": 80000,
-    "atk": 7000,
-    "traits": [
-      "人型",
-      "從者",
-      "EA特攻"
-    ]
+    "traits": ["無機物"], 
+    "hp": 20000, 
+    "gauge": 5, 
+    "actions": 1,
+    "death_rate": 50,
+    "stats": { "atk": 3000 },
+    "hits": {
+        "normal": [100],
+        "crit": [100],
+        "np": [33, 33, 34]
+    },
+    "noble_phantasm": {
+        "name": "芝麻開門",
+        "type": "single",
+        "hit_count": [33, 33, 34],
+        "description": "敵單體攻擊"
+    }
   },
   {
-    "id": 3,
-    "name": "魔神柱",
-    "class": "beast",
-    "attribute": "beast",
-    "hp": 500000,
-    "atk": 10000,
-    "traits": [
-      "超巨大"
-    ]
+    "id": 2002,
+    "name": "莊嚴的黃金像",
+    "class": "caster",
+    "attribute": "sky",
+    "traits": ["神性", "豬化無效", "無機物", "超巨大"], 
+    "hp": 100000,
+    "gauge": 5,
+    "actions": 3,
+    "death_rate": 20,
+    "stats": { "atk": 5000 },
+    "hits": {
+        "normal": [100],
+        "crit": [100],
+        "np": [100]
+    },
+    "skills": [
+        {
+            "name": "輝煌的繁盛",
+            "description": "自身暴擊發生率提升(20%) & 敵方獲得30個暴擊星【負面效果】",
+            "effects": [
+                { "type": "crit_rate_up", "target": "self", "val": 0.2 },
+                { "type": "star_gen_flat", "target": "enemy", "val": 30, "note": "給玩家星星" }
+            ]
+        }
+    ],
+    "noble_phantasm": {
+        "name": "輝煌的成功",
+        "type": "single",
+        "hit_count": [100],
+        "description": "敵單體攻擊 & 敵方NP增加70%【負面效果】",
+        "effects": [
+            { "type": "damage", "val": 100 },
+            { "type": "np_charge", "target": "enemy", "val": 70, "note": "給玩家充能" }
+        ]
+    }
   }
 ]
