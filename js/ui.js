@@ -220,6 +220,70 @@ const UI = {
         UI.updateSelectedSlots();
     },
 
+    selectTarget: (scope) => {
+        return new Promise((resolve, reject) => {
+            const body = document.body;
+            const cancelBtn = document.getElementById('target-cancel-btn');
+            
+            // 1. 進入選擇模式
+            body.classList.add('selecting-target');
+            
+            // 2. 定義哪些東西可以點
+            let clickables = [];
+            
+            if (scope === 'ally' || scope === 'one') {
+                // 高亮我方從者
+                document.querySelector('.area-party').classList.add('active-target-zone');
+                // 綁定點擊事件
+                UI.gameState.party.forEach((p, idx) => {
+                    const el = document.getElementById(`card-p${idx+1}`);
+                    if (el) {
+                        el._targetHandler = (e) => {
+                            e.stopPropagation();
+                            cleanup();
+                            resolve(p); // 回傳被選中的從者物件
+                        };
+                        el.addEventListener('click', el._targetHandler);
+                        clickables.push(el);
+                    }
+                });
+            } else if (scope === 'enemy') {
+                // 高亮敵人 (目前只有一個)
+                document.querySelector('.area-enemy').classList.add('active-target-zone');
+                const el = document.getElementById('enemy-card');
+                el._targetHandler = (e) => {
+                    e.stopPropagation();
+                    cleanup();
+                    resolve(UI.gameState.enemy);
+                };
+                el.addEventListener('click', el._targetHandler);
+                clickables.push(el);
+            }
+
+            // 3. 清理函式 (移除事件與樣式)
+            const cleanup = () => {
+                body.classList.remove('selecting-target');
+                document.querySelectorAll('.active-target-zone').forEach(el => el.classList.remove('active-target-zone'));
+                
+                clickables.forEach(el => {
+                    if (el._targetHandler) {
+                        el.removeEventListener('click', el._targetHandler);
+                        delete el._targetHandler;
+                    }
+                });
+                
+                cancelBtn.onclick = null;
+            };
+
+            // 4. 取消按鈕邏輯
+            cancelBtn.onclick = (e) => {
+                e.stopPropagation();
+                cleanup();
+                resolve(null); // 回傳 null 代表取消
+            };
+        });
+    },
+
     updateSelectedSlots: () => {
         const slots = [0, 1, 2];
         const selected = UI.gameState.selectedCards;
@@ -317,46 +381,103 @@ const UI = {
         });
     },
 
-    // 施放技能
-    castSkill: (servantIdx, skillIdx) => {
+    // 修改 castSkill
+    castSkill: async (servantIdx, skillIdx) => {
         const user = UI.gameState.party[servantIdx];
         const skill = user.skills[skillIdx];
 
         if (skill.currentCooldown > 0) return;
 
-        // 1. 目標選擇 (簡易版：如果是單體效果，跳出 Prompt)
-        let target = user; // 預設自己
-        let targets = [user]; // 預設單體陣列
+        let targets = [];
 
-        // 檢查技能效果是否包含 'one' (單體)
-        const isSingleTarget = skill.effects.some(e => e.target === 'one');
-        
-        if (isSingleTarget) {
-            const input = prompt(`請選擇對象 (1-3):\n1. ${UI.gameState.party[0].name}\n2. ${UI.gameState.party[1].name}\n3. ${UI.gameState.party[2].name}`, "1");
-            const targetIdx = parseInt(input) - 1;
-            if (targetIdx >= 0 && targetIdx < 3) {
-                target = UI.gameState.party[targetIdx];
-                targets = [target];
-            } else {
-                return; // 取消
+        // 1. 檢查是否需要選擇目標
+        // 判斷依據：效果裡有 target: 'one' (我方單體) 或 target: 'enemy' (敵方單體)
+        // 注意：有些技能可能有複合效果，只要有一個需要選，就要選
+        const needsAllySelection = skill.effects.some(e => e.target === 'one');
+        const needsEnemySelection = skill.effects.some(e => e.target === 'enemy'); // 雖然目前大多技能是對敵方全體或自身
+
+        if (needsAllySelection) {
+            UI.log(`請選擇 [${skill.name}] 的對象...`);
+            const selected = await UI.selectTarget('ally');
+            if (!selected) {
+                UI.log(">> 取消施放");
+                return;
             }
-        } else {
-            // 如果是全體 (party)，則遍歷
-            // 注意：Engine.useSkill 目前設計是一次處理一個 target
-            // 所以我們要把 target 設為所有隊員
+            targets = [selected];
+        } 
+        else if (needsEnemySelection) {
+             // 預留給敵方單體技能 (如降防)
+             const selected = await UI.selectTarget('enemy');
+             if (!selected) return;
+             targets = [selected];
+        }
+        else {
+            // 全體或自身，不需要選，但為了 Engine 方便，我們還是要傳入正確的 targets 陣列
+            // 如果是 party，targets 就是所有隊員
+            // 如果是 self，targets 就是 [user] (但 Engine.useSkill 內部邏輯目前是單次呼叫)
+            
+            // 這裡我們做個簡化：
+            // 如果是 party 效果，我們要在 UI 層拆解成對每個人呼叫一次 useSkill (或是 Engine 改寫支援陣列)
+            // 目前 Engine.useSkill 是一次處理一個 target。
+            // 所以我們把 targets 設為 [p1, p2, p3]
             targets = UI.gameState.party;
         }
 
         UI.log(`>> [Skill] ${user.name} 發動了 "${skill.name}"`);
 
-        // 2. 執行效果
-        targets.forEach(t => {
-            const res = Engine.useSkill(user, t, skill);
-            // 這裡可以顯示詳細 log (如: 增加 NP 20%)
+        // 2. 執行效果 (針對選定目標群)
+        // 這裡有個細節：如果技能同時有「我方全體加攻」和「我方單體充能」，targets 該怎麼辦？
+        // 正確做法：Engine.useSkill 應該要接收「主要選擇目標」，然後內部再判斷每個 effect 的 target 是 'party' 還是 'one'
+        
+        // --- 修正 Engine 呼叫邏輯 ---
+        // 我們改為：把「玩家選中的目標」傳給 Engine，讓 Engine 自己去過濾效果
+        // 如果玩家沒選 (因為是全體技)，selectedTarget 就傳 null 或 user
+        
+        const mainTarget = targets.length === 1 ? targets[0] : user;
+
+        // 我們需要對隊伍裡的每個人都跑一次 useSkill 嗎？
+        // 不，應該只跑一次，讓 Engine 決定誰會吃到效果。
+        // 但目前的 Engine.useSkill 是設計成 "Apply effects to THIS target"。
+        
+        // 【暫時解法】：
+        // 為了支援混合型技能 (例如術傻二技：單體充能 + 全體黃金律)
+        // 我們需要遍歷所有效果，分別處理。
+        
+        skill.effects.forEach(effect => {
+            let effectTargets = [];
+            
+            if (effect.target === 'one') {
+                // 使用玩家選中的目標
+                effectTargets = [mainTarget];
+            } else if (effect.target === 'self') {
+                effectTargets = [user];
+            } else if (effect.target === 'party') {
+                effectTargets = UI.gameState.party;
+            } else if (effect.target === 'enemy' || effect.target === 'enemy_all') {
+                effectTargets = [UI.gameState.enemy];
+            }
+
+            effectTargets.forEach(t => {
+                // 為了避免重複觸發某些全域效果 (如產星)，我們可以傳入一個 flag 或是由 Engine 判斷
+                // 但目前 star_gen_flat 是直接加到 global stars，重複加沒關係 (只要 JSON 數值沒寫錯，通常產星只會寫在一條 effect 裡)
+                
+                // 這裡我們只傳入單一 effect 給 Engine 處理
+                // 需要微調 Engine.useSkill 讓它接受單一 effect 或是我們在 UI 拆解
+                
+                // 為了不動 Engine 太大，我們手動呼叫 Engine.applyBuff / logic
+                // 或者，我們可以創造一個 "Dummy Skill" 只包含當前 effect 傳進去
+                const dummySkill = { ...skill, effects: [effect] };
+                Engine.useSkill(user, t, dummySkill);
+            });
         });
 
         // 3. 進入 CD
         skill.currentCooldown = skill.cd;
+        
+        // 檢查是否有「技能再裝填」被動 (CD -1)
+        // (這部分 Engine.useSkill 裡有寫註解，或是直接在這裡處理)
+        // 簡單做：在這裡檢查 user.passive_skills 是否有 skill_cooldown_reduce_trigger
+        // 這裡先跳過，等以後再精修
 
         // 4. 更新畫面
         UI.updateDisplay();
