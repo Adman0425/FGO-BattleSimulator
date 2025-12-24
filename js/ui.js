@@ -2,11 +2,11 @@ const UI = {
     gameState: {
         party: [], 
         enemy: null,
-        deck: [],        // 剩餘牌庫 (Pool)
-        currentHand: [], // 當前手牌 (5張)
+        deck: [],        
+        currentHand: [], 
         selectedCards: [],
         stars: 0,
-        turnCount: 0     // 回合計數
+        turnCount: 0     
     },
 
     cardImages: {
@@ -79,10 +79,11 @@ const UI = {
                 currentStats: stats,
                 currentHp: stats.hp,
                 maxHp: stats.hp,
-                currentNp: 0
+                currentNp: 0,
+                // 【新增】初始化 Buff 陣列 (假資料測試用)
                 buffs: [
                     { name: "攻擊力提升", type: "buff", val: 0.2, turn: 3, count: null },
-                    { name: "對魔力", type: "buff", val: 0, turn: 0, count: null } // 被動
+                    { name: "對魔力", type: "buff", val: 0, turn: 0, count: null }
                 ]
             };
         });
@@ -102,7 +103,6 @@ const UI = {
         UI.gameState.stars = 0;
         UI.gameState.turnCount = 0;
         
-        // 初始化牌庫
         UI.createFullDeck();
 
         UI.log(`--- 戰鬥開始: ${quest.name} ---`);
@@ -120,7 +120,6 @@ const UI = {
         return array;
     },
 
-    // 建立牌庫
     createFullDeck: () => {
         let fullDeck = [];
         UI.gameState.party.forEach((servant, sIndex) => {
@@ -128,15 +127,13 @@ const UI = {
                 fullDeck.push({ type: cardType, ownerIndex: sIndex, ownerId: servant.id });
             });
         });
-        UI.gameState.deck = UI.shuffleArray(fullDeck); // 洗牌後存入 gameState.deck
-        UI.log(">> 牌庫已重置");
+        UI.gameState.deck = UI.shuffleArray(fullDeck);
+        UI.log(">> 牌庫已重置 (15張)");
     },
 
-    // 發牌邏輯
     dealCards: () => {
         if (UI.gameState.party.length === 0) return;
 
-        // 如果牌庫不足 5 張，則視為新的一輪循環，重新洗牌
         if (UI.gameState.deck.length < 5) {
             UI.log(">> 牌庫洗牌 (Reshuffle)");
             UI.createFullDeck();
@@ -145,7 +142,6 @@ const UI = {
         UI.gameState.turnCount++;
         UI.log(`[Turn ${UI.gameState.turnCount}] 發牌... (牌庫剩餘 ${UI.gameState.deck.length} 張)`);
 
-        // 從牌庫頂端抽出 5 張
         UI.gameState.currentHand = UI.gameState.deck.splice(0, 5);
         UI.gameState.selectedCards = [];
         
@@ -318,13 +314,13 @@ const UI = {
             document.getElementById(`val-hp-p${slot}`).innerText = Math.floor(p.currentHp);
             document.getElementById(`hp-p${slot}`).style.width = `${Math.max(0, (p.currentHp / p.maxHp) * 100)}%`;
             
-            // NP 顯示為整數
             document.getElementById(`val-np-p${slot}`).innerText = Math.floor(p.currentNp);
             document.getElementById(`np-p${slot}`).style.width = `${Math.min(100, p.currentNp)}%`;
 
             // 【新增】點擊卡片開啟詳情
+            const cardEl = document.getElementById(`card-p${slot}`);
             cardEl.onclick = () => UI.openBuffModal(i);
-            cardEl.style.cursor = "pointer"; // 讓滑鼠變手型
+            cardEl.style.cursor = "pointer";
         });
 
         document.getElementById('star-count').innerText = Math.floor(UI.gameState.stars);
@@ -339,7 +335,8 @@ const UI = {
         box.scrollTop = box.scrollHeight;
     },
 
-    // 開啟狀態視窗
+    // --- 狀態視窗功能 (v3.5) ---
+
     openBuffModal: (servantIndex) => {
         const servant = UI.gameState.party[servantIndex];
         if (!servant) return;
@@ -350,7 +347,6 @@ const UI = {
         const list = document.getElementById('modal-buff-list');
         list.innerHTML = '';
 
-        // 如果沒有 buff
         if (!servant.buffs || servant.buffs.length === 0) {
             list.innerHTML = '<div style="color:#777;text-align:center;">無任何狀態</div>';
         } else {
@@ -358,7 +354,6 @@ const UI = {
                 const div = document.createElement('div');
                 div.className = `buff-item ${buff.type === 'debuff' ? 'debuff' : ''}`;
                 
-                // 組合文字： "攻擊力提升 [20%] (3回合)"
                 let text = `${buff.name}`;
                 if (buff.val > 0) text += ` [${Math.floor(buff.val * 100)}%]`;
                 
@@ -378,7 +373,6 @@ const UI = {
     },
 
     closeBuffModal: (e) => {
-        // 如果是點擊背景或關閉按鈕
         document.getElementById('buff-modal-overlay').classList.remove('active');
     }
 };
