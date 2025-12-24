@@ -1,5 +1,5 @@
 const Engine = {
-    // 翻譯對照表
+    // 翻譯對照表 (v4.3)
     BUFF_NAMES: {
         // --- 基礎數值 ---
         'atk_up': '攻擊力提升',
@@ -23,9 +23,11 @@ const Engine = {
         'crit_dmg_down': '暴擊威力下降',
         
         // --- 指令卡 ---
+        'card_up': '指令卡性能提升', // 通用
         'buster_card_up': 'Buster指令卡性能提升',
         'arts_card_up': 'Arts指令卡性能提升',
         'quick_card_up': 'Quick指令卡性能提升',
+        'card_gather_up': '指令卡集星提升', // 通用
         'buster_card_gather_up': 'Buster指令卡集星提升',
         'arts_card_gather_up': 'Arts指令卡集星提升',
         'quick_card_gather_up': 'Quick指令卡集星提升',
@@ -87,6 +89,7 @@ const Engine = {
         'burn': '灼傷',
         'curse': '詛咒',
         'order_change': '交換',
+        'buff_boost': '效果增幅',
 
         // --- 特殊/固有技能 ---
         'delayed_buff': '延遲發動效果',
@@ -113,6 +116,7 @@ const Engine = {
         'cherry_blossom_eater': '噬櫻者',
         'graceful_charme': '秀麗風情'
     },
+
     // 1. 初始化與練度計算
     initServant: (servantData, levelSetting) => {
         let baseHp = 0, baseAtk = 0, fouHp = 0, fouAtk = 0;
@@ -275,7 +279,6 @@ const Engine = {
     applyBuff: (source, target, effect) => {
         const buff = {
             id: Date.now() + Math.random(),
-            // 【修正】這裡使用翻譯對照表，如果找不到就顯示原文
             name: Engine.BUFF_NAMES[effect.type] || effect.type, 
             type: effect.type, 
             val: effect.val,
@@ -469,14 +472,14 @@ const Engine = {
         servant.buffs = servant.buffs.filter(b => b.turn > 0 || b.count > 0);
     },
 
-    // 7. 【關鍵修正】回合總結算 (支援物件型 cardChain)
+    // 7. 回合總結算 (支援物件型 cardChain)
     calculateTurn: (attacker, defender, cardChain, useNP = false) => {
         const results = {
             attacks: [],
             chainBonus: { busterChain: false, artsChain: false, quickChain: false, braveChain: false }
         };
 
-        // 1. 解析 Chain (cardChain 是物件陣列)
+        // 1. 解析 Chain
         const firstCardType = cardChain[0].type;
         const isSameColor = cardChain.every(c => c.type === firstCardType);
         
@@ -493,12 +496,10 @@ const Engine = {
 
         // 3. 逐卡計算
         cardChain.forEach((cardObj, index) => {
-            // 【修復崩潰】直接從卡片物件獲取 attacker，不再使用 null
             const currentAttacker = cardObj.attacker; 
             const cardType = cardObj.type;
             let isBusterChainActive = results.chainBonus.busterChain;
 
-            // 實裝暴擊 (隨機數 < critChance)
             const rand = Math.random() * 100;
             const isCrit = (cardObj.critChance || 0) > rand;
 
