@@ -450,3 +450,51 @@ select { background: #333; color: #fff; border: 1px solid #555; padding: 2px; }
     background: #555; border: none; color: white; cursor: pointer; border-radius: 4px;
 }
 .close-modal-btn:hover { background: #777; }
+
+/* --- 目標選擇模式 (Target Selection Mode) --- */
+body.selecting-target .servant-card,
+body.selecting-target .enemy-card {
+    cursor: crosshair; /* 滑鼠變成準心 */
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 1001; /* 確保浮在遮罩上層 */
+}
+
+/* 讓非目標的元素變暗 */
+body.selecting-target .main-stage > *:not(.active-target-zone) {
+    filter: brightness(0.4);
+    pointer-events: none; /* 禁止點擊其他東西 */
+}
+
+/* 高亮可選區域 (JS 動態添加 class) */
+.active-target-zone {
+    position: relative;
+    z-index: 1002;
+}
+
+/* 滑鼠懸停時的效果 */
+body.selecting-target .servant-card:hover,
+body.selecting-target .enemy-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px 5px #ffd700; /* 金色光圈 */
+    border-color: #ffd700;
+}
+
+/* 取消按鈕 (浮動在中間) */
+.target-cancel-btn {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    font-size: 20px;
+    background: #d32f2f;
+    color: white;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 2000;
+    display: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+body.selecting-target .target-cancel-btn {
+    display: block;
+}
