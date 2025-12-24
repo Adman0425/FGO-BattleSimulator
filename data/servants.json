@@ -1126,8 +1126,8 @@
         {
           "type": "skill_cooldown_reduce_trigger",
           "target": "self",
-          "count": 1, // Lv10 為 3 次，這裡先寫 1 次做示範
-          "val": 1    // 減少 1 回合
+          "count": 3,
+          "val": 1
         }
       ],
       "note": "Lv10 數值 (日服進度)"
