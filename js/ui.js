@@ -329,5 +329,48 @@ const UI = {
         div.innerHTML = msg;
         box.appendChild(div);
         box.scrollTop = box.scrollHeight;
+    },
+
+    // 開啟狀態視窗
+    openBuffModal: (servantIndex) => {
+        const servant = UI.gameState.party[servantIndex];
+        if (!servant) return;
+
+        document.getElementById('modal-avatar').src = UI.getServantIcon(servant.id);
+        document.getElementById('modal-name').innerText = servant.name;
+        
+        const list = document.getElementById('modal-buff-list');
+        list.innerHTML = '';
+
+        // 如果沒有 buff
+        if (!servant.buffs || servant.buffs.length === 0) {
+            list.innerHTML = '<div style="color:#777;text-align:center;">無任何狀態</div>';
+        } else {
+            servant.buffs.forEach(buff => {
+                const div = document.createElement('div');
+                div.className = `buff-item ${buff.type === 'debuff' ? 'debuff' : ''}`;
+                
+                // 組合文字： "攻擊力提升 [20%] (3回合)"
+                let text = `${buff.name}`;
+                if (buff.val > 0) text += ` [${Math.floor(buff.val * 100)}%]`;
+                
+                let durText = [];
+                if (buff.turn > 0) durText.push(`${buff.turn}回合`);
+                if (buff.count > 0) durText.push(`${buff.count}次`);
+                
+                if (durText.length > 0) text += ` (${durText.join('/')})`;
+                else text += ` (永久)`;
+
+                div.innerText = text;
+                list.appendChild(div);
+            });
+        }
+
+        document.getElementById('buff-modal-overlay').classList.add('active');
+    },
+
+    closeBuffModal: (e) => {
+        // 如果是點擊背景或關閉按鈕
+        document.getElementById('buff-modal-overlay').classList.remove('active');
     }
 };
