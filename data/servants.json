@@ -908,7 +908,262 @@
   "traits": ["EA特攻", "人型", "騎乘", "王", "人科", "豬化有效"]
 },
 {
-  "name": "奥伯龍",
+  "name": "阿爾托莉亞・Caster",
+  "id": 284,
+  "cost": 16,
+  "class": "caster",
+  "gender": "女性",
+  "policy": "中立·善",
+  "attribute": "star",
+  "stats": {
+    "natural": { "hp": 14406, "atk": 10546 },
+    "lv100": { "hp": 15782, "atk": 11544 },
+    "lv120": { "hp": 18549, "atk": 13551 }
+  },
+  "cards": {
+    "deck": ["Quick", "Arts", "Arts", "Arts", "Buster"],
+    "hits": {
+      "Quick": [16, 33, 51],
+      "Arts": [16, 33, 51],
+      "Buster": [16, 33, 51],
+      "Extra": [6, 13, 20, 26, 35],
+      "NP": [0]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.54,
+    "np_charge_def": 3,
+    "star_gen": 0.11,
+    "death_rate": 36,
+    "star_absorb": 50
+  },
+  "traits": ["阿爾托莉亞・Caster", "人型", "亞瑟", "阿爾托莉雅臉", "圓桌騎士", "妖精", "豬化有效"],
+  "skills": [
+    {
+      "name": "希望的領導力 B",
+      "icon": "skill_charisma.png",
+      "cd": 6,
+      "description": "己方全體攻擊力提升[20%](3回合) & NP增加[30%]",
+      "effects": [
+        {
+          "type": "atk_up",
+          "target": "party",
+          "val": 0.2,
+          "turn": 3
+        },
+        {
+          "type": "np_charge",
+          "target": "party",
+          "val": 30,
+          "turn": 0
+        }
+      ]
+    },
+    {
+      "name": "阿瓦隆的妖精 A",
+      "icon": "skill_np_gain.png",
+      "cd": 5,
+      "description": "己方單體NP增加[20%] & 己方全體NP獲得量提升[30%](3回合)",
+      "effects": [
+        {
+          "type": "np_charge",
+          "target": "one",
+          "val": 20,
+          "turn": 0
+        },
+        {
+          "type": "np_gain_up",
+          "target": "party",
+          "val": 0.3,
+          "turn": 3,
+          "note": "黃金律效果"
+        }
+      ]
+    },
+    {
+      "name": "聖劍鍛造 EX",
+      "icon": "skill_arts_up.png",
+      "cd": 6,
+      "description": "己方單體Arts指令卡性能提升[50%](3回合) & 對〔人類的威脅〕特攻狀態賦予[50%](3回合) & 無敵狀態(1回合)",
+      "effects": [
+        {
+          "type": "card_up",
+          "card": "Arts",
+          "target": "one",
+          "val": 0.5,
+          "turn": 3
+        },
+        {
+          "type": "special_dmg_up",
+          "target": "one",
+          "trait": "threat_to_humanity",
+          "val": 0.5,
+          "turn": 3,
+          "note": "人類威脅特攻"
+        },
+        {
+          "type": "invincible",
+          "target": "one",
+          "turn": 1,
+          "val": 1
+        }
+      ]
+    }
+  ],
+  "passive_skills": [
+    {
+      "name": "對魔力 A",
+      "icon": "passive_debuff_resist.png",
+      "description": "自身的弱化耐性提升(20%)",
+      "effects": [
+        {
+          "type": "debuff_resist",
+          "target": "self",
+          "val": 0.2
+        }
+      ]
+    },
+    {
+      "name": "陣地建造 EX",
+      "icon": "passive_arts.png",
+      "description": "自身的Arts指令卡性能提升(12%)",
+      "effects": [
+        {
+          "type": "card_up",
+          "card": "Arts",
+          "target": "self",
+          "val": 0.12
+        }
+      ]
+    },
+    {
+      "name": "獨自魔術 B",
+      "icon": "passive_arts_crit.png",
+      "description": "自身的Arts指令卡暴擊威力提升(10%)",
+      "effects": [
+        {
+          "type": "crit_dmg_up",
+          "card": "Arts",  // 注意：限定 Arts 卡
+          "target": "self",
+          "val": 0.1
+        }
+      ]
+    },
+    {
+      "name": "妖精眼 A",
+      "icon": "passive_crit_resist.png",
+      "description": "自身的被暴擊發生耐性提升(20%)",
+      "effects": [
+        {
+          "type": "crit_rate_resist",
+          "target": "self",
+          "val": 0.2,
+          "note": "降低被敵人暴擊的機率"
+        }
+      ]
+    }
+  ],
+  "append_skills": [
+    {
+      "id": 1,
+      "name": "追擊技巧提升",
+      "description": "自身的Extra Attack指令卡性能提升[50%]",
+      "effects": [
+        {
+          "type": "card_up",
+          "card": "Extra",
+          "target": "self",
+          "val": 0.5
+        }
+      ],
+      "note": "數值以 Lv10 為準"
+    },
+    {
+      "id": 2,
+      "name": "魔力裝填",
+      "description": "自身以NP已達一定數值的狀態開始戰鬥[20%]",
+      "effects": [
+        {
+          "type": "start_np", // 特殊類型：戰鬥開始時觸發
+          "target": "self",
+          "val": 20
+        }
+      ],
+      "note": "數值以 Lv10 為準"
+    },
+    {
+      "id": 3,
+      "name": "對 Saber 攻擊適性",
+      "description": "自身對〔Saber〕職階的攻擊力提升[30%]",
+      "effects": [
+        {
+          "type": "atk_up_vs_class", // 特殊類型：職階特攻
+          "target": "self",
+          "cond_class": "saber",
+          "val": 0.3
+        }
+      ],
+      "note": "數值以 Lv10 為準"
+    },
+    {
+      "id": 4,
+      "name": "特擊技巧提升",
+      "description": "自身的暴擊威力提升[30%]",
+      "effects": [
+        {
+          "type": "crit_dmg_up",
+          "target": "self",
+          "val": 0.3
+        }
+      ],
+      "note": "Lv10 數值 (日服進度)"
+    },
+     {
+      "id": 5,
+      "name": "技能再裝填",
+      "description": "使用技能後，所使用技能的充能減少1 (1次)",
+      "effects": [
+        {
+          "type": "skill_cooldown_reduce_trigger",
+          "target": "self",
+          "count": 1, // Lv10 為 3 次，這裡先寫 1 次做示範
+          "val": 1    // 減少 1 回合
+        }
+      ],
+      "note": "Lv10 數值 (日服進度)"
+    }
+  ],
+  "noble_phantasm": {
+    "name": "懷抱著你的希望之星",
+    "card": "Arts",
+    "type": "support", 
+    "hit_count": [], 
+    "effects": [
+      {
+        "type": "atk_up",
+        "target": "party",
+        "val": 0.3, 
+        "turn": 3,
+        "note": "寶具Lv1數值 (Lv5為 0.5)"
+      },
+      {
+        "type": "remove_debuff",
+        "target": "party",
+        "time": "immediate"
+      },
+      {
+        "type": "anti_purge_defense",
+        "target": "party",
+        "val": 1,         
+        "turn": 3,        
+        "count": 1,       
+        "note": "OC1次數 (OC5為 5次)。這是絕對防禦，優先級高於無敵貫通"
+      }
+    ]
+  }
+},
+{
+  "name": "奧伯隆",
   "id": 316,
   "cost": 16,
   "class": "pretender",
@@ -937,10 +1192,10 @@
     "death_rate": 18,
     "star_absorb": 104
   },
-  "traits": ["天地從者", "人型", "騎乘", "龍", "王", "人類威脅", "持有靈衣之人", "妖精", "夏日模式從者", "豬化有效"]
+  "traits": ["天地從者", "人型", "騎乘", "龍", "王", "人類威脅", "持有靈衣之人", "妖精", "夏日模式從者", "豬化有效"],
   "skills": [
     {
-      "name": "夜之帷幕",
+      "name": "夜之帷幕 EX",
       "icon": "skill_01.png",
       "cd": 6,
       "description": "己方全體寶具威力提升[30%](3回合) & NP增加[20%]",
@@ -960,7 +1215,7 @@
       ]
     },
     {
-      "name": "晨之雲雀",
+      "name": "晨之雲雀 EX",
       "icon": "skill_02.png",
       "cd": 6,
       "description": "己方單體NP增加[50%] & 獲得暴擊星[20] & [負面]回合結束時NP減少20%(1次)",
@@ -988,7 +1243,7 @@
       ]
     },
     {
-      "name": "夢之終結",
+      "name": "夢之終結 EX",
       "icon": "skill_03.png",
       "cd": 8,
       "description": "己方單體Buster性能提升[50%](1回合) & 寶具威力提升效果量翻倍(1回合) & [負面]回合結束時永久睡眠(無法解除)",
@@ -1022,27 +1277,123 @@
   ],
   "passive_skills": [
     {
-      "name": "對人理",
+      "name": "對人理 D",
+      "description": "自身在場時，己方全體對〔Foreigner〕以外的弱化付與成功率提升(10%) & 己方全體〔梅林〕的強化付與成功率下降(20%)【負面】",
       "effects": [
-        { "type": "debuff_success_up", "val": 0.1 }
+        {
+          "type": "debuff_success_up_conditional",
+          "target": "party", 
+          "val": 0.1,
+          "cond_target_class_not": "foreigner",
+          "note": "對非 Foreigner 職階生效"
+        },
+        {
+          "type": "buff_success_down_conditional",
+          "target": "party",
+          "val": 0.2,
+          "cond_ally_id": 150, // 梅林的 ID (假設梅林是 150)
+          "note": "隊伍裡的梅林強化成功率下降"
+        }
       ]
     },
     {
       "name": "陣地建造 E-",
+      "description": "自身的Arts指令卡性能小幅提升(1.5%)",
       "effects": [
-        { "type": "card_up", "card": "Arts", "val": 0.015 }
-      ]
-    },
-    {
-      "name": "騎乘 A",
-      "effects": [
-        { "type": "card_up", "card": "Quick", "val": 0.1 }
+        {
+          "type": "card_up",
+          "card": "Arts",
+          "target": "self",
+          "val": 0.015
+        }
       ]
     },
     {
       "name": "道具作成 A+",
+      "description": "自身的弱化付與成功率提升(11%)",
       "effects": [
-        { "type": "debuff_success_up", "val": 0.11 }
+        {
+          "type": "debuff_success_up",
+          "target": "self",
+          "val": 0.11
+        }
+      ]
+    },
+    {
+      "name": "騎乘 A",
+      "description": "自身的Quick指令卡性能提升(10%)",
+      "effects": [
+        {
+          "type": "card_up",
+          "card": "Quick",
+          "target": "self",
+          "val": 0.1
+        }
+      ]
+    },
+    {
+      "name": "仲夏夜之夢 EX",
+      "icon": "passive_immune.png",
+      "description": "付與自身精神異常·詛咒無效的狀態",
+      "effects": [
+        {
+          "type": "debuff_immune", // 核心邏輯：免疫
+          "target": "self",
+          "immune_tags": ["mental", "curse"], // 指定免疫的標籤
+          "note": "精神異常包含：魅惑、恐懼、混亂、睡眠等"
+        }
+      ]
+    }
+  ],
+  "append_skills": [
+    {
+      "id": 1,
+      "name": "追擊技巧提升",
+      "description": "自身的Extra Attack指令卡性能提升[50%]",
+      "effects": [
+        { "type": "card_up", "card": "Extra", "target": "self", "val": 0.5 }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "魔力裝填",
+      "description": "自身以NP已達一定數值的狀態開始戰鬥[20%]",
+      "effects": [
+        { "type": "start_np", "target": "self", "val": 20 }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "對 Caster 攻擊適性",
+      "description": "自身對〔Caster〕職階的攻擊力提升[30%]",
+      "effects": [
+        { 
+          "type": "atk_up_vs_class", 
+          "target": "self", 
+          "cond_class": "caster", 
+          "val": 0.3 
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "特擊技巧提升",
+      "description": "自身的暴擊威力提升[30%]",
+      "effects": [
+        { "type": "crit_dmg_up", "target": "self", "val": 0.3 }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "技能再裝填",
+      "description": "使用技能後，所使用技能的充能減少1 (1次)",
+      "effects": [
+        { 
+          "type": "skill_cooldown_reduce_trigger", 
+          "target": "self", 
+          "count": 1, 
+          "val": 1 
+        }
       ]
     }
   ],
