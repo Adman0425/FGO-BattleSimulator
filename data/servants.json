@@ -906,5 +906,178 @@
     "star_absorb": 196
   },
   "traits": ["EA特攻", "人型", "騎乘", "王", "人科", "豬化有效"]
+},
+{
+  "name": "奥伯龍",
+  "id": 316,
+  "cost": 16,
+  "class": "pretender",
+  "gender": "男性",
+  "policy": "混沌·惡",
+  "attribute": "earth",
+  "stats": {
+    "natural": { "hp": 13266, "atk": 11810 },
+    "lv100": { "hp": 14533, "atk": 12928 },
+    "lv120": { "hp": 17081, "atk": 15174 }
+  },
+  "cards": {
+    "deck": ["Quick", "Quick", "Arts", "Buster", "Buster"],
+    "hits": {
+      "Quick": [10, 20, 30, 40],
+      "Arts": [10, 20, 30, 40],
+      "Buster": [16, 33, 51],
+      "Extra": [4, 9, 14, 19, 23, 31],
+      "NP": [10, 20, 30, 40]
+    }
+  },
+  "hidden_stats": {
+    "np_charge_atk": 0.59,
+    "np_charge_def": 3,
+    "star_gen": 0.205,
+    "death_rate": 18,
+    "star_absorb": 104
+  },
+  "traits": ["天地從者", "人型", "騎乘", "龍", "王", "人類威脅", "持有靈衣之人", "妖精", "夏日模式從者", "豬化有效"]
+  "skills": [
+    {
+      "name": "夜之帷幕",
+      "icon": "skill_01.png",
+      "cd": 6,
+      "description": "己方全體寶具威力提升[30%](3回合) & NP增加[20%]",
+      "effects": [
+        {
+          "type": "np_dmg_up",
+          "target": "party",
+          "val": 0.3,
+          "turn": 3
+        },
+        {
+          "type": "np_charge",
+          "target": "party",
+          "val": 20,
+          "turn": 0
+        }
+      ]
+    },
+    {
+      "name": "晨之雲雀",
+      "icon": "skill_02.png",
+      "cd": 6,
+      "description": "己方單體NP增加[50%] & 獲得暴擊星[20] & [負面]回合結束時NP減少20%(1次)",
+      "effects": [
+        {
+          "type": "np_charge",
+          "target": "one", 
+          "val": 50,
+          "turn": 0
+        },
+        {
+          "type": "star_gen_flat",
+          "target": "party", 
+          "val": 20,
+          "turn": 0
+        },
+        {
+          "type": "np_loss_turn_end",
+          "target": "one",
+          "val": 20,
+          "turn": 1,
+          "count": 1,
+          "is_debuff": true
+        }
+      ]
+    },
+    {
+      "name": "夢之終結",
+      "icon": "skill_03.png",
+      "cd": 8,
+      "description": "己方單體Buster性能提升[50%](1回合) & 寶具威力提升效果量翻倍(1回合) & [負面]回合結束時永久睡眠(無法解除)",
+      "effects": [
+        {
+          "type": "card_up",
+          "card": "Buster",
+          "target": "one",
+          "val": 0.5,
+          "turn": 1
+        },
+        {
+          "type": "buff_boost", 
+          "sub_type": "np_dmg_up",
+          "target": "one",
+          "val": 1.0, 
+          "turn": 1,
+          "note": "讓現有的寶具威力Buff效果量增加100%"
+        },
+        {
+          "type": "permanent_sleep",
+          "target": "one",
+          "val": 0,
+          "turn": 999, 
+          "trigger": "turn_end",
+          "is_debuff": true,
+          "note": "無法解除、無法換人"
+        }
+      ]
+    }
+  ],
+  "passive_skills": [
+    {
+      "name": "對人理",
+      "effects": [
+        { "type": "debuff_success_up", "val": 0.1 }
+      ]
+    },
+    {
+      "name": "陣地建造 E-",
+      "effects": [
+        { "type": "card_up", "card": "Arts", "val": 0.015 }
+      ]
+    },
+    {
+      "name": "騎乘 A",
+      "effects": [
+        { "type": "card_up", "card": "Quick", "val": 0.1 }
+      ]
+    },
+    {
+      "name": "道具作成 A+",
+      "effects": [
+        { "type": "debuff_success_up", "val": 0.11 }
+      ]
+    }
+  ],
+  "noble_phantasm": {
+    "name": "與彼方同墜的夢之瞳眸",
+    "card": "Buster",
+    "type": "aoe",
+    "hit_count": [10, 20, 30, 40], 
+    "effects": [
+      {
+        "type": "damage",
+        "val": 300, 
+        "special_mod": { "trait": "lawful", "val": 1.5 },
+        "note": "對[秩序]特攻150%"
+      },
+      {
+        "type": "remove_buff",
+        "sub_type": "offensive",
+        "target": "enemy_all",
+        "time": "before_hit" 
+      },
+      {
+        "type": "sleep",
+        "target": "enemy_all",
+        "turn": 1
+      },
+      {
+        "type": "invincible",
+        "target": "enemy_all",
+        "turn": 1,
+        "is_debuff": false, 
+        "note": "副作用：敵方無敵"
+      }
+    ]
+  }
 }
+
 ]
