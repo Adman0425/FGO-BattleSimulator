@@ -498,3 +498,12 @@ body.selecting-target .enemy-card:hover {
 body.selecting-target .target-cancel-btn {
     display: block;
 }
+
+.np-btn {
+    font-weight: bold;
+    border: 1px solid #fff;
+    box-shadow: 0 0 5px #000;
+}
+.np-btn:hover {
+    filter: brightness(1.2);
+}
