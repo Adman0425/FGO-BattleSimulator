@@ -1,64 +1,62 @@
 [
   {
-    "id": "q_daily_qp_extreme",
+    "id": "daily_qp_extreme",
     "name": "打開寶物庫之門 極級",
-    "recommend_level": 90,
-    "ap_cost": 40,
-    "background": "bg_treasure_room",
     "waves": [
       {
-        "wave_no": 1,
+        "//": "--- 第一波 (Wave 1) ---",
         "enemies": [
-          {
-            "id": "enemy_door_silver",
-            "lvl": 30,
-            "hp": 23000,
-            "position": 1
+          { 
+            "id": 2001, 
+            "name": "霸者之門 A", 
+            "hp": 23027, 
+            "gauge": 3 
           },
-          {
-            "id": "enemy_door_gold",
-            "lvl": 35,
-            "hp": 28000,
-            "position": 2
+          { 
+            "id": 2001, 
+            "name": "霸者之門 B", 
+            "hp": 24483, 
+            "gauge": 3 
           },
-          {
-            "id": "enemy_door_silver",
-            "lvl": 30,
-            "hp": 23000,
-            "position": 3
+          { 
+            "id": 2001, 
+            "name": "霸者之門 C", 
+            "hp": 23755, 
+            "gauge": 3 
           }
         ]
       },
       {
-        "wave_no": 2,
+        "//": "--- 第二波 (Wave 2) ---",
         "enemies": [
-          {
-            "id": "enemy_door_gold",
-            "hp": 35000,
-            "position": 1
+          { 
+            "id": 2001, 
+            "name": "霸者之門 A", 
+            "hp": 31125, 
+            "gauge": 3 
           },
-          {
-            "id": "enemy_door_gold",
-            "hp": 35000,
-            "position": 2
+          { 
+            "id": 2001, 
+            "name": "霸者之門 B", 
+            "hp": 31999, 
+            "gauge": 3 
           },
-          {
-            "id": "enemy_door_gold",
-            "hp": 35000,
-            "position": 3
+          { 
+            "id": 2001, 
+            "name": "霸者之門 C", 
+            "hp": 30252, 
+            "gauge": 3 
           }
         ]
       },
       {
-        "wave_no": 3,
+        "//": "--- 第三波 (Fatal Battle) ---",
         "enemies": [
-          {
-            "id": "enemy_door_rainbow",
-            "hp": 150000,
-            "position": 2,
-            "attributes": {
-              "class": "ruler"
-            }
+          { 
+            "id": 2002, 
+            "name": "莊嚴的黃金像", 
+            "hp": 132932, 
+            "gauge": 5 
           }
         ]
       }
