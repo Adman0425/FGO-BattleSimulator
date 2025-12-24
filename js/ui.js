@@ -4,7 +4,9 @@ const UI = {
         enemy: null,
         deck: [],        
         currentHand: [], 
-        // 【重要變更】selectedCards 改存物件: { type: 'hand', index: 0 } 或 { type: 'np', ownerIndex: 0 }
+        // 儲存格式: { type: 'hand'|'np', val: index }
+        // type='hand': val是手牌陣列索引 (0-4)
+        // type='np': val是從者在隊伍中的索引 (0-2)
         selectedCards: [], 
         stars: 0,
         turnCount: 0     
@@ -93,7 +95,7 @@ const UI = {
             hp: enemyDataRaw.hp || eBase.hp,
             currentHp: enemyDataRaw.hp || eBase.hp,
             maxHp: enemyDataRaw.hp || eBase.hp,
-            currentGauge: 0, // 敵人氣槽
+            currentGauge: 0,
             maxGauge: enemyDataRaw.gauge || 3,
             buffs: [] 
         };
@@ -155,12 +157,60 @@ const UI = {
         }
 
         UI.gameState.selectedCards = [];
-        UI.renderHand();
+        UI.renderAllCards(); // 渲染手牌和寶具卡
         UI.updateSelectedSlots();
     },
 
-    // --- 選卡邏輯更新 ---
+    // --- 核心選卡渲染邏輯 ---
 
+    // 渲染「寶具卡」與「指令卡」
+    renderAllCards: () => {
+        UI.renderNPCards();
+        UI.renderHand();
+    },
+
+    // 1. 渲染寶具卡 (NP >= 100 才出現)
+    renderNPCards: () => {
+        const container = document.getElementById('np-container');
+        if (!container) return; // 防呆
+        container.innerHTML = '';
+
+        UI.gameState.party.forEach((servant, sIdx) => {
+            // 檢查 NP 是否足夠
+            if (servant.currentNp < 100) return;
+
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card-container np-card';
+            
+            // 檢查是否已選
+            const isSelected = UI.gameState.selectedCards.some(s => s.type === 'np' && s.val === sIdx);
+            if (isSelected) {
+                cardDiv.classList.add('used');
+            }
+            
+            cardDiv.onclick = () => UI.selectCard('np', sIdx);
+
+            const img = document.createElement('img');
+            img.src = UI.cardImages['NP']; // 使用 data/NP.png
+            img.className = 'command-card-img';
+
+            const badge = document.createElement('img');
+            badge.className = 'owner-badge';
+            badge.src = UI.getServantIcon(servant.id);
+
+            // 寶具名稱 (選用)
+            // const nameOverlay = document.createElement('div');
+            // nameOverlay.className = 'np-name-overlay';
+            // nameOverlay.innerText = servant.noble_phantasm.name;
+            // cardDiv.appendChild(nameOverlay);
+
+            cardDiv.appendChild(img);
+            cardDiv.appendChild(badge);
+            container.appendChild(cardDiv);
+        });
+    },
+
+    // 2. 渲染手牌 (指令卡)
     renderHand: () => {
         const container = document.getElementById('hand-container');
         container.innerHTML = '';
@@ -169,9 +219,11 @@ const UI = {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card-container';
             
-            // 檢查這張手牌是否已被選中 (注意結構變化)
-            const isSelected = UI.gameState.selectedCards.some(s => s.type === 'hand' && s.index === index);
-            if (isSelected) cardDiv.classList.add('used');
+            // 檢查是否已選
+            const isSelected = UI.gameState.selectedCards.some(s => s.type === 'hand' && s.val === index);
+            if (isSelected) {
+                cardDiv.classList.add('used');
+            }
             
             cardDiv.onclick = () => UI.selectCard('hand', index);
 
@@ -181,7 +233,6 @@ const UI = {
 
             if (card.critChance > 0) {
                 const critBadge = document.createElement('div');
-                critBadge.className = 'crit-badge'; // 建議去 CSS 加樣式
                 critBadge.style.position = 'absolute';
                 critBadge.style.top = '2px';
                 critBadge.style.right = '2px';
@@ -203,31 +254,28 @@ const UI = {
     },
 
     // 統一選卡入口
-    // type: 'hand' | 'np'
-    // val: cardIndex (for hand) | servantIndex (for np)
     selectCard: (type, val) => {
+        // 如果已經選了 3 張，不能再選
         if (UI.gameState.selectedCards.length >= 3) return;
         
-        // 避免重複選擇
+        // 防呆：如果這張卡已經被選過，不能再選 (CSS 已經擋了 pointer-events，但 JS 再擋一次保險)
         if (type === 'hand') {
-            if (UI.gameState.selectedCards.some(s => s.type === 'hand' && s.index === val)) return;
+            if (UI.gameState.selectedCards.some(s => s.type === 'hand' && s.val === val)) return;
         } else if (type === 'np') {
-            if (UI.gameState.selectedCards.some(s => s.type === 'np' && s.ownerIndex === val)) return;
+            if (UI.gameState.selectedCards.some(s => s.type === 'np' && s.val === val)) return;
         }
 
-        UI.gameState.selectedCards.push({ type: type, index: val, ownerIndex: val }); // index for hand, ownerIndex for np
+        UI.gameState.selectedCards.push({ type: type, val: val }); 
         
-        UI.renderHand();
+        UI.renderAllCards(); // 重繪所有卡片 (讓剛剛選的變暗)
         UI.updateSelectedSlots();
-        UI.updateDisplay(); // 更新寶具按鈕狀態 (已選就變暗)
     },
 
     deselectCard: (slotIndex) => {
         if (slotIndex >= UI.gameState.selectedCards.length) return;
         UI.gameState.selectedCards.splice(slotIndex, 1);
-        UI.renderHand();
+        UI.renderAllCards(); // 重繪 (恢復變亮)
         UI.updateSelectedSlots();
-        UI.updateDisplay();
     },
 
     updateSelectedSlots: () => {
@@ -250,30 +298,13 @@ const UI = {
                 let badgeSrc = '';
 
                 if (item.type === 'hand') {
-                    const card = hand[item.index];
+                    const card = hand[item.val];
                     imgSrc = UI.cardImages[card.type];
                     badgeSrc = UI.getServantIcon(card.ownerId);
                 } else if (item.type === 'np') {
-                    const servant = party[item.ownerIndex]; // item.index for NP is servantIndex
-                    imgSrc = UI.cardImages['NP']; // 你需要一張 NP 卡背圖，或用預設
-                    // 如果 servant.noble_phantasm.card 存在，可以用對應色卡
-                    const npCardColor = servant.noble_phantasm.card || 'Arts';
-                    imgSrc = UI.cardImages[npCardColor]; 
+                    const servant = party[item.val]; 
+                    imgSrc = UI.cardImages['NP'];
                     badgeSrc = UI.getServantIcon(servant.id);
-                    
-                    // 加上 "NP" 字樣覆蓋
-                    const npText = document.createElement('div');
-                    npText.innerText = "NOBLE PHANTASM";
-                    npText.style.position = 'absolute';
-                    npText.style.top = '50%';
-                    npText.style.left = '50%';
-                    npText.style.transform = 'translate(-50%, -50%)';
-                    npText.style.color = '#fff';
-                    npText.style.fontWeight = 'bold';
-                    npText.style.textShadow = '0 0 5px #f00';
-                    npText.style.textAlign = 'center';
-                    npText.style.fontSize = '12px';
-                    el.appendChild(npText);
                 }
 
                 const cardImg = document.createElement('img');
@@ -293,54 +324,16 @@ const UI = {
         document.getElementById('btn-execute').disabled = (selected.length !== 3);
     },
 
-    // --- 技能與寶具 UI ---
+    // --- 技能相關 ---
 
     renderSkills: (servantIndex) => {
         const servant = UI.gameState.party[servantIndex];
         const cardEl = document.getElementById(`card-p${servantIndex+1}`);
         const skillContainer = cardEl.querySelector('.skill-row');
-        
         if (!skillContainer) return;
         skillContainer.innerHTML = ''; 
 
-        // 1. 渲染寶具按鈕 (新增)
-        const npBtn = document.createElement('div');
-        npBtn.className = 'skill-btn np-btn'; // 用 CSS 讓它長得不一樣
-        npBtn.style.width = '100%'; // 長條狀
-        npBtn.style.marginBottom = '5px';
-        npBtn.style.background = '#d32f2f';
-        npBtn.style.color = 'white';
-        npBtn.style.fontSize = '12px';
-        npBtn.style.display = 'flex';
-        npBtn.style.alignItems = 'center';
-        npBtn.style.justifyContent = 'center';
-        npBtn.innerText = "寶具發動";
-        
-        // 檢查 NP 是否足夠
-        if (servant.currentNp < 100) {
-            npBtn.style.display = 'none'; // NP 不夠不顯示
-        }
-        
-        // 檢查是否已選
-        const isSelected = UI.gameState.selectedCards.some(s => s.type === 'np' && s.ownerIndex === servantIndex);
-        if (isSelected) {
-            npBtn.style.background = '#555';
-            npBtn.innerText = "已選擇";
-            npBtn.style.pointerEvents = 'none';
-        }
-
-        npBtn.onclick = (e) => {
-            e.stopPropagation();
-            UI.selectCard('np', servantIndex);
-        };
-        
-        // 把寶具按鈕插在技能上面，或插在技能列裡
-        // 為了版面整齊，我們把寶具按鈕放在技能列的最左邊，或者技能列上方
-        // 這裡暫時放在技能列的第一個位置，但樣式可能要調整
-        // 建議：直接放在 skillContainer 裡
-        skillContainer.appendChild(npBtn);
-
-        // 2. 渲染技能按鈕
+        // 技能按鈕
         if (!servant.skills) return;
 
         servant.skills.forEach((skill, skillIdx) => {
@@ -373,11 +366,9 @@ const UI = {
         });
     },
 
-    // 施放技能 (含目標選擇)
     castSkill: async (servantIdx, skillIdx) => {
         const user = UI.gameState.party[servantIdx];
         const skill = user.skills[skillIdx];
-
         if (skill.currentCooldown > 0) return;
 
         let targets = [];
@@ -405,7 +396,6 @@ const UI = {
         
         skill.effects.forEach(effect => {
             let effectTargets = [];
-            
             if (effect.target === 'one') effectTargets = [mainTarget];
             else if (effect.target === 'self') effectTargets = [user];
             else if (effect.target === 'party') effectTargets = UI.gameState.party;
@@ -481,15 +471,18 @@ const UI = {
     openCommandPhase: () => {
         if (!UI.gameState.enemy) return;
         document.getElementById('command-overlay').classList.add('active');
+        // 每次打開選卡介面時，重新渲染寶具卡和手牌
+        UI.renderAllCards();
     },
 
     closeCommandPhase: () => {
         document.getElementById('command-overlay').classList.remove('active');
     },
 
+    // 【關鍵修復】執行回合：確保寶具卡資料正確
     executeTurn: () => {
         const hand = UI.gameState.currentHand;
-        const selectedItems = UI.gameState.selectedCards; // 這是物件陣列了
+        const selectedItems = UI.gameState.selectedCards; 
         const e = UI.gameState.enemy;
 
         if (selectedItems.length !== 3) return;
@@ -497,7 +490,7 @@ const UI = {
         // 轉換 Chain 格式
         const cardChain = selectedItems.map(item => {
             if (item.type === 'hand') {
-                const card = hand[item.index];
+                const card = hand[item.val]; // item.val 是 index
                 return {
                     type: card.type,
                     attacker: UI.gameState.party[card.ownerIndex],
@@ -505,7 +498,7 @@ const UI = {
                     isNP: false
                 };
             } else if (item.type === 'np') {
-                const servant = UI.gameState.party[item.ownerIndex];
+                const servant = UI.gameState.party[item.val]; // item.val 是 servantIndex
                 const npData = servant.noble_phantasm;
                 return {
                     type: npData.card, // Buster/Arts/Quick
@@ -534,18 +527,14 @@ const UI = {
         if (results.chainBonus.quickChain) { UI.log("【Quick Chain】Stars +10"); UI.gameState.stars += 10; }
 
         results.attacks.forEach((atk, i) => {
-            const cardObj = cardChain[i < 3 ? i : 0]; // 修正 extra attack 來源
+            const cardObj = cardChain[i < 3 ? i : 0]; 
             const prefix = (i < 3) ? (cardObj.isNP ? `[NP] ${cardObj.attacker.name}` : `Card ${i+1}`) : `Extra`;
             
-            // 執行寶具效果 (如果有)
+            // 執行寶具效果 (扣NP)
             if (i < 3 && cardObj.isNP) {
                 UI.log(`>> ${cardObj.attacker.name} 釋放了寶具: ${cardObj.npData.name}`);
-                // 扣除 NP
-                cardObj.attacker.currentNp -= 100; // 暫時固定扣100 (OC需另算)
+                cardObj.attacker.currentNp -= 100; // 暫時固定扣100 (不支援OC 200/300的選擇)
                 if (cardObj.attacker.currentNp < 0) cardObj.attacker.currentNp = 0;
-                
-                // 這裡應該呼叫 Engine.useSkill 類似的邏輯來處理寶具效果 (targets...)
-                // 為了簡化，目前只有傷害和基本效果
             }
 
             const critText = atk.isCrit ? ' <span style="color:gold;font-weight:bold;">(CRIT!)</span>' : '';
@@ -556,16 +545,14 @@ const UI = {
             UI.gameState.stars += atk.stars;
         });
 
-        // 檢查敵人是否死亡
         if (e.currentHp <= 0) {
             e.currentHp = 0;
             UI.log(">> Enemy Defeated!");
         }
         UI.gameState.party.forEach(p => { if(p.currentNp > 300) p.currentNp = 300; });
 
-        // 我方回合結束處理
+        // 回合結束 Buff 處理
         UI.gameState.party.forEach(p => Engine.processTurnEnd(p));
-        // CD -1
         UI.gameState.party.forEach(p => {
             if(p.skills) {
                 p.skills.forEach(s => {
@@ -576,41 +563,33 @@ const UI = {
 
         UI.updateDisplay();
         
-        // 進入敵人回合 (如果還活著)
+        // 敵人回合
         if (e.currentHp > 0) {
             setTimeout(() => {
                 UI.enemyTurn();
             }, 1000);
-        } else {
-            // 戰鬥結束
         }
     },
 
-    // --- 【新增】敵人回合 ---
     enemyTurn: () => {
         UI.log("=== Enemy Phase ===");
         const e = UI.gameState.enemy;
         
-        // 1. 氣槽增加
         if (e.currentGauge < e.maxGauge) {
             e.currentGauge++;
             UI.log(`敵人氣槽增加 (${e.currentGauge}/${e.maxGauge})`);
         }
 
-        // 2. 判斷行動 (寶具或普攻)
         let isNP = false;
         if (e.currentGauge >= e.maxGauge) {
             isNP = true;
-            e.currentGauge = 0; // 重置
+            e.currentGauge = 0;
         }
 
         if (isNP) {
             UI.log(`<span style="color:red;font-weight:bold;">>> 敵人發動寶具 (AOE)!</span>`);
-            // 全體傷害 (簡易模擬)
             const dmg = 3000; 
             UI.gameState.party.forEach(p => {
-                // 這裡應該要算防禦 buff / 無敵
-                // 簡單檢查無敵
                 const hasInvincible = p.buffs && p.buffs.some(b => b.type === 'invincible' || b.type === 'anti_purge_defense');
                 if (hasInvincible) {
                     UI.log(`${p.name} 擋下了攻擊! (0)`);
@@ -618,16 +597,11 @@ const UI = {
                     p.currentHp -= dmg;
                     UI.log(`${p.name} 受到 ${dmg} 傷害`);
                 }
-                // 受擊 NP (暫定 10)
                 p.currentNp += 10;
             });
         } else {
-            // 普通攻擊 (隨機單體)
             const targetIdx = Math.floor(Math.random() * UI.gameState.party.length);
             const target = UI.gameState.party[targetIdx];
-            // 檢查嘲諷 (target_focus)
-            // ... (略)
-
             const dmg = 1500;
             UI.log(`敵人攻擊了 ${target.name}`);
             
@@ -641,19 +615,16 @@ const UI = {
             target.currentNp += 10;
         }
 
-        // 檢查我方死亡
         UI.gameState.party.forEach(p => {
             if (p.currentHp <= 0) {
                 p.currentHp = 0;
                 UI.log(`${p.name} 退場!`);
-                // 這裡應該觸發換人或戰敗
             }
             if (p.currentNp > 300) p.currentNp = 300;
         });
 
         UI.updateDisplay();
 
-        // 回到玩家回合
         setTimeout(() => {
             UI.dealCards();
         }, 1000);
@@ -667,9 +638,6 @@ const UI = {
         document.getElementById('e-hp-current').innerText = Math.floor(e.currentHp);
         const eHpPct = Math.max(0, (e.currentHp / e.maxHp) * 100);
         document.getElementById('e-hp-bar').style.width = `${eHpPct}%`;
-        
-        // 敵人氣槽顯示 (這裡需要修改 index.html 增加氣槽 UI，或者暫時用 log 看)
-        // 建議之後在 e-info 區塊加個 <div>Gauge: ◇◇◇</div>
 
         UI.gameState.party.forEach((p, i) => {
             const slot = i + 1; 
