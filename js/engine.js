@@ -14,6 +14,8 @@ const Engine = {
         'dmg_resist_down': '特殊耐性下降',
         'atk_add_buff': '攻擊附加強化',
         'atk_add_debuff': '攻擊附加弱化',
+        'dmg_cut': '被傷害減免',
+        'dmg_plus': '傷害附加',
         
         // --- 寶具與暴擊 ---
         'np_dmg_up': '寶具威力提升',
