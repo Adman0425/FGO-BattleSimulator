@@ -23,9 +23,8 @@ const UI = {
 
     // 技能圖示 helper (暫時用文字或預設圖)
     getSkillIcon: (iconName) => {
-        // 如果你有 skill icons，可以 return `data/skill_icons/${iconName}`;
-        // 這裡先回傳通用圖或 null，靠 CSS 處理
-        return null; 
+        if (!iconName) return null;
+        return `data/skill_icon/${iconName}`; 
     },
 
     init: () => {
