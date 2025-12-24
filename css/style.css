@@ -543,3 +543,52 @@ body.selecting-target .target-cancel-btn {
     cursor: not-allowed;
     pointer-events: none; /* 關鍵：讓它無法再被點擊 */
 }
+
+/* --- 多敵人容器 --- */
+.enemy-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+/* 敵人卡片 (覆蓋原本的 enemy-card 樣式，改為動態生成的 class) */
+.enemy-unit {
+    width: 200px;
+    border: 2px solid #444;
+    background: rgba(0,0,0,0.7);
+    padding: 10px;
+    border-radius: 8px;
+    position: relative;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+/* 被鎖定的目標 (Targeted) */
+.enemy-unit.targeted {
+    border-color: #ff5252; /* 紅色鎖定框 */
+    box-shadow: 0 0 10px #ff5252;
+}
+.enemy-unit.targeted::after {
+    content: "TARGET";
+    position: absolute;
+    top: -15px; left: 50%; transform: translateX(-50%);
+    background: #ff5252; color: white;
+    font-size: 10px; padding: 2px 6px; border-radius: 4px;
+    font-weight: bold;
+}
+
+/* 死亡的敵人 */
+.enemy-unit.dead {
+    opacity: 0.3;
+    filter: grayscale(100%);
+    pointer-events: none; /* 無法再被選中 */
+}
+
+/* 敵人血條與資訊 */
+.e-info-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px; }
+.e-hp-box { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-bottom: 5px; position: relative;}
+.e-hp-bar { height: 100%; background: linear-gradient(to right, #e91e63, #9c27b0); width: 100%; transition: width 0.3s; }
+.e-gauge-box { display: flex; gap: 2px; justify-content: center; height: 8px; }
+.gauge-pip { width: 8px; height: 8px; background: #555; border-radius: 50%; }
+.gauge-pip.filled { background: #ffd700; box-shadow: 0 0 5px #ffd700; }
