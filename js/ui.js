@@ -263,7 +263,7 @@ const UI = {
         const skillContainer = cardEl.querySelector('.skill-row');
         
         if (!skillContainer) return;
-        skillContainer.innerHTML = ''; // 清空
+        skillContainer.innerHTML = ''; // 清空舊按鈕
 
         if (!servant.skills) return;
 
@@ -271,26 +271,47 @@ const UI = {
             const btn = document.createElement('div');
             btn.className = 'skill-btn';
             
-            // 判斷 CD
+            // --- 【新增】設定技能圖示 ---
+            if (skill.icon) {
+                const iconPath = UI.getSkillIcon(skill.icon);
+                btn.style.backgroundImage = `url('${iconPath}')`;
+                btn.style.backgroundSize = 'cover'; // 讓圖片填滿按鈕
+                btn.style.backgroundPosition = 'center';
+            }
+            // ---------------------------
+
+            // 判斷 CD 狀態
             if (skill.currentCooldown > 0) {
-                btn.style.backgroundColor = '#222';
+                // CD 中：顯示半透明黑遮罩 + 數字
+                // 我們用 box-shadow 或 background-color rgba 來做遮罩效果
+                btn.style.backgroundColor = 'rgba(0,0,0,0.7)'; 
                 btn.style.cursor = 'not-allowed';
+                // 為了讓背景圖不被完全蓋住，我們使用 blend-mode 或是在上面蓋一層 div，
+                // 但簡單做法是直接疊加顏色
                 btn.innerHTML = `<div class="skill-cooldown">${skill.currentCooldown}</div>`;
+                
+                // 如果有圖，加一點濾鏡讓它變暗
+                if (skill.icon) {
+                    btn.style.filter = 'grayscale(100%) brightness(50%)'; 
+                }
             } else {
-                btn.style.backgroundColor = '#4db6ac'; // 可用顏色 (綠)
+                // 可用狀態
+                if (!skill.icon) {
+                    // 如果沒圖，才給預設綠色背景，有圖就不用給背景色
+                    btn.style.backgroundColor = '#4db6ac'; 
+                }
                 btn.style.cursor = 'pointer';
+                btn.style.filter = 'none'; // 移除濾鏡
+                
                 // 點擊事件
                 btn.onclick = (e) => {
-                    e.stopPropagation(); // 避免觸發開狀態視窗
+                    e.stopPropagation(); 
                     UI.castSkill(servantIndex, skillIdx);
                 };
                 
-                // Tooltip (簡單 title)
+                // Tooltip
                 btn.title = `${skill.name}\n${skill.description}`;
             }
-
-            // 如果有 icon
-            // if (skill.icon) btn.style.backgroundImage = ...
 
             skillContainer.appendChild(btn);
         });
