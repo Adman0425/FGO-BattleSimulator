@@ -941,7 +941,7 @@
   "skills": [
     {
       "name": "希望的領導力 B",
-      "icon": "skill_charisma.png",
+      "icon": "atk_up.png",
       "cd": 6,
       "description": "己方全體攻擊力提升[20%](3回合) & NP增加[30%]",
       "effects": [
@@ -961,7 +961,7 @@
     },
     {
       "name": "阿瓦隆的妖精 A",
-      "icon": "skill_np_gain.png",
+      "icon": "np_charge.png",
       "cd": 5,
       "description": "己方單體NP增加[20%] & 己方全體NP獲得量提升[30%](3回合)",
       "effects": [
@@ -982,7 +982,7 @@
     },
     {
       "name": "聖劍鍛造 EX",
-      "icon": "skill_arts_up.png",
+      "icon": "arts_card_up.png",
       "cd": 6,
       "description": "己方單體Arts指令卡性能提升[50%](3回合) & 對〔人類的威脅〕特攻狀態賦予[50%](3回合) & 無敵狀態(1回合)",
       "effects": [
@@ -1013,7 +1013,6 @@
   "passive_skills": [
     {
       "name": "對魔力 A",
-      "icon": "passive_debuff_resist.png",
       "description": "自身的弱化耐性提升(20%)",
       "effects": [
         {
@@ -1025,7 +1024,6 @@
     },
     {
       "name": "陣地建造 EX",
-      "icon": "passive_arts.png",
       "description": "自身的Arts指令卡性能提升(12%)",
       "effects": [
         {
@@ -1038,7 +1036,6 @@
     },
     {
       "name": "獨自魔術 B",
-      "icon": "passive_arts_crit.png",
       "description": "自身的Arts指令卡暴擊威力提升(10%)",
       "effects": [
         {
@@ -1051,7 +1048,6 @@
     },
     {
       "name": "妖精眼 A",
-      "icon": "passive_crit_resist.png",
       "description": "自身的被暴擊發生耐性提升(20%)",
       "effects": [
         {
@@ -1196,7 +1192,7 @@
   "skills": [
     {
       "name": "夜之帷幕 EX",
-      "icon": "skill_01.png",
+      "icon": "np_dmg_up.png",
       "cd": 6,
       "description": "己方全體寶具威力提升[30%](3回合) & NP增加[20%]",
       "effects": [
@@ -1216,7 +1212,7 @@
     },
     {
       "name": "晨之雲雀 EX",
-      "icon": "skill_02.png",
+      "icon": "np_charge.png",
       "cd": 6,
       "description": "己方單體NP增加[50%] & 獲得暴擊星[20] & [負面]回合結束時NP減少20%(1次)",
       "effects": [
@@ -1244,7 +1240,7 @@
     },
     {
       "name": "夢之終結 EX",
-      "icon": "skill_03.png",
+      "icon": "buster_card_up.png",
       "cd": 8,
       "description": "己方單體Buster性能提升[50%](1回合) & 寶具威力提升效果量翻倍(1回合) & [負面]回合結束時永久睡眠(無法解除)",
       "effects": [
@@ -1333,7 +1329,6 @@
     },
     {
       "name": "仲夏夜之夢 EX",
-      "icon": "passive_immune.png",
       "description": "付與自身精神異常·詛咒無效的狀態",
       "effects": [
         {
