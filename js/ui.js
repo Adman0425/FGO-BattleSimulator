@@ -80,6 +80,10 @@ const UI = {
                 currentHp: stats.hp,
                 maxHp: stats.hp,
                 currentNp: 0
+                buffs: [
+                    { name: "攻擊力提升", type: "buff", val: 0.2, turn: 3, count: null },
+                    { name: "對魔力", type: "buff", val: 0, turn: 0, count: null } // 被動
+                ]
             };
         });
 
@@ -317,6 +321,10 @@ const UI = {
             // NP 顯示為整數
             document.getElementById(`val-np-p${slot}`).innerText = Math.floor(p.currentNp);
             document.getElementById(`np-p${slot}`).style.width = `${Math.min(100, p.currentNp)}%`;
+
+            // 【新增】點擊卡片開啟詳情
+            cardEl.onclick = () => UI.openBuffModal(i);
+            cardEl.style.cursor = "pointer"; // 讓滑鼠變手型
         });
 
         document.getElementById('star-count').innerText = Math.floor(UI.gameState.stars);
