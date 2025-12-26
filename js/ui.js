@@ -768,7 +768,7 @@ const UI = {
                 UI.gameState.party.forEach(p => {
                     const hasInvincible = p.buffs && p.buffs.some(b => b.type === 'invincible' || b.type === 'anti_purge_defense');
                     if (hasInvincible) {
-                        UI.log(`  ${p.name} 無傷 (無敵)`);
+                        UI.log(`  ${p.name} 無傷`);
                     } else {
                         p.currentHp -= dmg;
                         UI.log(`  ${p.name} 受到 ${dmg}`);
@@ -783,7 +783,7 @@ const UI = {
                 UI.log(`[${e.name}] 攻擊 ${target.name}`);
                 const hasInvincible = target.buffs && target.buffs.some(b => b.type === 'invincible' || b.type === 'anti_purge_defense');
                 if (hasInvincible) {
-                    UI.log(`  無傷 (無敵)`);
+                    UI.log(`  無傷`);
                 } else {
                     target.currentHp -= dmg;
                     UI.log(`  傷害 ${dmg}`);
@@ -800,7 +800,7 @@ const UI = {
     },
 
     updateDisplay: () => {
-        // 【修改】只更新敵人卡片，不更新大血條 (e-name 不存在了)
+        // 更新敵人卡片
         const enemyContainer = document.getElementById('enemy-container');
         enemyContainer.innerHTML = ''; 
 
