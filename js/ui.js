@@ -116,14 +116,18 @@ const UI = {
         if (!quest || !quest.waves[waveIndex]) return;
 
         const wave = quest.waves[waveIndex];
-        UI.log(`\n=== BATTLE ${waveIndex + 1}/${quest.waves.length} ===`);
+        
+        // 優先使用 JSON 裡的 battleLabel，如果沒有則使用自動計算
+        const label = wave.battleLabel || `BATTLE ${waveIndex + 1}/${quest.waves.length}`;
+        
+        UI.log(`\n=== ${label} ===`);
 
         // 讀取敵人數據
         UI.gameState.enemies = wave.enemies.map((enemyDataRaw, index) => {
             let eBase = DB.ENEMIES.find(e => e.id === enemyDataRaw.id) || DB.ENEMIES[0];
             return {
                 ...eBase,
-                uniqueId: `wave${waveIndex}_enemy${index}`, // 確保 ID 唯一
+                uniqueId: `wave${waveIndex}_enemy${index}`, 
                 name: enemyDataRaw.name || eBase.name, 
                 hp: enemyDataRaw.hp || eBase.hp,
                 currentHp: enemyDataRaw.hp || eBase.hp,
@@ -134,13 +138,13 @@ const UI = {
             };
         });
 
-        // 重置鎖定目標 (預設鎖定第一個)
+        // 重置鎖定目標
         UI.gameState.targetIndex = 0;
         
         // 更新畫面
         UI.updateDisplay();
     },
-
+    
     // --- 發牌與洗牌 ---
     shuffleArray: (array) => {
         for (let i = array.length - 1; i > 0; i--) {
