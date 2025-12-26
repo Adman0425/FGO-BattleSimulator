@@ -683,7 +683,7 @@
       { "id": 5, "name": "技能再裝填", "effects": [{ "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 1, "val": 1 }] }
     ],
     "noble_phantasm": {
-      "name": "與彼方同墜的夢之瞳眸", "card": "Buster", "type": "aoe", "hit_count": [10, 20, 30, 40], 
+      "name": "與彼方同墜的夢之瞳眸", "card": "Buster", "type": "aoe", "val": [300, 350, 400, 450, 500],, "hit_count": [10, 20, 30, 40], 
       "effects": [
         { "type": "damage", "val": 500, "special_mod": { "trait": "lawful", "val": 1.5 }, "note": "對[秩序]特攻150%" },
         { "type": "remove_buff", "sub_type": "offensive", "target": "enemy_all", "time": "before_hit" },
@@ -793,10 +793,7 @@
       { "id": 5, "name": "技能再裝填", "effects": [{ "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 1, "val": 1 }] }
     ],
     "noble_phantasm": {
-      "name": "希冀照臨的千秋豐國",
-      "card": "Arts",
-      "type": "aoe",
-      "hit_count": [10, 20, 30, 40],
+      "name": "希冀照臨的千秋豐國", "card": "Arts", "type": "aoe", "val": [450, 600, 675, 712, 750], "hit_count": [10, 20, 30, 40],
       "description": "(第1/2階段) 對敵方全體發動強大攻擊 & 〔天地〕特攻 & 自身NP增加<OC> & 我方全體攻擊力提升<OC>",
       "effects": [
         { "type": "damage", "val": 750, "special_mod": { "trait": ["sky", "earth"], "val": 1.5 }, "note": "對天地特攻150%" },
@@ -805,14 +802,11 @@
       ]
     },
     "noble_phantasm_alt": {
-      "name": "假使迎見的眾生明日",
-      "card": "Buster",
-      "type": "aoe",
-      "hit_count": [10, 20, 30, 40],
+      "name": "假使迎見的眾生明日", "card": "Buster", "type": "aoe", "val": [300, 400, 450, 475, 500], "hit_count": [10, 20, 30, 40],
       "description": "(第3階段) 自身寶威大幅提升<OC> & 無視防禦全體攻擊 & 〔天地〕特攻 & 全體NP增加<OC> & 解除「征服」 & 最大HP減少【副作用】",
       "effects": [
         { "type": "np_dmg_up", "target": "self", "val": 0.6, "turn": 1, "calc_mode": "oc", "oc_vals": [0.6, 0.65, 0.7, 0.75, 0.8], "time": "before_hit" },
-        { "type": "damage", "val": 300, "ignore_defense": true, "special_mod": { "trait": ["sky", "earth"], "val": 1.5 } },
+        { "type": "damage", "val": 500, "ignore_defense": true, "special_mod": { "trait": ["sky", "earth"], "val": 1.5 } },
         { "type": "np_charge", "target": "party", "val": 10, "calc_mode": "oc", "oc_vals": [10, 15, 20, 25, 30] },
         { "type": "remove_buff_by_name", "target": "self", "buff_name": "征服", "note": "解除征服狀態" },
         { "type": "max_hp_down", "target": "self", "val": 2000, "turn": 999, "unremovable": true, "is_debuff": true }
