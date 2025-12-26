@@ -120,7 +120,7 @@ const Engine = {
         'graceful_charme': '秀麗風情'
     },
 
-    // 屬性相剋表 (1.0 = 無克制, 2.0 = 克制, 0.5 = 被克)
+    // 屬性相剋表
     ATTRIBUTE_MATRIX: {
         'sky': { 'sky': 1.0, 'earth': 1.1, 'man': 0.9, 'star': 1.0, 'beast': 1.0 },
         'earth': { 'sky': 0.9, 'earth': 1.0, 'man': 1.1, 'star': 1.0, 'beast': 1.0 },
@@ -129,7 +129,7 @@ const Engine = {
         'beast': { 'sky': 1.0, 'earth': 1.0, 'man': 1.0, 'star': 1.1, 'beast': 1.0 }
     },
 
-    // 職階相剋表 (簡化版)
+    // 職階相剋表
     CLASS_MATRIX: {
         'saber': { 'lancer': 2.0, 'archer': 0.5, 'ruler': 0.5, 'conqueror': 1.0 },
         'archer': { 'saber': 2.0, 'lancer': 0.5, 'ruler': 0.5, 'conqueror': 1.0 },
@@ -144,14 +144,13 @@ const Engine = {
         'moon_cancer': { 'avenger': 2.0, 'ruler': 0.5, 'conqueror': 1.0 },
         'alter_ego': { 'rider': 1.5, 'caster': 1.5, 'assassin': 1.5, 'saber': 0.5, 'archer': 0.5, 'lancer': 0.5, 'conqueror': 1.0 },
         'pretender': { 'saber': 1.5, 'archer': 1.5, 'lancer': 1.5, 'rider': 0.5, 'caster': 0.5, 'assassin': 0.5, 'conqueror': 1.0 },
-        'conqueror': { 'default': 1.0 } // 預設白字
+        'conqueror': { 'default': 1.0 }
     },
 
     initServant: (data, level) => {
         let hp = data.stats.natural.hp;
         let atk = data.stats.natural.atk;
         
-        // 簡易等級成長計算 (線性模擬)
         if (level > 90) {
             const ratio = (level - 90) / 30;
             const maxHp = data.stats.lv120.hp;
@@ -171,27 +170,22 @@ const Engine = {
         };
     },
 
-    // 獲取 Buff 總和
     getBuffTotal: (servant, type, cardType = null) => {
         if (!servant.buffs) return 0;
         let total = 0;
         
-        // 1. 先計算 Buff Boost (如奧伯龍)
-        let boostMap = {}; // { 'np_dmg_up': 1.0 }
+        let boostMap = {}; 
         servant.buffs.forEach(b => {
             if (b.type === 'buff_boost' && b.sub_type) {
                 boostMap[b.sub_type] = (boostMap[b.sub_type] || 0) + b.val;
             }
         });
 
-        // 2. 計算實際 Buff
         servant.buffs.forEach(b => {
             if (b.type === type) {
-                // 如果指定了卡色 (如 Arts卡性能)，則必須符合
                 if (b.card && cardType && b.card !== cardType) return;
                 
                 let val = b.val;
-                // 應用 Boost
                 if (boostMap[type]) {
                     val += val * boostMap[type];
                 }
@@ -201,16 +195,11 @@ const Engine = {
         return total;
     },
 
-    // 【新增】連攜計算 (之前漏掉這個導致 Crash)
     calculateTurn: (servant, target, cards, isExtra) => {
-        // cards 是一個陣列，包含本次選中的三張卡
-        // 判斷 Chain
-        const firstCard = cards[0];
-        const isBusterChain = cards.every(c => c.type === 'Buster' || (c.isNP && c.type === 'Buster')); // 寶具視為其顏色的卡
+        const isBusterChain = cards.every(c => c.type === 'Buster' || (c.isNP && c.type === 'Buster'));
         const isArtsChain = cards.every(c => c.type === 'Arts' || (c.isNP && c.type === 'Arts'));
         const isQuickChain = cards.every(c => c.type === 'Quick' || (c.isNP && c.type === 'Quick'));
         
-        // Brave Chain 判斷 (擁有者相同)
         const ownerId = cards[0].attacker.id;
         const isBraveChain = cards.length === 3 && cards.every(c => c.attacker.id === ownerId);
 
@@ -224,39 +213,36 @@ const Engine = {
         };
     },
 
-    // 核心傷害計算
     calculateDamage: (attacker, defender, cardType, cardPosition, isCrit, isBusterChain) => {
         // 1. 基礎參數
         const ATK = attacker.atk;
-        const NP_LEVEL_IDX = 4; // 【預設】使用 NP5 (索引4)。改為 0 就是 NP1。
+        const NP_LEVEL_IDX = 4; // 【預設】使用 NP5
         
         // 2. 指令卡/寶具倍率
         let cardDamageValue = 0;
         let cardTypeMod = 1.0;
-        const isNP = (cardPosition === 0 && attacker.noble_phantasm.card === cardType && arguments[3] === 0); // 簡易判斷 (非 Extra)
+        
+        // 【修正】移除 arguments，改用明確變數檢查是否為寶具
+        const isNP = (cardPosition === 0 && attacker.noble_phantasm.card === cardType);
 
         if (isNP) {
             const npData = attacker.noble_phantasm;
-            // 【修正】處理寶具倍率陣列
             if (Array.isArray(npData.val)) {
                 cardDamageValue = npData.val[NP_LEVEL_IDX] || npData.val[0];
             } else {
-                cardDamageValue = npData.val || 450; // 預設 450
+                cardDamageValue = npData.val || 450;
             }
             
-            // 寶具卡色補正 (Arts: 1.0, Buster: 1.5, Quick: 0.8)
             if (cardType === 'Arts') cardTypeMod = 1.0;
             else if (cardType === 'Buster') cardTypeMod = 1.5;
             else if (cardType === 'Quick') cardTypeMod = 0.8;
 
         } else {
-            // 普通指令卡
             if (cardType === 'Arts') { cardDamageValue = 100; cardTypeMod = 1.0; }
             else if (cardType === 'Buster') { cardDamageValue = 150; cardTypeMod = 1.5; }
             else if (cardType === 'Quick') { cardDamageValue = 80; cardTypeMod = 0.8; }
-            else if (cardType === 'Extra') { cardDamageValue = 100; cardTypeMod = 1.0; } // Extra 獨立算
+            else if (cardType === 'Extra') { cardDamageValue = 100; cardTypeMod = 1.0; }
             
-            // 卡位補正 (1st: 1.0, 2nd: 1.2, 3rd: 1.4)
             if (cardType !== 'Extra') {
                 const posMods = [1.0, 1.2, 1.4];
                 cardDamageValue = cardDamageValue * (posMods[cardPosition] || 1.0);
@@ -271,10 +257,9 @@ const Engine = {
         if (Engine.CLASS_MATRIX[atkClass]) {
             classAffinity = Engine.CLASS_MATRIX[atkClass][defClass] || Engine.CLASS_MATRIX[atkClass]['default'] || 1.0;
         }
-        // 狂職特殊處理
         if (atkClass === 'berserker' && defClass === 'shielder') classAffinity = 1.0;
 
-        // 4. 陣營相剋 (天地人)
+        // 4. 陣營相剋
         let attributeMod = 1.0;
         if (Engine.ATTRIBUTE_MATRIX[attacker.attribute]) {
             attributeMod = Engine.ATTRIBUTE_MATRIX[attacker.attribute][defender.attribute] || 1.0;
@@ -282,27 +267,24 @@ const Engine = {
 
         // 5. Buff 計算
         const atkBuff = Engine.getBuffTotal(attacker, 'atk_up');
-        const defBuff = Engine.getBuffTotal(defender, 'def_up'); // 需注意無視防禦
+        const defBuff = Engine.getBuffTotal(defender, 'def_up');
         const cardBuff = Engine.getBuffTotal(attacker, 'card_up', cardType);
         const npBuff = isNP ? Engine.getBuffTotal(attacker, 'np_dmg_up') : 0;
         const critBuff = isCrit ? Engine.getBuffTotal(attacker, 'crit_dmg_up') : 0;
-        const powerMod = Engine.getBuffTotal(attacker, 'special_dmg_up'); // 特攻狀態
+        const powerMod = Engine.getBuffTotal(attacker, 'special_dmg_up');
         const dmgPlus = Engine.getBuffTotal(attacker, 'dmg_plus');
         const dmgCut = Engine.getBuffTotal(defender, 'dmg_cut');
 
-        // 無視防禦判定
         const ignoreDef = attacker.buffs.some(b => b.type === 'ignore_defense') || (isNP && attacker.noble_phantasm.ignore_defense);
         const effectiveDef = ignoreDef ? 0 : defBuff;
 
-        // 6. 寶具特攻 (Super Effective)
-        let specialNPMod = 1.0; // 預設 100%
+        // 6. 寶具特攻
+        let specialNPMod = 1.0;
         if (isNP && attacker.noble_phantasm.special_mod) {
             const mod = attacker.noble_phantasm.special_mod;
             let match = false;
             
-            // 檢查特攻對象 (Trait)
             const targetTraits = Array.isArray(mod.trait) ? mod.trait : [mod.trait];
-            // 檢查敵人的 trait 或 attribute
             const enemyTraits = (defender.traits || []).concat([defender.attribute]);
             
             if (targetTraits.some(t => enemyTraits.includes(t))) {
@@ -310,64 +292,47 @@ const Engine = {
             }
 
             if (match) {
-                specialNPMod = mod.val; // e.g. 1.5
+                specialNPMod = mod.val;
             }
         }
 
-        // 7. 公式計算 (FGO 近似公式)
-        // Dmg = ATK * Multiplier * (FirstCardBonus + (CardValue * (1 + CardBuff))) * Class * Attribute * Random * ATK_Buff * Special_Buff * NP_Buff * Crit_Buff
-        
-        // 簡化版公式：
+        // 7. 公式計算
         let baseDmg = ATK * (cardDamageValue / 100);
-        
-        // 色卡加成 (First Card Bonus 暫略，直接乘卡色係數和Buff)
         let cardFactor = cardTypeMod * (1 + cardBuff);
-        if (isBusterChain) cardFactor += 0.2; // Buster Chain 加成
+        if (isBusterChain) cardFactor += 0.2;
 
         let buffsFactor = Math.max(0, 1 + atkBuff - effectiveDef);
-        
-        // 特攻與暴擊
         let specialFactor = 1.0 + critBuff + npBuff + powerMod; 
 
-        // 總傷害
         let totalDamage = baseDmg * cardFactor * classAffinity * attributeMod * buffsFactor * specialFactor * specialNPMod * 0.23;
         
-        // 亂數 (0.9 ~ 1.099)
         const rand = 0.9 + Math.random() * 0.199;
         totalDamage *= rand;
 
-        // 加減傷
         totalDamage += (dmgPlus - dmgCut);
 
         return Math.floor(Math.max(0, totalDamage));
     },
 
     calculateNPGain: (attacker, defender, cardType, cardPosition, damage, isCrit) => {
-        // 簡易 NP 獲取公式
-        // 基礎 * 卡片補正 * (1 + 藍放/綠放) * (1 + NP獲取率Buff) * 敵補正
-        
-        if (cardType === 'Buster') return 0; // 紅卡通常無 NP (除非有特殊被動，暫略)
+        if (cardType === 'Buster') return 0;
 
         const baseNP = attacker.hidden_stats ? attacker.hidden_stats.np_charge_atk : 0.5;
         let cardMod = 1.0;
-        if (cardType === 'Arts') cardMod = 3.0 + (cardPosition * 1.5); // 1st: 3.0, 2nd: 4.5, 3rd: 6.0 (概略)
+        if (cardType === 'Arts') cardMod = 3.0 + (cardPosition * 1.5);
         if (cardType === 'Quick') cardMod = 1.0 + (cardPosition * 0.5);
         if (cardType === 'Extra') cardMod = 1.0;
 
-        // 如果是寶具 (假設寶具算 1st card)
-        if (arguments.length > 6 || (cardPosition === 0 && attacker.noble_phantasm.card === cardType)) { 
-             // 寶具的 NP 回收通常較低，這裡用 hits 修正或固定係數
-             // 暫時用 Arts 3.0, Quick 1.0
-        }
-
+        // 【修正】移除 arguments，使用邏輯判斷是否為寶具
+        // 這裡暫時忽略寶具的特殊 NP 獲取計算，視為指令卡處理，或依需求調整
+        
         const cardBuff = Engine.getBuffTotal(attacker, 'card_up', cardType);
         const npGainBuff = Engine.getBuffTotal(attacker, 'np_gain_up');
         
         let np = baseNP * cardMod * (1 + cardBuff) * (1 + npGainBuff);
         
-        if (isCrit) np *= 2; // 暴擊 NP 翻倍 (概略)
+        if (isCrit) np *= 2;
         
-        // 乘上 Hit 數 (假設每 Hit 獲取相同)
         let hits = 1;
         if (attacker.cards && attacker.cards.hits && attacker.cards.hits[cardType]) {
             const hitArr = attacker.cards.hits[cardType];
@@ -378,11 +343,10 @@ const Engine = {
     },
 
     calculateStarGen: (attacker, defender, cardType, cardPosition, isCrit) => {
-        // 簡易打星公式
-        if (cardType === 'Arts') return 0; // 藍卡打星極低
+        if (cardType === 'Arts') return 0;
         
         let stars = 0;
-        let baseRate = 0.1; // 10%
+        let baseRate = 0.1;
         
         if (cardType === 'Quick') baseRate = 0.8 + (cardPosition * 0.2);
         if (cardType === 'Buster') baseRate = 0.1 + (cardPosition * 0.05);
@@ -393,14 +357,12 @@ const Engine = {
         let chance = baseRate + cardBuff + starGenBuff;
         if (isCrit) chance += 0.2;
         
-        // 乘上 Hit 數
         let hits = 1;
         if (attacker.cards && attacker.cards.hits && attacker.cards.hits[cardType]) {
             const hitArr = attacker.cards.hits[cardType];
             hits = hitArr.length > 0 ? hitArr.length : 1;
         }
 
-        // 每一擊判斷
         for(let i=0; i<hits; i++) {
             if (Math.random() < chance) stars++;
         }
@@ -409,7 +371,6 @@ const Engine = {
     },
 
     distributeStars: (hand, stars) => {
-        // 簡單權重分配 (目前全隨機)
         hand.forEach(card => {
             card.critChance = 0;
         });
@@ -420,16 +381,13 @@ const Engine = {
                 hand[luckyIdx].critChance += 10;
             }
         }
-        return 0; // 剩餘星星
+        return 0;
     },
 
-    // 技能處理 (含 Buff 施加)
     useSkill: (user, target, skill) => {
         if (!skill.effects) return;
 
         skill.effects.forEach(effect => {
-            
-            // 1. 直接數值變更
             if (effect.type === 'np_charge') {
                 target.currentNp += effect.val;
                 if (target.currentNp > 300) target.currentNp = 300;
@@ -440,7 +398,7 @@ const Engine = {
                 if (target.currentGauge !== undefined) target.currentGauge = Math.max(0, target.currentGauge - effect.val);
             }
             else if (effect.type === 'star_gen_flat') {
-                // UI.gameState.stars += effect.val; // 星星通常在 UI 層處理
+                // UI 處理
             }
             else if (effect.type === 'deck_shuffle') {
                 // UI 處理
@@ -448,8 +406,6 @@ const Engine = {
             else if (effect.type === 'hp_recover') {
                 target.currentHp = Math.min(target.maxHp, target.currentHp + effect.val);
             }
-            
-            // 2. 解除狀態
             else if (effect.type === 'remove_debuff') {
                 if (target.buffs) {
                     target.buffs = target.buffs.filter(b => !b.isDebuff || b.unremovable);
@@ -465,13 +421,9 @@ const Engine = {
                     target.buffs = target.buffs.filter(b => b.name !== effect.buff_name);
                 }
             }
-            
-            // 3. 特殊：變身
             else if (effect.type === 'transform') {
                 target.pendingTransform = effect;
             }
-
-            // 4. 通用：施加 Buff (Catch-all)
             else {
                 Engine.applyBuff(user, target, effect);
             }
@@ -502,16 +454,9 @@ const Engine = {
 
     processTurnEnd: (servant) => {
         if (!servant.buffs) return;
-
-        // 1. 處理回合結束效果 (如奧伯龍睡眠扣NP)
-        // 這裡需要遍歷找 buff.type === 'np_loss_turn_end' (暫略)
-
-        // 2. 扣除回合數
         servant.buffs.forEach(b => {
             if (b.turn > 0) b.turn--;
         });
-
-        // 3. 移除過期 Buff (回合=0 且 次數=0/null)
         servant.buffs = servant.buffs.filter(b => {
             if (b.turn === 0 && (b.count === null || b.count === 0)) return false;
             return true;
