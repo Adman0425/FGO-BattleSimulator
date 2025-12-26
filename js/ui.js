@@ -1,10 +1,13 @@
 const UI = {
     gameState: {
         party: [], 
-        enemies: [], // 【改為陣列】
-        targetIndex: 0, // 當前鎖定的敵人索引
+        enemies: [],      // 當前場上的敵人列表
+        quest: null,      // 關卡資訊
+        currentWave: 0,   // 當前波次 (0-based)
+        targetIndex: 0,   // 玩家當前鎖定的敵人索引
         deck: [],        
         currentHand: [], 
+        // selectedCards 結構: { type: 'hand'|'np', val: index }
         selectedCards: [], 
         stars: 0,
         turnCount: 0     
@@ -70,7 +73,9 @@ const UI = {
         UI.log("隊伍已儲存。");
     },
 
+    // --- 初始化戰鬥 ---
     initBattle: () => {
+        // 1. 初始化我方
         const partyIndices = [
             { idx: document.getElementById('p1-select').value, lv: document.getElementById('p1-lv').value },
             { idx: document.getElementById('p2-select').value, lv: document.getElementById('p2-lv').value },
@@ -84,29 +89,17 @@ const UI = {
             return servant;
         });
 
+        // 2. 初始化關卡與 Wave
         const qIndex = document.getElementById('quest-select').value;
         const quest = DB.QUESTS[qIndex];
-        const wave = quest.waves[0]; // 目前只讀 Wave 1
-
-        // 【修改】讀取該 Wave 所有敵人
-        UI.gameState.enemies = wave.enemies.map((enemyDataRaw, index) => {
-            let eBase = DB.ENEMIES.find(e => e.id === enemyDataRaw.id) || DB.ENEMIES[0];
-            return {
-                ...eBase,
-                uniqueId: `enemy_${index}`, // 唯一識別
-                name: enemyDataRaw.name || eBase.name, // 允許覆蓋名字
-                hp: enemyDataRaw.hp || eBase.hp,
-                currentHp: enemyDataRaw.hp || eBase.hp,
-                maxHp: enemyDataRaw.hp || eBase.hp,
-                currentGauge: 0,
-                maxGauge: enemyDataRaw.gauge || eBase.gauge || 3,
-                buffs: []
-            };
-        });
         
-        UI.gameState.targetIndex = 0; // 預設鎖定第一隻
+        UI.gameState.quest = quest;
+        UI.gameState.currentWave = 0;
         UI.gameState.stars = 0;
         UI.gameState.turnCount = 0;
+        
+        // 載入第一波敵人
+        UI.loadWave(0);
         
         UI.createFullDeck();
 
@@ -117,6 +110,38 @@ const UI = {
         UI.dealCards(); 
     },
 
+    // --- 載入波次 (核心) ---
+    loadWave: (waveIndex) => {
+        const quest = UI.gameState.quest;
+        if (!quest || !quest.waves[waveIndex]) return;
+
+        const wave = quest.waves[waveIndex];
+        UI.log(`\n=== BATTLE ${waveIndex + 1}/${quest.waves.length} ===`);
+
+        // 讀取敵人數據
+        UI.gameState.enemies = wave.enemies.map((enemyDataRaw, index) => {
+            let eBase = DB.ENEMIES.find(e => e.id === enemyDataRaw.id) || DB.ENEMIES[0];
+            return {
+                ...eBase,
+                uniqueId: `wave${waveIndex}_enemy${index}`, // 確保 ID 唯一
+                name: enemyDataRaw.name || eBase.name, 
+                hp: enemyDataRaw.hp || eBase.hp,
+                currentHp: enemyDataRaw.hp || eBase.hp,
+                maxHp: enemyDataRaw.hp || eBase.hp,
+                currentGauge: 0,
+                maxGauge: enemyDataRaw.gauge || eBase.gauge || 3,
+                buffs: []
+            };
+        });
+
+        // 重置鎖定目標 (預設鎖定第一個)
+        UI.gameState.targetIndex = 0;
+        
+        // 更新畫面
+        UI.updateDisplay();
+    },
+
+    // --- 發牌與洗牌 ---
     shuffleArray: (array) => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -142,10 +167,10 @@ const UI = {
     },
 
     dealCards: () => {
-        // 檢查是否全滅或勝利
+        // 檢查是否所有敵人都死光了 (防止在 Wave 間隙錯誤發牌)
         const anyEnemyAlive = UI.gameState.enemies.some(e => e.currentHp > 0);
         if (!anyEnemyAlive) {
-            UI.log(">> 戰鬥勝利 (Battle Win)!");
+            // 如果沒怪了，理論上會在 executeTurn 處理換波，這裡不做事
             return;
         }
 
@@ -172,6 +197,7 @@ const UI = {
         UI.updateSelectedSlots();
     },
 
+    // --- 渲染卡片 ---
     renderAllCards: () => {
         UI.renderNPCards();
         UI.renderHand();
@@ -248,8 +274,13 @@ const UI = {
 
     selectCard: (type, val) => {
         if (UI.gameState.selectedCards.length >= 3) return;
-        if (type === 'hand' && UI.gameState.selectedCards.some(s => s.type === 'hand' && s.val === val)) return;
-        if (type === 'np' && UI.gameState.selectedCards.some(s => s.type === 'np' && s.val === val)) return;
+        
+        // 防呆：避免重複選擇
+        if (type === 'hand') {
+            if (UI.gameState.selectedCards.some(s => s.type === 'hand' && s.val === val)) return;
+        } else if (type === 'np') {
+            if (UI.gameState.selectedCards.some(s => s.type === 'np' && s.val === val)) return;
+        }
 
         UI.gameState.selectedCards.push({ type: type, val: val }); 
         
@@ -289,7 +320,7 @@ const UI = {
                     badgeSrc = UI.getServantIcon(card.ownerId);
                 } else if (item.type === 'np') {
                     const servant = party[item.val]; 
-                    imgSrc = UI.cardImages['NP'];
+                    imgSrc = UI.cardImages['NP']; // 可優化：使用 servant.noble_phantasm.card 對應色卡圖
                     badgeSrc = UI.getServantIcon(servant.id);
                     
                     const npText = document.createElement('div');
@@ -302,7 +333,8 @@ const UI = {
                     npText.style.fontWeight = 'bold';
                     npText.style.textShadow = '0 0 5px #f00';
                     npText.style.textAlign = 'center';
-                    npText.style.fontSize = '12px';
+                    npText.style.fontSize = '10px';
+                    npText.style.width = '100%';
                     el.appendChild(npText);
                 }
 
@@ -323,6 +355,7 @@ const UI = {
         document.getElementById('btn-execute').disabled = (selected.length !== 3);
     },
 
+    // --- 技能系統 (含圖示) ---
     renderSkills: (servantIndex) => {
         const servant = UI.gameState.party[servantIndex];
         const cardEl = document.getElementById(`card-p${servantIndex+1}`);
@@ -392,19 +425,18 @@ const UI = {
         
         skill.effects.forEach(effect => {
             let effectTargets = [];
+            // 判斷目標類型
             if (effect.target === 'one') effectTargets = [mainTarget];
             else if (effect.target === 'self') effectTargets = [user];
             else if (effect.target === 'party') effectTargets = UI.gameState.party;
             else if (effect.target === 'enemy' || effect.target === 'enemy_all') {
-                // 如果是敵方全體，選所有活著的
                 if (effect.target === 'enemy_all') {
                     effectTargets = UI.gameState.enemies.filter(e => e.currentHp > 0);
                 } else {
-                    // 單體敵方 (使用當前鎖定目標，或 selected)
+                    // 單體敵方 (如果有選就用選的，沒選用鎖定的)
                     if (targets.length > 0 && targets[0].uniqueId) {
                         effectTargets = targets;
                     } else {
-                        // 默認給當前鎖定的
                         effectTargets = [UI.gameState.enemies[UI.gameState.targetIndex]];
                     }
                 }
@@ -420,6 +452,7 @@ const UI = {
         UI.updateDisplay();
     },
 
+    // --- 視覺化目標選擇 ---
     selectTarget: (scope) => {
         return new Promise((resolve, reject) => {
             const body = document.body;
@@ -444,16 +477,14 @@ const UI = {
                 });
             } else if (scope === 'enemy') {
                 // 選敵人
-                // 因為現在有多個敵人，我們需要綁定到每個 .enemy-unit
                 const enemyUnits = document.querySelectorAll('.enemy-unit');
                 enemyUnits.forEach(el => {
                     if (el.classList.contains('dead')) return;
-                    el.parentElement.classList.add('active-target-zone'); // container
+                    el.parentElement.classList.add('active-target-zone'); 
                     
                     el._targetHandler = (e) => {
                         e.stopPropagation();
                         cleanup();
-                        // 找出這是哪隻敵人 (透過 index 屬性或 id)
                         const enemyId = el.getAttribute('data-id');
                         const enemy = UI.gameState.enemies.find(e => e.uniqueId === enemyId);
                         resolve(enemy);
@@ -495,7 +526,7 @@ const UI = {
         document.getElementById('command-overlay').classList.remove('active');
     },
 
-    // 【核心】支援多敵人目標切換
+    // --- 回合執行 (含波次切換) ---
     executeTurn: () => {
         const hand = UI.gameState.currentHand;
         const selectedItems = UI.gameState.selectedCards; 
@@ -547,7 +578,6 @@ const UI = {
         }
         if (bonuses.quickChain) { UI.log("【Quick Chain】Stars +10"); UI.gameState.stars += 10; }
 
-        // 整理所有攻擊 (含 Extra)
         const allAttacks = [];
         cardChain.forEach((cardObj, i) => {
             allAttacks.push({ ...cardObj, index: i, isExtra: false });
@@ -563,53 +593,44 @@ const UI = {
             });
         }
 
-        // --- 執行攻擊與寶具 ---
+        // 執行所有攻擊
         allAttacks.forEach(atk => {
-            // 每次行動前確認目標
+            // 自動切換目標
             let currentTarget = UI.gameState.enemies[UI.gameState.targetIndex];
             if (!currentTarget || currentTarget.currentHp <= 0) {
                 const nextTargetIdx = UI.gameState.enemies.findIndex(e => e.currentHp > 0);
-                if (nextTargetIdx === -1) return; // 全死光了
+                if (nextTargetIdx === -1) return; // 全死光
                 UI.gameState.targetIndex = nextTargetIdx;
                 currentTarget = UI.gameState.enemies[nextTargetIdx];
             }
 
-            // 1. 處理寶具 (NP)
             if (atk.isNP) {
                 UI.log(`>> ${atk.attacker.name} 釋放了寶具: ${atk.npData.name}`);
-                atk.attacker.currentNp -= 100; // 扣 NP
+                atk.attacker.currentNp -= 100; 
                 if (atk.attacker.currentNp < 0) atk.attacker.currentNp = 0;
 
-                // 【修正點】判斷是 輔助型 還是 攻擊型
                 const npType = atk.npData.type || 'single';
 
                 if (npType === 'support') {
-                    // --- 輔助寶具邏輯 ---
                     UI.log(`<span style="color:#4db6ac;">(輔助效果發動)</span>`);
-                    
-                    // 執行效果 (類似 castSkill 的邏輯)
                     if (atk.npData.effects) {
                         atk.npData.effects.forEach(effect => {
                             let effectTargets = [];
-                            // 判斷對象 (輔助寶具通常是對 party 或 self)
                             if (effect.target === 'party') effectTargets = UI.gameState.party;
                             else if (effect.target === 'self') effectTargets = [atk.attacker];
-                            else if (effect.target === 'one') effectTargets = [atk.attacker]; // 暫時給自己(如果沒指定)
-                            else if (effect.target === 'enemy_all') effectTargets = UI.gameState.enemies.filter(e => e.currentHp > 0); // 輔助寶具也可能有 Debuff (如孔明)
+                            else if (effect.target === 'one') effectTargets = [atk.attacker]; 
+                            else if (effect.target === 'enemy_all') effectTargets = UI.gameState.enemies.filter(e => e.currentHp > 0);
 
                             effectTargets.forEach(t => {
-                                // 使用 Engine 施加 Buff/Debuff (但不造成傷害)
                                 const dummySkill = { effects: [effect] };
-                                const res = Engine.useSkill(atk.attacker, t, dummySkill);
-                                // 這裡可以選擇性顯示 log
+                                Engine.useSkill(atk.attacker, t, dummySkill);
                             });
                         });
                     }
-                    // 輔助寶具不計算傷害，直接 return
                     return; 
                 } 
                 
-                // --- 攻擊型寶具邏輯 (AOE / Single) ---
+                // 攻擊寶具
                 let hitTargets = [];
                 if (npType === 'aoe') {
                     hitTargets = UI.gameState.enemies.filter(e => e.currentHp > 0);
@@ -628,10 +649,9 @@ const UI = {
                     
                     UI.log(`對 ${t.name}: 傷 ${dmg} | NP+${np}%`);
 
-                    // 攻擊型寶具的附帶效果 (如：奧伯龍的睡眠、孔明的降防)
                     if (atk.npData.effects) {
                         atk.npData.effects.forEach(effect => {
-                            if (effect.type !== 'damage') { // 排除純傷害標記
+                            if (effect.type !== 'damage') {
                                 const dummySkill = { effects: [effect] };
                                 Engine.useSkill(atk.attacker, t, dummySkill);
                             }
@@ -640,7 +660,7 @@ const UI = {
                 });
 
             } else {
-                // 2. 普通攻擊 / Extra
+                // 普通攻擊
                 const isCrit = (atk.critChance || 0) > Math.random() * 100;
                 const cardIdx = atk.isExtra ? 3 : atk.index; 
                 
@@ -658,13 +678,37 @@ const UI = {
             }
         });
 
-        // 檢查勝利 (Wave Clear)
+        // --- 檢查勝利與換波 ---
         const remainingEnemies = UI.gameState.enemies.filter(e => e.currentHp > 0);
+        
         if (remainingEnemies.length === 0) {
             UI.gameState.enemies.forEach(e => e.currentHp = 0);
             UI.updateDisplay();
-            UI.log(">> Enemy Defeated! Wave Clear!");
-            return;
+
+            const totalWaves = UI.gameState.quest.waves.length;
+            const nextWaveIdx = UI.gameState.currentWave + 1;
+
+            if (nextWaveIdx < totalWaves) {
+                UI.log(">> Wave Cleared! 前往下一波...");
+                
+                setTimeout(() => {
+                    UI.gameState.currentWave = nextWaveIdx;
+                    UI.loadWave(nextWaveIdx); // 載入新敵人
+                    
+                    // 換波時的回合結束處理
+                    UI.gameState.party.forEach(p => Engine.processTurnEnd(p));
+                    UI.gameState.party.forEach(p => {
+                        if(p.skills) p.skills.forEach(s => { if(s.currentCooldown > 0) s.currentCooldown--; });
+                    });
+
+                    UI.dealCards(); 
+                }, 1500);
+
+            } else {
+                UI.log("<h2 style='color:gold'>🏆 BATTLE FINISH 🏆</h2>");
+                document.getElementById('e-name').innerText = "VICTORY";
+            }
+            return; 
         }
 
         UI.gameState.party.forEach(p => { if(p.currentNp > 300) p.currentNp = 300; });
@@ -685,11 +729,9 @@ const UI = {
     enemyTurn: () => {
         UI.log("=== Enemy Phase ===");
         
-        // 每個活著的敵人都行動
         UI.gameState.enemies.forEach(e => {
             if (e.currentHp <= 0) return;
 
-            // 氣槽增加
             if (e.currentGauge < e.maxGauge) {
                 e.currentGauge++;
             }
@@ -701,9 +743,9 @@ const UI = {
             }
 
             if (isNP) {
-                UI.log(`[${e.name}] <span style="color:red;">發動強力攻擊 (Charge Attack)!</span>`);
-                // 簡易全體攻擊
+                UI.log(`[${e.name}] <span style="color:red;">發動強力攻擊/寶具!</span>`);
                 const dmg = 3000;
+                // 這裡可以根據 enemies.json 讀取特定寶具效果，先簡化
                 UI.gameState.party.forEach(p => {
                     const hasInvincible = p.buffs && p.buffs.some(b => b.type === 'invincible' || b.type === 'anti_purge_defense');
                     if (hasInvincible) {
@@ -715,7 +757,6 @@ const UI = {
                     p.currentNp += 10; 
                 });
             } else {
-                // 普攻
                 const targetIdx = Math.floor(Math.random() * UI.gameState.party.length);
                 const target = UI.gameState.party[targetIdx];
                 const dmg = 1500;
@@ -745,26 +786,23 @@ const UI = {
     updateDisplay: () => {
         // --- 渲染敵人列表 ---
         const enemyContainer = document.getElementById('enemy-container');
-        enemyContainer.innerHTML = ''; // 重繪
+        enemyContainer.innerHTML = ''; 
 
         UI.gameState.enemies.forEach((e, idx) => {
-            // 建立 DOM
             const eDiv = document.createElement('div');
             eDiv.className = 'enemy-unit';
-            eDiv.setAttribute('data-id', e.uniqueId); // 用於選擇
+            eDiv.setAttribute('data-id', e.uniqueId); 
             
             if (e.currentHp <= 0) eDiv.classList.add('dead');
             if (idx === UI.gameState.targetIndex && e.currentHp > 0) eDiv.classList.add('targeted');
 
-            // 點擊鎖定目標
             eDiv.onclick = () => {
                 if (e.currentHp > 0) {
                     UI.gameState.targetIndex = idx;
-                    UI.updateDisplay(); // 更新鎖定框
+                    UI.updateDisplay(); 
                 }
             };
 
-            // 內容：名字、HP條、氣槽
             const hpPct = Math.max(0, (e.currentHp / e.maxHp) * 100);
             
             let gaugeHtml = '';
@@ -788,7 +826,16 @@ const UI = {
             enemyContainer.appendChild(eDiv);
         });
 
-        // --- 我方渲染 (不變) ---
+        // 顯示敵人(目標)資訊在上方大血條 (可選，目前多敵人模式下，大血條可以顯示當前鎖定目標)
+        const currentTarget = UI.gameState.enemies[UI.gameState.targetIndex];
+        if (currentTarget) {
+            document.getElementById('e-name').innerText = currentTarget.name;
+            document.getElementById('e-hp-current').innerText = Math.floor(currentTarget.currentHp);
+            const tHpPct = Math.max(0, (currentTarget.currentHp / currentTarget.maxHp) * 100);
+            document.getElementById('e-hp-bar').style.width = `${tHpPct}%`;
+        }
+
+        // --- 我方渲染 ---
         UI.gameState.party.forEach((p, i) => {
             const slot = i + 1; 
             document.getElementById(`img-p${slot}`).src = UI.getServantIcon(p.id);
