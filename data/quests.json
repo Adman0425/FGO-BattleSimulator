@@ -29,5 +29,64 @@
         ]
       }
     ]
+  },
+  {
+    "id": "twinstory_campaign_1",
+    "name": "逃出伊夫堡（シャトー・ディフからの脱獄）",
+    "waves": [
+      {
+        "battleLabel": "BATTLE 1/3",
+        "//": "第一面 (第1批: 劍x3)",
+        "enemies": [
+          { "id": 3001, "name": "失落的獄卒 C", "hp": 43578, "gauge": 3 },
+          { "id": 3001, "name": "失落的獄卒 B", "hp": 43578, "gauge": 3 },
+          { "id": 3001, "name": "失落的獄卒 A", "hp": 43578, "gauge": 3 }
+        ]
+      },
+      {
+        "battleLabel": "BATTLE 1/3",
+        "//": "第一面 (第2批: 弓/劍/弓)",
+        "enemies": [
+          { "id": 3002, "name": "憂鬱的獄卒 F", "hp": 56958, "gauge": 3 },
+          { "id": 3001, "name": "憂鬱的獄卒 E", "hp": 48971, "gauge": 3 },
+          { "id": 3002, "name": "憂鬱的獄卒 D", "hp": 54578, "gauge": 3 }
+        ]
+      },
+      {
+        "battleLabel": "BATTLE 1/3",
+        "//": "第一面 (第3批: 槍/槍/劍)",
+        "enemies": [
+          { "id": 3003, "name": "憂鬱的獄卒 I", "hp": 55911, "gauge": 3 },
+          { "id": 3003, "name": "憂鬱的獄卒 H", "hp": 54577, "gauge": 3 },
+          { "id": 3001, "name": "憂鬱的獄卒 G", "hp": 59769, "gauge": 3 }
+        ]
+      },
+      {
+        "battleLabel": "BATTLE 1/3",
+        "//": "第一面 (第4批: 狂/槍/弓)",
+        "enemies": [
+          { "id": 3004, "name": "絕望的獄卒 L", "hp": 86549, "gauge": 5 },
+          { "id": 3003, "name": "絕望的獄卒 K", "hp": 66972, "gauge": 3 },
+          { "id": 3002, "name": "絕望的獄卒 J", "hp": 64567, "gauge": 3 }
+        ]
+      },
+      {
+        "battleLabel": "BATTLE 2/3",
+        "//": "第二面 (降臨者x2)",
+        "enemies": [
+          { "id": 4001, "name": "瘋狂的守門人", "hp": 284325, "gauge": 5 },
+          { "id": 4001, "name": "癲狂的守門人", "hp": 304336, "gauge": 5 }
+        ]
+      },
+      {
+        "battleLabel": "BATTLE 3/3",
+        "//": "第三面 (仇/狂/裁 Boss)",
+        "enemies": [
+          { "id": 5001, "name": "不認罪之人", "hp": 475892, "gauge": 4 },
+          { "id": 5002, "name": "不屈罪之人", "hp": 666666, "gauge": 5 },
+          { "id": 5003, "name": "不蒙罪之人", "hp": 589014, "gauge": 5 }
+        ]
+      }
+    ]
   }
 ]
