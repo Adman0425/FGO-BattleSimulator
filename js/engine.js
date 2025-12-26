@@ -405,30 +405,28 @@ const Engine = {
 
         skill.effects.forEach(effect => {
             
-            // 1. 直接數值變更
+            // 1. 直接數值變更 (Instant Effects)
             if (effect.type === 'np_charge') {
                 target.currentNp += effect.val;
                 if (target.currentNp > 300) target.currentNp = 300;
-                // log...
             }
             else if (effect.type === 'np_drain') {
-                target.currentNp -= effect.val; // for enemy (gauge) logic needed later
+                target.currentNp -= effect.val;
+                if (target.currentNp < 0) target.currentNp = 0;
+                // 如果有敵人氣槽邏輯 (Gauge) 也可在此處理
                 if (target.currentGauge !== undefined) target.currentGauge = Math.max(0, target.currentGauge - effect.val);
             }
             else if (effect.type === 'star_gen_flat') {
-                // UI.gameState.stars += effect.val; // 需要存取 UI state，暫略
+                // UI.gameState.stars += effect.val; // 星星通常在 UI 層處理，Engine 暫時只算數值
             }
             else if (effect.type === 'deck_shuffle') {
-                // UI 處理
+                // 洗牌在 UI 層處理
             }
-            // ... 其他即時效果
-
-            // 2. 施加 Buff (狀態)
-            else if (['atk_up', 'def_up', 'card_up', 'np_dmg_up', 'crit_dmg_up', 'invincible', 'taunt', 'np_gain_up', 'ignore_defense', 'permanent_sleep', 'anti_purge_defense'].includes(effect.type)) {
-                Engine.applyBuff(user, target, effect);
+            else if (effect.type === 'hp_recover') {
+                target.currentHp = Math.min(target.maxHp, target.currentHp + effect.val);
             }
             
-            // 3. 解除狀態
+            // 2. 解除狀態 (Remove)
             else if (effect.type === 'remove_debuff') {
                 if (target.buffs) {
                     target.buffs = target.buffs.filter(b => !b.isDebuff || b.unremovable);
@@ -445,10 +443,16 @@ const Engine = {
                 }
             }
             
-            // 4. 特殊：變身 (UI 處理)
+            // 3. 特殊：變身 (UI 處理)
             else if (effect.type === 'transform') {
-                // 標記需要變身，由 UI 執行
                 target.pendingTransform = effect;
+            }
+
+            // 4. 施加 Buff (Catch-all for Buffs)
+            // 只要在 BUFF_NAMES 裡有定義名字，或是常見的 Buff 類型，都視為狀態加上去
+            else {
+                // 這裡是一個通用的防呆判斷，只要不是上面處理過的 type，都嘗試當作 buff 加上去
+                Engine.applyBuff(user, target, effect);
             }
         });
     },
