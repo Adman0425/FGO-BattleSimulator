@@ -800,7 +800,7 @@
     "append_skills": [
       { "id": 1, "name": "追擊技巧提升", "effects": [{ "type": "card_up", "card": "Extra", "target": "self", "val": 0.5 }] },
       { "id": 2, "name": "魔力裝填", "effects": [{ "type": "start_np", "target": "self", "val": 20 }] },
-      { "id": 3, "name": "對 Saber 攻擊適性", "effects": [{ "type": "atk_up_vs_class", "target": "self", "cond_class": "caster", "val": 0.3 }] },
+      { "id": 3, "name": "對 Saber 攻擊適性", "effects": [{ "type": "atk_up_vs_class", "target": "self", "cond_class": "saber", "val": 0.3 }] },
       { "id": 4, "name": "特擊技巧提升", "effects": [{ "type": "crit_dmg_up", "target": "self", "val": 0.3 }] },
       { "id": 5, "name": "技能再裝填", "effects": [{ "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 1, "val": 1 }] }
     ],
