@@ -1136,16 +1136,10 @@
       "description": "己方全體攻擊力提升[20%](3回合) & NP增加[30%]",
       "effects": [
         {
-          "type": "atk_up",
-          "target": "party",
-          "val": 0.2,
-          "turn": 3
+          "type": "atk_up", "target": "party", "val": 0.2, "turn": 3
         },
         {
-          "type": "np_charge",
-          "target": "party",
-          "val": 30,
-          "turn": 0
+          "type": "np_charge", "target": "party", "val": 30, "turn": 0
         }
       ]
     },
@@ -1156,17 +1150,10 @@
       "description": "己方單體NP增加[20%] & 己方全體NP獲得量提升[30%](3回合)",
       "effects": [
         {
-          "type": "np_charge",
-          "target": "one",
-          "val": 20,
-          "turn": 0
+          "type": "np_charge", "target": "one", "val": 20, "turn": 0
         },
         {
-          "type": "np_gain_up",
-          "target": "party",
-          "val": 0.3,
-          "turn": 3,
-          "note": "黃金律效果"
+          "type": "np_gain_up", "target": "party", "val": 0.3, "turn": 3, "note": "黃金律效果"
         }
       ]
     },
@@ -1176,27 +1163,9 @@
       "cd": 6,
       "description": "己方單體Arts指令卡性能提升[50%](3回合) & 對〔人類的威脅〕特攻狀態賦予[50%](3回合) & 無敵狀態(1回合)",
       "effects": [
-        {
-          "type": "card_up",
-          "card": "Arts",
-          "target": "one",
-          "val": 0.5,
-          "turn": 3
-        },
-        {
-          "type": "special_dmg_up",
-          "target": "one",
-          "trait": "threat_to_humanity",
-          "val": 0.5,
-          "turn": 3,
-          "note": "人類威脅特攻"
-        },
-        {
-          "type": "invincible",
-          "target": "one",
-          "turn": 1,
-          "val": 1
-        }
+        { "type": "card_up", "card": "Arts", "target": "one", "val": 0.5, "turn": 3 },
+        { "type": "special_dmg_up", "target": "one", "trait": "threat_to_humanity", "val": 0.5, "turn": 3, "note": "人類威脅特攻" },
+        { "type": "invincible", "target": "one", "turn": 1, "val": 1 }
       ]
     }
   ],
@@ -1205,119 +1174,37 @@
       "name": "對魔力 A",
       "description": "自身的弱化耐性提升(20%)",
       "effects": [
-        {
-          "type": "debuff_resist",
-          "target": "self",
-          "val": 0.2
-        }
+        { "type": "debuff_resist", "target": "self", "val": 0.2 }
       ]
     },
     {
       "name": "陣地建造 EX",
       "description": "自身的Arts指令卡性能提升(12%)",
       "effects": [
-        {
-          "type": "card_up",
-          "card": "Arts",
-          "target": "self",
-          "val": 0.12
-        }
+        { "type": "card_up", "card": "Arts", "target": "self", "val": 0.12 }
       ]
     },
     {
       "name": "獨自魔術 B",
       "description": "自身的Arts指令卡暴擊威力提升(10%)",
       "effects": [
-        {
-          "type": "crit_dmg_up",
-          "card": "Arts",
-          "target": "self",
-          "val": 0.1
-        }
+        { "type": "crit_dmg_up", "card": "Arts", "target": "self", "val": 0.1 }
       ]
     },
     {
       "name": "妖精眼 A",
       "description": "自身的被暴擊發生耐性提升(20%)",
       "effects": [
-        {
-          "type": "crit_rate_resist",
-          "target": "self",
-          "val": 0.2,
-          "note": "降低被敵人暴擊的機率"
-        }
+        { "type": "crit_rate_resist", "target": "self", "val": 0.2 }
       ]
     }
   ],
   "append_skills": [
-    {
-      "id": 1,
-      "name": "追擊技巧提升",
-      "description": "自身的Extra Attack指令卡性能提升[50%]",
-      "effects": [
-        {
-          "type": "card_up",
-          "card": "Extra",
-          "target": "self",
-          "val": 0.5
-        }
-      ],
-      "note": "數值以 Lv10 為準"
-    },
-    {
-      "id": 2,
-      "name": "魔力裝填",
-      "description": "自身以NP已達一定數值的狀態開始戰鬥[20%]",
-      "effects": [
-        {
-          "type": "start_np",
-          "target": "self",
-          "val": 20
-        }
-      ],
-      "note": "數值以 Lv10 為準"
-    },
-    {
-      "id": 3,
-      "name": "對 Saber 攻擊適性",
-      "description": "自身對〔Saber〕職階的攻擊力提升[30%]",
-      "effects": [
-        {
-          "type": "atk_up_vs_class",
-          "target": "self",
-          "cond_class": "saber",
-          "val": 0.3
-        }
-      ],
-      "note": "數值以 Lv10 為準"
-    },
-    {
-      "id": 4,
-      "name": "特擊技巧提升",
-      "description": "自身的暴擊威力提升[30%]",
-      "effects": [
-        {
-          "type": "crit_dmg_up",
-          "target": "self",
-          "val": 0.3
-        }
-      ],
-      "note": "Lv10 數值 (日服進度)"
-    },
-     {
-      "id": 5,
-      "name": "技能再裝填",
-      "description": "使用技能後，所使用技能的充能減少1 (1次)",
-      "effects": [
-        {
-          "type": "skill_cooldown_reduce_trigger",
-          "target": "self",
-          "count": 3,
-          "val": 1
-        }
-      ],
-      "note": "Lv10 數值 (日服進度)"
-    }
+    { "id": 1, "name": "追擊技巧提升", "effects": [{ "type": "card_up", "card": "Extra", "target": "self", "val": 0.5 }] },
+    { "id": 2, "name": "魔力裝填", "effects": [{ "type": "start_np", "target": "self", "val": 20 }] },
+    { "id": 3, "name": "對 Saber 攻擊適性", "effects": [{ "type": "atk_up_vs_class", "target": "self", "cond_class": "saber", "val": 0.3 }] },
+    { "id": 4, "name": "特擊技巧提升", "effects": [{ "type": "crit_dmg_up", "target": "self", "val": 0.3 }] },
+    { "id": 5, "name": "技能再裝填", "effects": [{ "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 3, "val": 1 }] }
   ],
   "noble_phantasm": {
     "name": "懷抱著你的希望之星",
@@ -1325,26 +1212,9 @@
     "type": "support", 
     "hit_count": [], 
     "effects": [
-      {
-        "type": "atk_up",
-        "target": "party",
-        "val": 0.3, 
-        "turn": 3,
-        "note": "寶具Lv1數值 (Lv5為 0.5)"
-      },
-      {
-        "type": "remove_debuff",
-        "target": "party",
-        "time": "immediate"
-      },
-      {
-        "type": "anti_purge_defense",
-        "target": "party",
-        "val": 1,         
-        "turn": 3,        
-        "count": 1,       
-        "note": "OC1次數 (OC5為 5次)。這是絕對防禦，優先級高於無敵貫通"
-      }
+      { "type": "atk_up", "target": "party", "val": 0.3, "turn": 3, "note": "寶具Lv1數值 (Lv5為 0.5)" },
+      { "type": "remove_debuff", "target": "party", "time": "immediate" },
+      { "type": "anti_purge_defense", "target": "party", "val": 1, "turn": 3, "count": 1, "note": "OC1次數 (OC5為 5次)。這是絕對防禦，優先級高於無敵貫通" }
     ]
   }
 },
@@ -1387,16 +1257,10 @@
       "description": "己方全體寶具威力提升[30%](3回合) & NP增加[20%]",
       "effects": [
         {
-          "type": "np_dmg_up",
-          "target": "party",
-          "val": 0.3,
-          "turn": 3
+          "type": "np_dmg_up", "target": "party", "val": 0.3, "turn": 3
         },
         {
-          "type": "np_charge",
-          "target": "party",
-          "val": 20,
-          "turn": 0
+          "type": "np_charge", "target": "party", "val": 20, "turn": 0
         }
       ]
     },
@@ -1407,24 +1271,13 @@
       "description": "己方單體NP增加[50%] & 獲得暴擊星[20] & [負面]回合結束時NP減少20%(1次)",
       "effects": [
         {
-          "type": "np_charge",
-          "target": "one", 
-          "val": 50,
-          "turn": 0
+          "type": "np_charge", "target": "one", "val": 50, "turn": 0
         },
         {
-          "type": "star_gen_flat",
-          "target": "party", 
-          "val": 20,
-          "turn": 0
+          "type": "star_gen_flat", "target": "party", "val": 20, "turn": 0
         },
         {
-          "type": "np_loss_turn_end",
-          "target": "one",
-          "val": 20,
-          "turn": 1,
-          "count": 1,
-          "is_debuff": true
+          "type": "np_loss_turn_end", "target": "one", "val": 20, "turn": 1, "count": 1, "is_debuff": false
         }
       ]
     },
@@ -1435,28 +1288,13 @@
       "description": "己方單體Buster性能提升[50%](1回合) & 寶具威力提升效果量翻倍(1回合) & [負面]回合結束時永久睡眠(無法解除)",
       "effects": [
         {
-          "type": "card_up",
-          "card": "Buster",
-          "target": "one",
-          "val": 0.5,
-          "turn": 1
+          "type": "card_up", "card": "Buster", "target": "one", "val": 0.5, "turn": 1
         },
         {
-          "type": "buff_boost", 
-          "sub_type": "np_dmg_up",
-          "target": "one",
-          "val": 1.0, 
-          "turn": 1,
-          "note": "讓現有的寶具威力Buff效果量增加100%"
+          "type": "buff_boost", "sub_type": "np_dmg_up", "target": "one", "val": 1.0, "turn": 1, "note": "讓現有的寶具威力Buff效果量增加100%"
         },
         {
-          "type": "permanent_sleep",
-          "target": "one",
-          "val": 0,
-          "turn": 999, 
-          "trigger": "turn_end",
-          "is_debuff": true,
-          "note": "無法解除、無法換人"
+          "type": "permanent_sleep", "target": "one", "val": 0, "turn": 999, "trigger": "turn_end", "is_debuff": true, "unremovable": true, "note": "無法解除、無法換人"
         }
       ]
     }
@@ -1467,18 +1305,10 @@
       "description": "自身在場時，己方全體對〔Foreigner〕以外的弱化付與成功率提升(10%) & 己方全體〔梅林〕的強化付與成功率下降(20%)【負面】",
       "effects": [
         {
-          "type": "debuff_success_up_conditional",
-          "target": "party", 
-          "val": 0.1,
-          "cond_target_class_not": "foreigner",
-          "note": "對非 Foreigner 職階生效"
+          "type": "debuff_success_up_conditional", "target": "party", "val": 0.1, "cond_target_class_not": "foreigner", "note": "對非 Foreigner 職階生效"
         },
         {
-          "type": "buff_success_down_conditional",
-          "target": "party",
-          "val": 0.2,
-          "cond_ally_id": 150,
-          "note": "隊伍裡的梅林強化成功率下降"
+          "type": "buff_success_down_conditional", "target": "party", "val": 0.2, "cond_ally_id": 150, "note": "隊伍裡的梅林強化成功率下降"
         }
       ]
     },
@@ -1487,10 +1317,7 @@
       "description": "自身的Arts指令卡性能小幅提升(1.5%)",
       "effects": [
         {
-          "type": "card_up",
-          "card": "Arts",
-          "target": "self",
-          "val": 0.015
+          "type": "card_up", "card": "Arts", "target": "self", "val": 0.015
         }
       ]
     },
@@ -1499,9 +1326,7 @@
       "description": "自身的弱化付與成功率提升(11%)",
       "effects": [
         {
-          "type": "debuff_success_up",
-          "target": "self",
-          "val": 0.11
+          "type": "debuff_success_up", "target": "self", "val": 0.11
         }
       ]
     },
@@ -1510,10 +1335,7 @@
       "description": "自身的Quick指令卡性能提升(10%)",
       "effects": [
         {
-          "type": "card_up",
-          "card": "Quick",
-          "target": "self",
-          "val": 0.1
+          "type": "card_up", "card": "Quick", "target": "self", "val": 0.1
         }
       ]
     },
@@ -1522,10 +1344,7 @@
       "description": "付與自身精神異常·詛咒無效的狀態",
       "effects": [
         {
-          "type": "debuff_immune",
-          "target": "self",
-          "immune_tags": ["mental", "curse"],
-          "note": "精神異常包含：魅惑、恐懼、混亂、睡眠等"
+          "type": "debuff_immune", "target": "self", "immune_tags": ["mental", "curse"], "note": "精神異常包含：魅惑、恐懼、混亂、睡眠等"
         }
       ]
     }
@@ -1553,10 +1372,7 @@
       "description": "自身對〔Caster〕職階的攻擊力提升[30%]",
       "effects": [
         { 
-          "type": "atk_up_vs_class", 
-          "target": "self", 
-          "cond_class": "caster", 
-          "val": 0.3 
+          "type": "atk_up_vs_class", "target": "self", "cond_class": "caster", "val": 0.3 
         }
       ]
     },
@@ -1574,10 +1390,7 @@
       "description": "使用技能後，所使用技能的充能減少1 (1次)",
       "effects": [
         { 
-          "type": "skill_cooldown_reduce_trigger", 
-          "target": "self", 
-          "count": 1, 
-          "val": 1 
+          "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 1, "val": 1 
         }
       ]
     }
@@ -1589,28 +1402,16 @@
     "hit_count": [10, 20, 30, 40], 
     "effects": [
       {
-        "type": "damage",
-        "val": 300, 
-        "special_mod": { "trait": "lawful", "val": 1.5 },
-        "note": "對[秩序]特攻150%"
+        "type": "damage", "val": 300, "special_mod": { "trait": "lawful", "val": 1.5 }, "note": "對[秩序]特攻150%"
       },
       {
-        "type": "remove_buff",
-        "sub_type": "offensive",
-        "target": "enemy_all",
-        "time": "before_hit" 
+        "type": "remove_buff", "sub_type": "offensive", "target": "enemy_all", "time": "before_hit" 
       },
       {
-        "type": "sleep",
-        "target": "enemy_all",
-        "turn": 1
+        "type": "sleep", "target": "enemy_all", "turn": 1
       },
       {
-        "type": "invincible",
-        "target": "enemy_all",
-        "turn": 1,
-        "is_debuff": false, 
-        "note": "副作用：敵方無敵"
+        "type": "invincible", "target": "enemy_all", "turn": 1, "is_debuff": false, "note": "副作用：敵方無敵"
       }
     ]
   }
