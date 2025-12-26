@@ -683,7 +683,7 @@
       { "id": 5, "name": "技能再裝填", "effects": [{ "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 1, "val": 1 }] }
     ],
     "noble_phantasm": {
-      "name": "與彼方同墜的夢之瞳眸", "card": "Buster", "type": "aoe", "val": [300, 350, 400, 450, 500],, "hit_count": [10, 20, 30, 40], 
+      "name": "與彼方同墜的夢之瞳眸", "card": "Buster", "type": "aoe", "val": [300, 350, 400, 450, 500], "hit_count": [10, 20, 30, 40], 
       "effects": [
         { "type": "damage", "val": 500, "special_mod": { "trait": "lawful", "val": 1.5 }, "note": "對[秩序]特攻150%" },
         { "type": "remove_buff", "sub_type": "offensive", "target": "enemy_all", "time": "before_hit" },
