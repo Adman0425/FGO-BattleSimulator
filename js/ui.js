@@ -141,28 +141,37 @@ const UI = {
 
     // --- 補位邏輯 ---
     refillEnemies: () => {
-        // 1. 移除死亡的敵人
-        // (這裡我們直接 filter 掉 HP<=0 的，讓陣列縮小)
-        // 注意：如果你希望屍體保留一回合，邏輯會比較複雜。這裡採用「死亡即消失」
-        const aliveEnemies = UI.gameState.enemies.filter(e => e.currentHp > 0);
-        
-        // 如果有變動 (有怪死了)
-        if (aliveEnemies.length < UI.gameState.enemies.length) {
-            UI.gameState.enemies = aliveEnemies;
-            // 修正目標鎖定 (避免鎖定到不存在的 index)
-            if (UI.gameState.targetIndex >= UI.gameState.enemies.length) {
-                UI.gameState.targetIndex = 0;
+        // 遍歷當前場上的每一個位置 (slot)
+        for (let i = 0; i < UI.gameState.enemies.length; i++) {
+            const enemy = UI.gameState.enemies[i];
+            
+            // 如果該位置的敵人死了 (HP <= 0)
+            if (enemy.currentHp <= 0) {
+                // 檢查有無後備敵人
+                if (UI.gameState.reserveEnemies.length > 0) {
+                    // 有後備：取出並「原地替換」到位置 i
+                    const nextEnemy = UI.gameState.reserveEnemies.shift();
+                    UI.gameState.enemies[i] = nextEnemy; // <--- 關鍵修改
+                    
+                    UI.log(`>> 增援出現: ${nextEnemy.name} (位置 ${i + 1})`);
+                    
+                    // 如果剛好鎖定的是這個位置，保持鎖定 (因為新怪出來了)
+                    // 如果鎖定的是別人，也不受影響
+                } else {
+                    // 沒後備了：保留屍體佔位，或者什麼都不做
+                    // 這樣 [Dead, B, C] 就不會變成 [B, C] 導致位移
+                }
             }
         }
-
-        // 2. 從後備補充
-        while (UI.gameState.enemies.length < 3 && UI.gameState.reserveEnemies.length > 0) {
-            const nextEnemy = UI.gameState.reserveEnemies.shift(); // 取出第一個
-            UI.gameState.enemies.push(nextEnemy);
-            UI.log(`>> 增援出現: ${nextEnemy.name}`);
-        }
         
-        // 3. 如果沒有怪了，也沒有後備了 -> Wave Clear 判斷會在 executeTurn 處理
+        // 修正目標鎖定：如果當前鎖定的目標是死人(且沒補位)，自動切換到活人
+        const currentTarget = UI.gameState.enemies[UI.gameState.targetIndex];
+        if (!currentTarget || currentTarget.currentHp <= 0) {
+            const nextAliveIdx = UI.gameState.enemies.findIndex(e => e.currentHp > 0);
+            if (nextAliveIdx !== -1) {
+                UI.gameState.targetIndex = nextAliveIdx;
+            }
+        }
     },
 
     shuffleArray: (array) => {
@@ -682,18 +691,26 @@ const UI = {
             }
         });
 
-        // 【修改】執行補位檢查
+        // 執行補位檢查
         UI.refillEnemies();
         UI.updateDisplay();
 
         // 檢查波次結束
-        if (UI.gameState.enemies.length === 0 && UI.gameState.reserveEnemies.length === 0) {
+        // 判斷條件：場上沒活人 AND 後備也沒人
+        const anyAlive = UI.gameState.enemies.some(e => e.currentHp > 0);
+        const noReserves = UI.gameState.reserveEnemies.length === 0;
+
+        if (!anyAlive && noReserves) {
             
+            // 讓所有敵人血條歸零
+            UI.gameState.enemies.forEach(e => e.currentHp = 0);
+            UI.updateDisplay();
+
             const totalWaves = UI.gameState.quest.waves.length;
             const nextWaveIdx = UI.gameState.currentWave + 1;
 
             if (nextWaveIdx < totalWaves) {
-                UI.log(">> Wave Cleared! 前往下一波...");
+                // UI.log(">> Wave Cleared! 前往下一波...");
                 
                 setTimeout(() => {
                     UI.gameState.currentWave = nextWaveIdx;
@@ -708,7 +725,9 @@ const UI = {
                 }, 1500);
 
             } else {
-                UI.log("<h2 style='color:gold'>🏆 BATTLE FINISH 🏆</h2>");
+                UI.log("<h2 style='color:gold'> BATTLE FINISH </h2>");
+                // 可以加一行顯示 Victory
+                // if(document.getElementById('e-name')) document.getElementById('e-name').innerText = "VICTORY";
             }
             return; 
         }
