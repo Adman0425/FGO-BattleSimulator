@@ -147,21 +147,28 @@ const Engine = {
         'conqueror': { 'default': 1.0 }
     },
 
-    initServant: (data, level) => {
+    initServant: (data, levelInput) => {
+        // 【修正】強制將輸入轉為整數，避免字串比對錯誤
+        const level = parseInt(levelInput) || 90; 
+
         let hp = data.stats.natural.hp;
         let atk = data.stats.natural.atk;
         
+        // 等級成長計算 (線性模擬)
         if (level > 90) {
-            const ratio = (level - 90) / 30;
-            const maxHp = data.stats.lv120.hp;
-            const maxAtk = data.stats.lv120.atk;
-            hp = hp + (maxHp - hp) * ratio;
-            atk = atk + (maxAtk - atk) * ratio;
+            const ratio = (level - 90) / 30; // 120等時 ratio = 1
+            // 確保 lv120 資料存在，否則不計算
+            if (data.stats.lv120) {
+                const maxHp = data.stats.lv120.hp;
+                const maxAtk = data.stats.lv120.atk;
+                hp = hp + (maxHp - hp) * ratio;
+                atk = atk + (maxAtk - atk) * ratio;
+            }
         }
 
         return {
             ...data,
-            level: parseInt(level),
+            level: level,
             maxHp: Math.floor(hp),
             currentHp: Math.floor(hp),
             atk: Math.floor(atk),
