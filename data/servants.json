@@ -588,7 +588,7 @@
     "noble_phantasm": {
       "name": "懷抱著你的希望之星", "card": "Arts", "type": "support",  "hit_count": [], 
       "effects": [
-        { "type": "atk_up", "target": "party", "val": 0.3, "turn": 3, "note": "寶具Lv1數值 (Lv5為 0.5)" },
+        { "type": "atk_up", "target": "party", "val": 0.5, "turn": 3, "note": "寶具Lv5數值" },
         { "type": "remove_debuff", "target": "party", "time": "immediate" },
         { "type": "anti_purge_defense", "target": "party", "val": 1, "turn": 3, "count": 1, "note": "OC1次數 (OC5為 5次)。這是絕對防禦，優先級高於無敵貫通" }
       ]
@@ -685,7 +685,7 @@
     "noble_phantasm": {
       "name": "與彼方同墜的夢之瞳眸", "card": "Buster", "type": "aoe", "hit_count": [10, 20, 30, 40], 
       "effects": [
-        { "type": "damage", "val": 300, "special_mod": { "trait": "lawful", "val": 1.5 }, "note": "對[秩序]特攻150%" },
+        { "type": "damage", "val": 500, "special_mod": { "trait": "lawful", "val": 1.5 }, "note": "對[秩序]特攻150%" },
         { "type": "remove_buff", "sub_type": "offensive", "target": "enemy_all", "time": "before_hit" },
         { "type": "sleep", "target": "enemy_all", "turn": 1 },
         { "type": "invincible", "target": "enemy_all", "turn": 1, "is_debuff": false, "note": "副作用：敵方無敵" }
@@ -785,18 +785,6 @@
         ]
       }
     ],
-    "noble_phantasm": {
-      "name": "希冀照臨的千秋豐國",
-      "card": "Arts",
-      "type": "aoe",
-      "hit_count": [10, 20, 30, 40],
-      "description": "(第1/2階段) 對敵方全體發動強大攻擊 & 〔天地〕特攻 & 自身NP增加<OC> & 我方全體攻擊力提升<OC>",
-      "effects": [
-        { "type": "damage", "val": 450, "special_mod": { "trait": ["sky", "earth"], "val": 1.5 }, "note": "對天地特攻150%" },
-        { "type": "np_charge", "target": "self", "val": 30, "calc_mode": "oc", "oc_vals": [30, 35, 40, 45, 50] },
-        { "type": "atk_up", "target": "party", "val": 0.1, "turn": 1, "calc_mode": "oc", "oc_vals": [0.1, 0.15, 0.2, 0.25, 0.3] }
-      ]
-    },
     "append_skills": [
       { "id": 1, "name": "追擊技巧提升", "effects": [{ "type": "card_up", "card": "Extra", "target": "self", "val": 0.5 }] },
       { "id": 2, "name": "魔力裝填", "effects": [{ "type": "start_np", "target": "self", "val": 20 }] },
@@ -804,6 +792,18 @@
       { "id": 4, "name": "特擊技巧提升", "effects": [{ "type": "crit_dmg_up", "target": "self", "val": 0.3 }] },
       { "id": 5, "name": "技能再裝填", "effects": [{ "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 1, "val": 1 }] }
     ],
+    "noble_phantasm": {
+      "name": "希冀照臨的千秋豐國",
+      "card": "Arts",
+      "type": "aoe",
+      "hit_count": [10, 20, 30, 40],
+      "description": "(第1/2階段) 對敵方全體發動強大攻擊 & 〔天地〕特攻 & 自身NP增加<OC> & 我方全體攻擊力提升<OC>",
+      "effects": [
+        { "type": "damage", "val": 750, "special_mod": { "trait": ["sky", "earth"], "val": 1.5 }, "note": "對天地特攻150%" },
+        { "type": "np_charge", "target": "self", "val": 30, "calc_mode": "oc", "oc_vals": [30, 35, 40, 45, 50] },
+        { "type": "atk_up", "target": "party", "val": 0.1, "turn": 1, "calc_mode": "oc", "oc_vals": [0.1, 0.15, 0.2, 0.25, 0.3] }
+      ]
+    },
     "noble_phantasm_alt": {
       "name": "假使迎見的眾生明日",
       "card": "Buster",
