@@ -4,60 +4,28 @@
     "name": "打開寶物庫之門 極級",
     "waves": [
       {
+        "battleLabel": "BATTLE 1/3",
         "//": "--- 第一波 (Wave 1) ---",
         "enemies": [
-          { 
-            "id": 2001, 
-            "name": "霸者之門 A", 
-            "hp": 23027, 
-            "gauge": 5 
-          },
-          { 
-            "id": 2001, 
-            "name": "霸者之門 B", 
-            "hp": 24483, 
-            "gauge": 5 
-          },
-          { 
-            "id": 2001, 
-            "name": "霸者之門 C", 
-            "hp": 23755, 
-            "gauge": 5 
-          }
+          { "id": 2001, "name": "霸者之門 A", "hp": 23027, "gauge": 5 },
+          { "id": 2001, "name": "霸者之門 B", "hp": 24483, "gauge": 5 },
+          { "id": 2001, "name": "霸者之門 C", "hp": 23755, "gauge": 5 }
         ]
       },
       {
+        "battleLabel": "BATTLE 2/3",
         "//": "--- 第二波 (Wave 2) ---",
         "enemies": [
-          { 
-            "id": 2001, 
-            "name": "霸者之門 A", 
-            "hp": 31125, 
-            "gauge": 5 
-          },
-          { 
-            "id": 2001, 
-            "name": "霸者之門 B", 
-            "hp": 31999, 
-            "gauge": 5 
-          },
-          { 
-            "id": 2001, 
-            "name": "霸者之門 C", 
-            "hp": 30252, 
-            "gauge": 5 
-          }
+          { "id": 2001, "name": "霸者之門 A", "hp": 31125, "gauge": 5 },
+          { "id": 2001, "name": "霸者之門 B", "hp": 31999, "gauge": 5 },
+          { "id": 2001, "name": "霸者之門 C", "hp": 30252, "gauge": 5 }
         ]
       },
       {
+        "battleLabel": "BATTLE 3/3",
         "//": "--- 第三波 (Fatal Battle) ---",
         "enemies": [
-          { 
-            "id": 2002, 
-            "name": "莊嚴的黃金像", 
-            "hp": 132932, 
-            "gauge": 5 
-          }
+          { "id": 2002, "name": "莊嚴的黃金像", "hp": 132932, "gauge": 5 }
         ]
       }
     ]
