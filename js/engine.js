@@ -56,6 +56,7 @@ const Engine = {
         'heal_efficacy_up': '回復量提升',
         'heal_efficacy_down': '回復量下降',
         'max_hp_up': '最大HP提升',
+        'max_hp_down': '最大HP減少',
         'sure_hit': '必中',
         'evade': '迴避',
         'ignore_invincible': '無敵貫通',
@@ -200,6 +201,29 @@ const Engine = {
         return total;
     },
 
+    // 【新增】連攜計算 (之前漏掉這個導致 Crash)
+    calculateTurn: (servant, target, cards, isExtra) => {
+        // cards 是一個陣列，包含本次選中的三張卡
+        // 判斷 Chain
+        const firstCard = cards[0];
+        const isBusterChain = cards.every(c => c.type === 'Buster' || (c.isNP && c.type === 'Buster')); // 寶具視為其顏色的卡
+        const isArtsChain = cards.every(c => c.type === 'Arts' || (c.isNP && c.type === 'Arts'));
+        const isQuickChain = cards.every(c => c.type === 'Quick' || (c.isNP && c.type === 'Quick'));
+        
+        // Brave Chain 判斷 (擁有者相同)
+        const ownerId = cards[0].attacker.id;
+        const isBraveChain = cards.length === 3 && cards.every(c => c.attacker.id === ownerId);
+
+        return {
+            chainBonus: {
+                busterChain: isBusterChain,
+                artsChain: isArtsChain,
+                quickChain: isQuickChain,
+                braveChain: isBraveChain
+            }
+        };
+    },
+
     // 核心傷害計算
     calculateDamage: (attacker, defender, cardType, cardPosition, isCrit, isBusterChain) => {
         // 1. 基礎參數
@@ -209,7 +233,7 @@ const Engine = {
         // 2. 指令卡/寶具倍率
         let cardDamageValue = 0;
         let cardTypeMod = 1.0;
-        const isNP = (cardPosition === 0 && attacker.noble_phantasm.card === cardType && arguments[3] === 0); // 簡易判斷
+        const isNP = (cardPosition === 0 && attacker.noble_phantasm.card === cardType && arguments[3] === 0); // 簡易判斷 (非 Extra)
 
         if (isNP) {
             const npData = attacker.noble_phantasm;
@@ -405,7 +429,7 @@ const Engine = {
 
         skill.effects.forEach(effect => {
             
-            // 1. 直接數值變更 (Instant Effects)
+            // 1. 直接數值變更
             if (effect.type === 'np_charge') {
                 target.currentNp += effect.val;
                 if (target.currentNp > 300) target.currentNp = 300;
@@ -413,20 +437,19 @@ const Engine = {
             else if (effect.type === 'np_drain') {
                 target.currentNp -= effect.val;
                 if (target.currentNp < 0) target.currentNp = 0;
-                // 如果有敵人氣槽邏輯 (Gauge) 也可在此處理
                 if (target.currentGauge !== undefined) target.currentGauge = Math.max(0, target.currentGauge - effect.val);
             }
             else if (effect.type === 'star_gen_flat') {
-                // UI.gameState.stars += effect.val; // 星星通常在 UI 層處理，Engine 暫時只算數值
+                // UI.gameState.stars += effect.val; // 星星通常在 UI 層處理
             }
             else if (effect.type === 'deck_shuffle') {
-                // 洗牌在 UI 層處理
+                // UI 處理
             }
             else if (effect.type === 'hp_recover') {
                 target.currentHp = Math.min(target.maxHp, target.currentHp + effect.val);
             }
             
-            // 2. 解除狀態 (Remove)
+            // 2. 解除狀態
             else if (effect.type === 'remove_debuff') {
                 if (target.buffs) {
                     target.buffs = target.buffs.filter(b => !b.isDebuff || b.unremovable);
@@ -443,15 +466,13 @@ const Engine = {
                 }
             }
             
-            // 3. 特殊：變身 (UI 處理)
+            // 3. 特殊：變身
             else if (effect.type === 'transform') {
                 target.pendingTransform = effect;
             }
 
-            // 4. 施加 Buff (Catch-all for Buffs)
-            // 只要在 BUFF_NAMES 裡有定義名字，或是常見的 Buff 類型，都視為狀態加上去
+            // 4. 通用：施加 Buff (Catch-all)
             else {
-                // 這裡是一個通用的防呆判斷，只要不是上面處理過的 type，都嘗試當作 buff 加上去
                 Engine.applyBuff(user, target, effect);
             }
         });
