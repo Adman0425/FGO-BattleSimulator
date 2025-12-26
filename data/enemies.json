@@ -58,5 +58,85 @@
             { "type": "np_charge", "target": "enemy", "val": 70, "note": "給玩家充能" }
         ]
     }
+  },
+  {
+    "id": 3001,
+    "name": "獄卒 (劍)",
+    "class": "saber",
+    "attribute": "earth",
+    "traits": ["人型"],
+    "hp": 40000, "gauge": 3, "actions": 2,
+    "stats": { "atk": 4000 },
+    "hits": { "normal": [100], "crit": [100], "np": [100] }
+  },
+  {
+    "id": 3002,
+    "name": "獄卒 (弓)",
+    "class": "archer",
+    "attribute": "earth",
+    "traits": ["人型"],
+    "hp": 40000, "gauge": 3, "actions": 2,
+    "stats": { "atk": 4000 },
+    "hits": { "normal": [100], "crit": [100], "np": [100] }
+  },
+  {
+    "id": 3003,
+    "name": "獄卒 (槍)",
+    "class": "lancer",
+    "attribute": "earth",
+    "traits": ["人型"],
+    "hp": 40000, "gauge": 3, "actions": 2,
+    "stats": { "atk": 4000 },
+    "hits": { "normal": [100], "crit": [100], "np": [100] }
+  },
+  {
+    "id": 3004,
+    "name": "獄卒 (狂)",
+    "class": "berserker",
+    "attribute": "earth",
+    "traits": ["人型"],
+    "hp": 40000, "gauge": 5, "actions": 2,
+    "stats": { "atk": 6000 },
+    "hits": { "normal": [100], "crit": [100], "np": [100] }
+  },
+  {
+    "id": 4001,
+    "name": "守門人 (降)",
+    "class": "foreigner",
+    "attribute": "star",
+    "traits": ["領域外生命"],
+    "hp": 200000, "gauge": 5, "actions": 3,
+    "stats": { "atk": 7000 },
+    "hits": { "normal": [100], "crit": [100], "np": [100] }
+  },
+  {
+    "id": 5001,
+    "name": "不認罪之人 (仇)",
+    "class": "avenger",
+    "attribute": "man",
+    "traits": ["人型"],
+    "hp": 400000, "gauge": 5, "actions": 3,
+    "stats": { "atk": 8000 },
+    "hits": { "normal": [100], "crit": [100], "np": [100] }
+  },
+  {
+    "id": 5002,
+    "name": "不屈罪之人 (狂)",
+    "class": "berserker",
+    "attribute": "earth",
+    "traits": ["人型"],
+    "hp": 600000, "gauge": 5, "actions": 3,
+    "stats": { "atk": 9000 },
+    "hits": { "normal": [100], "crit": [100], "np": [100] }
+  },
+  {
+    "id": 5003,
+    "name": "不蒙罪之人 (裁)",
+    "class": "ruler",
+    "attribute": "sky",
+    "traits": ["人型"],
+    "hp": 500000, "gauge": 5, "actions": 3,
+    "stats": { "atk": 7500 },
+    "hits": { "normal": [100], "crit": [100], "np": [100] }
   }
 ]
