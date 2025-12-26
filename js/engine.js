@@ -247,7 +247,7 @@ const Engine = {
             }
             else if (effect.type === 'remove_debuff') {
                 if (target.buffs) {
-                    target.buffs = target.buffs.filter(b => !b.isDebuff);
+                    target.buffs = target.buffs.filter(b => !b.isDebuff || b.unremovable);
                 }
             }
             else if (effect.type === 'skill_cooldown_reduce_trigger') {
@@ -287,6 +287,9 @@ const Engine = {
             turn: effect.turn || 0,
             count: effect.count || null,
             isDebuff: effect.is_debuff || false,
+            // 【新增】記錄是否不可解除
+            unremovable: effect.unremovable || false, 
+            
             sourceId: source.id,
             card: effect.card || null,       
             trait: effect.trait || null,     
