@@ -691,5 +691,132 @@
         { "type": "invincible", "target": "enemy_all", "turn": 1, "is_debuff": false, "note": "副作用：敵方無敵" }
       ]
     }
+  },
+  {
+    "name": "豐臣秀吉",
+    "id": 1077,
+    "cost": 16,
+    "class": "conqueror",
+    "gender": "男性",
+    "policy": "中立·善",
+    "attribute": "star",
+    "stats": { "natural": { "hp": 14962, "atk": 11019 }, "lv100": { "hp": 14533, "atk": 12928 }, "lv120": { "hp": 17081, "atk": 15174 } },
+    "cards": {
+      "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
+      "hits": { "Quick": [10, 20, 30, 40], "Arts": [16, 33, 51], "Buster": [16, 33, 51], "Extra": [6, 13, 20, 26, 35], "NP": [4, 9, 14, 19, 23, 31] }
+    },
+    "hidden_stats": { "np_charge_atk": 0.65, "np_charge_def": 3, "star_gen": 0.153, "death_rate": 0.6, "star_absorb": 52 },
+    "traits": ["天地從者", "人型", "騎乘", "王", "神性", "持有靈衣之人"],
+    "passive_skills": [
+      {
+        "name": "對魔力 C",
+        "description": "自身的弱化耐性小幅提升(15%)",
+        "effects": [{ "type": "debuff_resist", "target": "self", "val": 0.15 }]
+      },
+      {
+        "name": "騎乘 C",
+        "description": "自身的Quick指令卡性能小幅提升(6%)",
+        "effects": [{ "type": "card_up", "card": "Quick", "target": "self", "val": 0.06 }]
+      },
+      {
+        "name": "陣具做成 A",
+        "description": "自身的Arts指令卡性能小幅提升(10%) & 弱化賦予成功率提升(10%)",
+        "effects": [
+          { "type": "card_up", "card": "Arts", "target": "self", "val": 0.1 },
+          { "type": "debuff_success_up", "target": "self", "val": 0.1 }
+        ]
+      },
+      {
+        "name": "啟明征途 A-",
+        "description": "三色指令卡性能提升(4%) & 擊殺時賦予自身「征服」(ATK+500)狀態",
+        "effects": [
+          { "type": "card_up", "card": "Quick", "target": "self", "val": 0.04 },
+          { "type": "card_up", "card": "Arts",  "target": "self", "val": 0.04 },
+          { "type": "card_up", "card": "Buster", "target": "self", "val": 0.04 },
+          { "type": "grant_buff_on_kill", "target": "self", "buff_name": "征服", "val": 500, "stat": "atk_flat", "turn": 3, "max_stack": 5, "note": "擊殺觸發" }
+        ]
+      },
+      {
+        "name": "金星無明支 -",
+        "description": "機率性負面狀態無效 & NP獲得量下降(10%) & 與信長編隊時CD-1",
+        "effects": [
+          { "type": "debuff_immune_conditional", "target": "self", "cond": "probability_based", "note": "機率負面無效" },
+          { "type": "np_gain_down", "target": "self", "val": 0.1 },
+          { "type": "skill_cooldown_reduce_passive", "target": "self", "val": 1, "cond_ally_keyword": "信長", "note": "與信長編隊時生效" }
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "name": "太閣的猿知慧 A+",
+        "icon": "np_charge.png",
+        "cd": 7,
+        "description": "我方單體NP增加[50%] & 獲得爆擊星[25] & 除對象外全體無法抽卡(1回) & 重新洗牌",
+        "effects": [
+          { "type": "np_charge", "target": "one", "val": 50, "turn": 0 },
+          { "type": "star_gen_flat", "target": "party", "val": 25, "turn": 0 },
+          { "type": "card_draw_seal", "target": "party_excluding_target", "turn": 1, "count": 1, "note": "除選擇對象外無法抽卡" },
+          { "type": "deck_shuffle", "target": "party", "time": "immediate" }
+        ]
+      },
+      {
+        "name": "日輪霸道帖 EX",
+        "icon": "seal.png",
+        "cd": 7,
+        "description": "敵方全體寶具封印(1回) & 自身攻擊提升[50%](3T) & 寶具威力提升[30%](3T) & 暴擊威力提升[100%](1T) & 賦予無視防禦(3T)",
+        "effects": [
+          { "type": "np_seal", "target": "enemy_all", "turn": 1 },
+          { "type": "atk_up", "target": "self", "val": 0.5, "turn": 3 },
+          { "type": "np_dmg_up", "target": "self", "val": 0.3, "turn": 3 },
+          { "type": "crit_dmg_up", "target": "self", "val": 1.0, "turn": 1 },
+          { "type": "ignore_defense", "target": "self", "turn": 3 }
+        ]
+      },
+      {
+        "name": "魔王寵愛繫縛身 EX",
+        "icon": "buster_arts.png",
+        "cd": 5,
+        "description": "Arts/Buster提升[40%](3T) & 形象切換(1/2與3互換) & 寶具發動時CD減少2(3T)",
+        "effects": [
+          { "type": "card_up", "card": "Arts", "target": "self", "val": 0.4, "turn": 3 },
+          { "type": "card_up", "card": "Buster", "target": "self", "val": 0.4, "turn": 3 },
+          { "type": "transform", "target": "self", "mode": "toggle", "stages": [1, 3], "note": "切換形象與寶具" },
+          { "type": "trigger_on_np", "target": "self", "sub_effect": { "type": "skill_cooldown_reduce", "val": 2 }, "turn": 3, "note": "寶具發動時CD-2" }
+        ]
+      }
+    ],
+    "noble_phantasm": {
+      "name": "希冀照臨的千秋豐國",
+      "card": "Arts",
+      "type": "aoe",
+      "hit_count": [10, 20, 30, 40],
+      "description": "(第1/2階段) 對敵方全體發動強大攻擊 & 〔天地〕特攻 & 自身NP增加<OC> & 我方全體攻擊力提升<OC>",
+      "effects": [
+        { "type": "damage", "val": 450, "special_mod": { "trait": ["sky", "earth"], "val": 1.5 }, "note": "對天地特攻150%" },
+        { "type": "np_charge", "target": "self", "val": 30, "calc_mode": "oc", "oc_vals": [30, 35, 40, 45, 50] },
+        { "type": "atk_up", "target": "party", "val": 0.1, "turn": 1, "calc_mode": "oc", "oc_vals": [0.1, 0.15, 0.2, 0.25, 0.3] }
+      ]
+    },
+    "append_skills": [
+      { "id": 1, "name": "追擊技巧提升", "effects": [{ "type": "card_up", "card": "Extra", "target": "self", "val": 0.5 }] },
+      { "id": 2, "name": "魔力裝填", "effects": [{ "type": "start_np", "target": "self", "val": 20 }] },
+      { "id": 3, "name": "對 Saber 攻擊適性", "effects": [{ "type": "atk_up_vs_class", "target": "self", "cond_class": "caster", "val": 0.3 }] },
+      { "id": 4, "name": "特擊技巧提升", "effects": [{ "type": "crit_dmg_up", "target": "self", "val": 0.3 }] },
+      { "id": 5, "name": "技能再裝填", "effects": [{ "type": "skill_cooldown_reduce_trigger", "target": "self", "count": 1, "val": 1 }] }
+    ],
+    "noble_phantasm_alt": {
+      "name": "假使迎見的眾生明日",
+      "card": "Buster",
+      "type": "aoe",
+      "hit_count": [10, 20, 30, 40],
+      "description": "(第3階段) 自身寶威大幅提升<OC> & 無視防禦全體攻擊 & 〔天地〕特攻 & 全體NP增加<OC> & 解除「征服」 & 最大HP減少【副作用】",
+      "effects": [
+        { "type": "np_dmg_up", "target": "self", "val": 0.6, "turn": 1, "calc_mode": "oc", "oc_vals": [0.6, 0.65, 0.7, 0.75, 0.8], "time": "before_hit" },
+        { "type": "damage", "val": 300, "ignore_defense": true, "special_mod": { "trait": ["sky", "earth"], "val": 1.5 } },
+        { "type": "np_charge", "target": "party", "val": 10, "calc_mode": "oc", "oc_vals": [10, 15, 20, 25, 30] },
+        { "type": "remove_buff_by_name", "target": "self", "buff_name": "征服", "note": "解除征服狀態" },
+        { "type": "max_hp_down", "target": "self", "val": 2000, "turn": 999, "unremovable": true, "is_debuff": true }
+      ]
+    }
   }
 ]
