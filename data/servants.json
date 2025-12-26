@@ -700,7 +700,7 @@
     "gender": "男性",
     "policy": "中立·善",
     "attribute": "star",
-    "stats": { "natural": { "hp": 14962, "atk": 11019 }, "lv100": { "hp": 14533, "atk": 12928 }, "lv120": { "hp": 17081, "atk": 15174 } },
+    "stats": { "natural": { "hp": 14962, "atk": 11019 }, "lv100": { "hp": 16390, "atk": 12061 }, "lv120": { "hp": 19263, "atk": 14157 } },
     "cards": {
       "deck": ["Quick", "Arts", "Arts", "Buster", "Buster"],
       "hits": { "Quick": [10, 20, 30, 40], "Arts": [16, 33, 51], "Buster": [16, 33, 51], "Extra": [6, 13, 20, 26, 35], "NP": [4, 9, 14, 19, 23, 31] }
