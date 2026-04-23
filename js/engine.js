@@ -476,8 +476,8 @@ const Engine = {
                 servant.currentNp = Math.min(300, servant.currentNp + b.val);
             }
             if (b.type === 'star_regen') {
-                // 假設全域變數是 BattleManager.stars
-                // BattleManager.stars += b.val; 
+                // 全域變數是 BattleManager.stars
+                BattleManager.stars += b.val; 
             }
             if (b.type === 'poison' || b.type === 'burn' || b.type === 'curse') {
                 // 毒/燒/咒扣血 (不會致死，保留 1 滴血)
