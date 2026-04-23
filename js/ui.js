@@ -595,9 +595,10 @@ const UI = {
         }
         if (bonuses.quickChain) { UI.log("【Quick Chain】Stars +10"); UI.gameState.stars += 10; }
 
+        // 1. 建立攻擊序列 (加入 position 讓引擎知道是第幾張卡)
         const allAttacks = [];
         cardChain.forEach((cardObj, i) => {
-            allAttacks.push({ ...cardObj, index: i, isExtra: false });
+            allAttacks.push({ ...cardObj, position: i, isExtra: false });
         });
         if (bonuses.braveChain) {
             const extraAttacker = cardChain[0].attacker;
@@ -606,26 +607,33 @@ const UI = {
                 attacker: extraAttacker,
                 critChance: 0,
                 isNP: false,
-                isExtra: true
+                isExtra: true,
+                position: 3 // EX 卡位置算作 3
             });
         }
 
+        // 取得首卡類型 (用於傳入引擎算加成)
+        const firstCardType = cardChain[0].type;
+
+        // 2. 逐卡執行攻擊
         allAttacks.forEach(atk => {
+            // 確認當前目標，如果死了就自動換下一個活著的
             let currentTarget = UI.gameState.enemies[UI.gameState.targetIndex];
             if (!currentTarget || currentTarget.currentHp <= 0) {
                 const nextTargetIdx = UI.gameState.enemies.findIndex(e => e.currentHp > 0);
-                if (nextTargetIdx === -1) return; 
+                if (nextTargetIdx === -1) return; // 敵人都死光了，提早結束鞭屍
                 UI.gameState.targetIndex = nextTargetIdx;
                 currentTarget = UI.gameState.enemies[nextTargetIdx];
             }
 
             if (atk.isNP) {
                 UI.log(`>> ${atk.attacker.name} 釋放了寶具: ${atk.npData.name}`);
-                atk.attacker.currentNp -= 100; 
+                atk.attacker.currentNp -= 100; // 扣除基礎 100NP (若有過充能機制未來可在此擴充)
                 if (atk.attacker.currentNp < 0) atk.attacker.currentNp = 0;
 
                 const npType = atk.npData.type || 'single';
 
+                // 純輔助寶具
                 if (npType === 'support') {
                     UI.log(`<span style="color:#4db6ac;">(輔助效果發動)</span>`);
                     if (atk.npData.effects) {
@@ -645,24 +653,20 @@ const UI = {
                     return; 
                 } 
                 
-                let hitTargets = [];
-                if (npType === 'aoe') {
-                    hitTargets = UI.gameState.enemies.filter(e => e.currentHp > 0);
-                } else {
-                    hitTargets = [currentTarget];
-                }
+                // 攻擊型寶具 (單體 / 全體)
+                let hitTargets = (npType === 'aoe') 
+                    ? UI.gameState.enemies.filter(e => e.currentHp > 0) 
+                    : [currentTarget];
 
                 hitTargets.forEach(t => {
-                    const dmg = Engine.calculateDamage(atk.attacker, t, atk.type, 0, false, bonuses.busterChain);
-                    const np = Engine.calculateNPGain(atk.attacker, t, atk.type, 0, dmg, false);
-                    const star = Engine.calculateStarGen(atk.attacker, t, atk.type, 0, false);
+                    const result = Engine.simulateCardExecution(atk.attacker, t, atk, firstCardType, bonuses.busterChain);
                     
-                    t.currentHp -= dmg;
-                    atk.attacker.currentNp += np;
-                    UI.gameState.stars += star;
+                    atk.attacker.currentNp += result.npGained;
+                    UI.gameState.stars += result.starsGained;
                     
-                    UI.log(`對 ${t.name}: 傷 ${dmg} | NP+${np}%`);
+                    UI.log(`對 ${t.name}: 傷 ${result.damage} | NP+${result.npGained}%`);
 
+                    // 附加寶具副效果
                     if (atk.npData.effects) {
                         atk.npData.effects.forEach(effect => {
                             if (effect.type !== 'damage') {
@@ -674,20 +678,18 @@ const UI = {
                 });
 
             } else {
+                // 處理一般指令卡
                 const isCrit = (atk.critChance || 0) > Math.random() * 100;
-                const cardIdx = atk.isExtra ? 3 : atk.index; 
+                atk.isCrit = isCrit; // 標記給引擎吃
                 
-                const dmg = Engine.calculateDamage(atk.attacker, currentTarget, atk.type, cardIdx, isCrit, bonuses.busterChain);
-                const np = Engine.calculateNPGain(atk.attacker, currentTarget, atk.type, cardIdx, dmg, isCrit);
-                const star = Engine.calculateStarGen(atk.attacker, currentTarget, atk.type, cardIdx, isCrit);
+                const result = Engine.simulateCardExecution(atk.attacker, currentTarget, atk, firstCardType, bonuses.busterChain);
 
-                currentTarget.currentHp -= dmg;
-                atk.attacker.currentNp += np;
-                UI.gameState.stars += star;
+                atk.attacker.currentNp += result.npGained;
+                UI.gameState.stars += result.starsGained;
 
-                const prefix = atk.isExtra ? 'Extra' : `Card ${atk.index+1}`;
-                const critText = isCrit ? ' (CRIT!)' : '';
-                UI.log(`${prefix} > ${currentTarget.name}: 傷 ${dmg}${critText} | NP+${np}% | 星+${star}`);
+                const prefix = atk.isExtra ? 'Extra' : `Card ${atk.position + 1}`;
+                const critText = isCrit ? ' <span style="color:gold;">(CRIT!)</span>' : '';
+                UI.log(`${prefix} > ${currentTarget.name}: 傷 ${result.damage}${critText} | NP+${result.npGained}% | 星+${result.starsGained}`);
             }
         });
 
