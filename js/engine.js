@@ -372,7 +372,7 @@ const Engine = {
             starsGained: generatedStars,
             isEnemyDead: defender.currentHp <= 0
         };
-    }
+    },
 
     distributeStars: (hand, stars) => {
         hand.forEach(card => {
