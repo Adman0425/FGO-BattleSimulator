@@ -2,7 +2,7 @@ const UI = {
     gameState: {
         party: [], 
         enemies: [],      // 場上活躍的敵人 (最多3)
-        reserveEnemies: [], // 【新增】後備敵人
+        reserveEnemies: [], // 後備敵人
         quest: null,
         currentWave: 0,
         targetIndex: 0,
@@ -659,7 +659,7 @@ const UI = {
                     : [currentTarget];
 
                 hitTargets.forEach(t => {
-                    const result = Engine.simulateCardExecution(atk.attacker, t, atk, firstCardType, bonuses.busterChain);
+                    const result = Engine.simulateCardExecution(atk.attacker, t, atk, firstCardType, bonuses);
                     
                     atk.attacker.currentNp += result.npGained;
                     UI.gameState.stars += result.starsGained;
@@ -682,7 +682,7 @@ const UI = {
                 const isCrit = (atk.critChance || 0) > Math.random() * 100;
                 atk.isCrit = isCrit; // 標記給引擎吃
                 
-                const result = Engine.simulateCardExecution(atk.attacker, currentTarget, atk, firstCardType, bonuses.busterChain);
+                const result = Engine.simulateCardExecution(atk.attacker, currentTarget, atk, firstCardType, bonuses);
 
                 atk.attacker.currentNp += result.npGained;
                 UI.gameState.stars += result.starsGained;
