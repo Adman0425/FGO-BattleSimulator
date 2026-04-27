@@ -250,6 +250,11 @@ const Engine = {
         let posModDmg = 1.0, posModNp = 1.0, posModStar = 1.0;
         let dmgTypeMod = 1.0;
 
+        // 判斷是否為同色串聯，影響 EX 卡倍率
+        const chainBonuses = isBusterChain || {}; // 接收從 UI 傳來的 chainBonuses 物件
+        const isBusterOnly = chainBonuses.busterChain || false;
+        const isSameColorChain = chainBonuses.busterChain || chainBonuses.artsChain || chainBonuses.quickChain;
+
         if (isNP) {
             const npData = attacker.noble_phantasm;
             dmgCardValue = Array.isArray(npData.val) ? npData.val[npLevelIdx] : (npData.val || 450);
@@ -259,10 +264,18 @@ const Engine = {
             else if (cardType === 'Buster') { dmgTypeMod = 1.5; npCardMod = 0; starCardMod = 0.1; }
             else if (cardType === 'Quick') { dmgTypeMod = 0.8; npCardMod = 1.0; starCardMod = 0.8; }
         } else {
+            // 普通指令卡的 dmgCardValue 必須永遠是 100，色卡加成只看 dmgTypeMod
             if (cardType === 'Arts') { dmgCardValue = 100; dmgTypeMod = 1.0; npCardMod = 3.0 + (pos * 1.5); starCardMod = 0; }
-            else if (cardType === 'Buster') { dmgCardValue = 150; dmgTypeMod = 1.5; npCardMod = 0; starCardMod = 0.1 + (pos * 0.05); }
-            else if (cardType === 'Quick') { dmgCardValue = 80; dmgTypeMod = 0.8; npCardMod = 1.0 + (pos * 0.5); starCardMod = 0.8 + (pos * 0.2); }
-            else if (cardType === 'Extra') { dmgCardValue = 100; dmgTypeMod = 1.0; npCardMod = 1.0; starCardMod = 1.0; posModDmg = 2.0; }
+            else if (cardType === 'Buster') { dmgCardValue = 100; dmgTypeMod = 1.5; npCardMod = 0; starCardMod = 0.1 + (pos * 0.05); }
+            else if (cardType === 'Quick') { dmgCardValue = 100; dmgTypeMod = 0.8; npCardMod = 1.0 + (pos * 0.5); starCardMod = 0.8 + (pos * 0.2); }
+            else if (cardType === 'Extra') { 
+                dmgCardValue = 100; 
+                dmgTypeMod = 1.0; 
+                npCardMod = 1.0; 
+                starCardMod = 1.0; 
+                // EX卡倍率：同色 Brave Chain 是 3.5，異色是 2.0
+                posModDmg = isSameColorChain ? 3.5 : 2.0; 
+            }
             
             if (cardType !== 'Extra') {
                 const posMods = [1.0, 1.2, 1.4];
@@ -315,7 +328,7 @@ const Engine = {
         totalDamage *= (0.9 + Math.random() * 0.199); 
         totalDamage += (Engine.getBuffTotal(attacker, 'dmg_plus') - Engine.getBuffTotal(defender, 'dmg_cut'));
         
-        if (isBusterChain && !isNP && cardType !== 'Extra') {
+        if (isBusterOnly && !isNP && cardType !== 'Extra') {
             totalDamage += (baseATK * 0.2); // Buster Chain 固定加傷
         }
         totalDamage = Math.max(0, Math.floor(totalDamage));
