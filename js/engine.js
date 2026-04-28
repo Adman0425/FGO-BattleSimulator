@@ -212,19 +212,26 @@ const Engine = {
     },
 
     calculateTurn: (servant, target, cards, isExtra) => {
-        const isBusterChain = cards.every(c => c.type === 'Buster' || (c.isNP && c.type === 'Buster'));
-        const isArtsChain = cards.every(c => c.type === 'Arts' || (c.isNP && c.type === 'Arts'));
-        const isQuickChain = cards.every(c => c.type === 'Quick' || (c.isNP && c.type === 'Quick'));
-        
-        const ownerId = cards[0].attacker.id;
-        const isBraveChain = cards.length === 3 && cards.every(c => c.attacker.id === ownerId);
+    const isBusterChain = cards.every(c => c.type === 'Buster' || (c.isNP && c.type === 'Buster'));
+    const isArtsChain = cards.every(c => c.type === 'Arts' || (c.isNP && c.type === 'Arts'));
+    const isQuickChain = cards.every(c => c.type === 'Quick' || (c.isNP && c.type === 'Quick'));
+    
+    // 偵測 Mighty Chain
+    const hasBuster = cards.some(c => c.type === 'Buster');
+    const hasArts = cards.some(c => c.type === 'Arts');
+    const hasQuick = cards.some(c => c.type === 'Quick');
+    const isMightyChain = hasBuster && hasArts && hasQuick;
 
-        return {
-            chainBonus: {
-                busterChain: isBusterChain,
-                artsChain: isArtsChain,
-                quickChain: isQuickChain,
-                braveChain: isBraveChain
+    const ownerId = cards[0].attacker.id;
+    const isBraveChain = cards.length === 3 && cards.every(c => c.attacker.id === ownerId);
+
+    return {
+        chainBonus: {
+            busterChain: isBusterChain,
+            artsChain: isArtsChain,
+            quickChain: isQuickChain,
+            braveChain: isBraveChain,
+            mightyChain: isMightyChain // 輸出 Mighty Chain 狀態
             }
         };
     },
@@ -238,6 +245,9 @@ const Engine = {
 
         const npLevel = attacker.npLevel || 1; 
         const npLevelIdx = npLevel - 1; 
+
+        const isBusterChain = chainBonuses.busterChain || false;
+        const isMightyChain = chainBonuses.mightyChain || false;
 
         // 獸之足跡
         const footprintAtk = (!isNP && card.footprint) ? card.footprint : 0;
@@ -284,9 +294,12 @@ const Engine = {
         }
 
         // 首卡加成
-        let firstCardDmgBonus = (!isNP && firstCardType === 'Buster') ? 0.5 : 0;
-        let firstCardNpBonus = (!isNP && firstCardType === 'Arts') ? 1.0 : 0;
-        let firstCardStarBonus = (!isNP && firstCardType === 'Quick') ? 0.2 : 0;
+        let firstCardDmgBonus = (!isNP && (firstCardType === 'Buster' || isMightyChain)) ? 0.5 : 0; 
+        let firstCardNpBonus = (!isNP && (firstCardType === 'Arts' || isMightyChain)) ? 1.0 : 0; 
+        let firstCardStarBonus = (!isNP && (firstCardType === 'Quick' || isMightyChain)) ? 0.2 : 0;
+        if (!isNP && cardType !== 'Extra' && (firstCardType === 'Quick' || isMightyChain)) {
+            card.critChance = (card.critChance || 0) + 20;
+        }
 
         // ==========================================
         // 2. 乘區與 Buff 結算
@@ -328,7 +341,7 @@ const Engine = {
         totalDamage *= (0.9 + Math.random() * 0.199); 
         totalDamage += (Engine.getBuffTotal(attacker, 'dmg_plus') - Engine.getBuffTotal(defender, 'dmg_cut'));
         
-        if (isBusterOnly && !isNP && cardType !== 'Extra') {
+        if (isBusterChain && !isNP && cardType !== 'Extra') { 
             totalDamage += (baseATK * 0.2); // Buster Chain 固定加傷
         }
         totalDamage = Math.max(0, Math.floor(totalDamage));
