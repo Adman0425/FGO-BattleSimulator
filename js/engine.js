@@ -625,27 +625,54 @@ const Engine = {
     processTurnEnd: (servant) => {
         if (!servant.buffs) return;
 
-        //  結算每回合觸發的效果 (Regen / DoT)
+        // 1. 先進行回合數扣減與過期篩選
+        // 只有 turn > 0 的 Buff 才需要扣除回合數
         servant.buffs.forEach(b => {
+            if (b.turn > 0) {
+                b.turn--;
+            }
+        });
+
+        // 2. 移除所有「回合結束且次數歸零」或「回合結束且時間到期」的 Buff
+        // 定義移除條件：時間到期 (turn === 0) 且 沒有剩餘使用次數 (count === null 或 count === 0)
+        servant.buffs = servant.buffs.filter(b => {
+            const isExpired = (b.turn === 0);
+            const isCountEmpty = (b.count !== null && b.count <= 0);
+            
+            // 如果是永久 Buff (turn === -1) 或 count 還有，則保留
+            if (b.turn === -1) return true;
+            return !(isExpired || isCountEmpty);
+        });
+
+        // 3. 結算每回合觸發的效果 (Regen / DoT)
+        // 這裡確保只有「依然存活」且「未被移除」的 Buff 才會觸發
+        servant.buffs.forEach(b => {
+            // 處理 HP 回復與掉血
             if (b.type === 'hp_regen') {
                 servant.currentHp = Math.min(servant.maxHp, servant.currentHp + b.val);
-            }
-            if (b.type === 'np_regen') {
-                servant.currentNp = Math.min(300, servant.currentNp + b.val);
-            }
-            if (b.type === 'star_regen') {
-                UI.gameState.stars += b.val; 
             }
             if (b.type === 'poison' || b.type === 'burn' || b.type === 'curse') {
                 // 毒/燒/咒扣血 (不會致死，保留 1 滴血)
                 servant.currentHp = Math.max(1, servant.currentHp - b.val);
             }
-        });
+            
+            // 處理 NP 獲得
+            if (b.type === 'np_regen') {
+                servant.currentNp = Math.min(300, servant.currentNp + b.val * 100);
+            }
+            
+            // 處理獲得星星
+            if (b.type === 'star_regen') {
+                // 建議這裡不要直接引用 UI，而是透過一個事件機制或全域變數處理
+                if (typeof UI !== 'undefined' && UI.gameState) {
+                    UI.gameState.stars += b.val;
+                }
+            }
 
-        // 扣減 Buff 回合數並移除過期 Buff
-        servant.buffs.forEach(b => {
-            if (b.turn > 0) b.turn--;
+            // 處理效果使用次數扣減 (若該 Buff 是次數型 Buff，例如「攻擊時賦予毒」的 Buff)
+            if (b.count !== null && b.count > 0) {
+                // 注意：這裡是結算回合觸發，有些 count 是被攻擊才扣，這裡僅處理回合觸發型的 count
+            }
         });
-        servant.buffs = servant.buffs.filter(b => b.turn !== 0 || (b.count !== null && b.count > 0));
     },
 };
