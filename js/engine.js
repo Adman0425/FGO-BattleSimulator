@@ -282,7 +282,7 @@ const Engine = {
     },
 
     // 卡牌執行
-    simulateCardExecution: (attacker, defender, card, firstCardType, chainBonuses = {}) => {
+    simulateCardExecution: (attacker, defender, card, firstCardType, chainBonuses = {}, ocLevel = 1) => {
         const isNP = card.isNP || false;
         const cardType = card.type;       
         const pos = card.position || 0;   
@@ -290,17 +290,19 @@ const Engine = {
 
         const npLevel = attacker.npLevel || 1; 
         const npLevelIdx = npLevel - 1; 
+        
+        // 確保 OC 等級在 1~5 之間 (對應陣列 0~4)
+        const ocIdx = Math.min(4, Math.max(0, ocLevel - 1));
 
         const isBusterChain = chainBonuses.busterChain || false;
         const isMightyChain = chainBonuses.mightyChain || false;
         const isSameColorChain = chainBonuses.busterChain || chainBonuses.artsChain || chainBonuses.quickChain;
 
-        // 獸之足跡
         const footprintAtk = (!isNP && card.footprint) ? card.footprint : 0;
         const baseATK = attacker.atk + footprintAtk;
 
         // ==========================================
-        // 1. 基礎倍率與位置補正 (Damage, NP, Star)
+        // 1. 基礎倍率與位置補正
         // ==========================================
         let dmgCardValue = 0, npCardMod = 0, starCardMod = 0;
         let posModDmg = 1.0, posModNp = 1.0, posModStar = 1.0;
@@ -322,8 +324,8 @@ const Engine = {
                 dmgTypeMod = 1.0; 
                 npCardMod = 1.0; 
                 starCardMod = 1.0; 
-                // EX卡倍率：同色 3.5、異色/mighty chain 2.0
-                posModDmg = isSameColorChain ? 3.5 : 2.0; 
+                // Mighty Brave Chain 的 EX 卡倍率也視同同色為 3.5
+                posModDmg = (isSameColorChain || isMightyChain) ? 3.5 : 2.0; 
             }
             
             if (cardType !== 'Extra') {
@@ -332,63 +334,84 @@ const Engine = {
             }
         }
 
-        // 首卡加成
         let firstCardDmgBonus = (!isNP && (firstCardType === 'Buster' || isMightyChain)) ? 0.5 : 0; 
         let firstCardNpBonus = (!isNP && (firstCardType === 'Arts' || isMightyChain)) ? 1.0 : 0; 
         let firstCardStarBonus = (!isNP && (firstCardType === 'Quick' || isMightyChain)) ? 0.2 : 0;
         
-        // 綠卡首卡/Mighty Chain
         if (!isNP && cardType !== 'Extra' && (firstCardType === 'Quick' || isMightyChain)) {
             card.critChance = Math.min(100, (card.critChance || 0) + 20);
         }
 
         // ==========================================
-        // 2. 乘區與 Buff 結算
+        // 2. 乘區結算 (包含防禦端修正)
         // ==========================================
         const atkBuff = Engine.getBuffTotal(attacker, 'atk_up');
         const defBuff = Engine.getBuffTotal(defender, 'def_up');
         const cardBuff = Engine.getBuffTotal(attacker, 'card_up', cardType);
         const npBuff = isNP ? Engine.getBuffTotal(attacker, 'np_dmg_up') : 0;
         const critBuff = isCrit ? Engine.getBuffTotal(attacker, 'crit_dmg_up') : 0;
-        const powerMod = Engine.getBuffTotal(attacker, 'special_dmg_up');
-        const extraBuff = cardType === 'Extra' ? Engine.getBuffTotal(attacker, 'extra_dmg_up') : 0; // 被動1
         
-        // 相剋
+        // 攻方的特攻 減去 守方的特防
+        const powerMod = Engine.getBuffTotal(attacker, 'special_dmg_up');
+        const specialDefMod = Engine.getBuffTotal(defender, 'special_dmg_down'); 
+        const extraBuff = cardType === 'Extra' ? Engine.getBuffTotal(attacker, 'extra_dmg_up') : 0; 
+        
         let classAffinity = Engine.CLASS_MATRIX[attacker.class] ? (Engine.CLASS_MATRIX[attacker.class][defender.class] || Engine.CLASS_MATRIX[attacker.class]['default'] || 1.0) : 1.0;
         if (attacker.class === 'berserker' && defender.class === 'shielder') classAffinity = 1.0;
         let attributeMod = Engine.ATTRIBUTE_MATRIX[attacker.attribute] ? (Engine.ATTRIBUTE_MATRIX[attacker.attribute][defender.attribute] || 1.0) : 1.0;
         let classAtkMod = Engine.CLASS_ATK_MODIFIER[attacker.class] || 1.0;
 
-        // 寶具特攻
+        // 寶具特攻吃 OC 動態階段
         let specialNPMod = 1.0;
         if (isNP && attacker.noble_phantasm.special_mod) {
             const mod = attacker.noble_phantasm.special_mod;
             const targetTraits = Array.isArray(mod.trait) ? mod.trait : [mod.trait];
             const enemyTraits = (defender.traits || []).concat([defender.attribute]);
-            if (targetTraits.some(t => enemyTraits.includes(t))) specialNPMod = mod.val;
+            if (targetTraits.some(t => enemyTraits.includes(t))) {
+                specialNPMod = Array.isArray(mod.val) ? mod.val[ocIdx] : mod.val;
+            }
         }
 
         // ==========================================
-        // 3. 傷害總公式計算
+        // 3. 最終傷害計算與盾系判定
         // ==========================================
         let baseDmg = baseATK * 0.23 * classAtkMod;
         let cardFactor = (dmgTypeMod * posModDmg * (1 + cardBuff)) + firstCardDmgBonus;
         let buffsFactor = Math.max(0, 1 + atkBuff - defBuff);
-        let specialFactor = Math.max(0, 1.0 + critBuff + npBuff + powerMod + extraBuff); // 將 EX 增傷算入
+        let specialFactor = Math.max(0, 1.0 + critBuff + npBuff + powerMod + extraBuff - specialDefMod); 
         let critMultiplier = isCrit ? 2.0 : 1.0;
 
-        let totalDamage = baseDmg * (dmgCardValue / 100) * cardFactor * classAffinity * attributeMod * buffsFactor * specialFactor * critMultiplier * specialNPMod;
+        // 特殊耐性乘區
+        const resistMod = Engine.getBuffTotal(defender, 'dmg_resist_up') - Engine.getBuffTotal(defender, 'dmg_resist_down');
+        const resistFactor = Math.max(0, 1.0 - resistMod);
+
+        let totalDamage = baseDmg * (dmgCardValue / 100) * cardFactor * classAffinity * attributeMod * buffsFactor * specialFactor * critMultiplier * specialNPMod * resistFactor;
         totalDamage *= (0.9 + Math.random() * 0.199); 
         totalDamage += (Engine.getBuffTotal(attacker, 'dmg_plus') - Engine.getBuffTotal(defender, 'dmg_cut'));
         
-        // Buster Chain 固定加傷 (不適用於 Mighty Chain)
         if (isBusterChain && !isNP && cardType !== 'Extra') { 
             totalDamage += (baseATK * 0.2); 
         }
         totalDamage = Math.max(0, Math.floor(totalDamage));
 
+        // 無敵、迴避、對肅正防禦 絕對判定
+        const hasAntiPurge = defender.buffs && defender.buffs.some(b => b.type === 'anti_purge_defense');
+        const hasInvincible = defender.buffs && defender.buffs.some(b => b.type === 'invincible');
+        const hasEvade = defender.buffs && defender.buffs.some(b => b.type === 'evade');
+        
+        const ignoreInvincible = attacker.buffs && attacker.buffs.some(b => b.type === 'ignore_invincible');
+        const sureHit = attacker.buffs && attacker.buffs.some(b => b.type === 'sure_hit');
+
+        if (hasAntiPurge) {
+            totalDamage = 0; // 絕對防禦，無解
+        } else if (hasInvincible && !ignoreInvincible) {
+            totalDamage = 0; // 無敵被無敵貫通克制
+        } else if (hasEvade && !ignoreInvincible && !sureHit) {
+            totalDamage = 0; // 迴避被貫通與必中克制
+        }
+
         // ==========================================
-        // 4. Hit-by-Hit 結算 (Overkill, NP, 打星)
+        // 4. Hit-by-Hit 結算 (包含 Break 鎖血與 Guts)
         // ==========================================
         const hitDistribution = (attacker.cards && attacker.cards.hits && attacker.cards.hits[cardType]) 
             ? attacker.cards.hits[cardType] 
@@ -398,24 +421,29 @@ const Engine = {
         let generatedStars = 0;
         let currentEnemyHp = defender.currentHp;
         
+        // 敵方受擊的隱藏 NP 與掉星補正
+        const enemyNpMod = defender.hidden_stats ? (defender.hidden_stats.np_mod || 1.0) : 1.0;
+        const enemyStarMod = defender.hidden_stats ? (defender.hidden_stats.star_mod || 0) : 0;
+
         const baseNPRate = attacker.hidden_stats ? attacker.hidden_stats.np_charge_atk : 0.5;
         const baseStarRate = attacker.hidden_stats ? attacker.hidden_stats.star_gen : 0.1;
+
+        let isBreakLock = false; // 是否觸發破條鎖血
 
         for (let i = 0; i < hitDistribution.length; i++) {
             let hitWeight = hitDistribution[i] / 100;
             let hitDmg = Math.floor(totalDamage * hitWeight);
             
-            let isOverkill = (currentEnemyHp <= 0 || currentEnemyHp - hitDmg <= 0);
+            // 只要觸發鎖血，後續 Hits 皆視為 Overkill
+            let isOverkill = (currentEnemyHp <= 0 || currentEnemyHp - hitDmg <= 0) || isBreakLock;
 
-            // NP 計算 (紅卡若無首藍且非Mighty不回NP)
             if (!(cardType === 'Buster' && firstCardType !== 'Arts' && !isMightyChain)) {
                 let npModFactor = isOverkill ? 1.5 : 1.0;
-                let hitNP = baseNPRate * ((npCardMod * (1 + cardBuff)) + firstCardNpBonus) * npModFactor * (1 + Engine.getBuffTotal(attacker, 'np_gain_up')) * critMultiplier;
+                let hitNP = baseNPRate * ((npCardMod * (1 + cardBuff)) + firstCardNpBonus) * enemyNpMod * npModFactor * (1 + Engine.getBuffTotal(attacker, 'np_gain_up')) * critMultiplier;
                 generatedNP += hitNP;
             }
 
-            // 打星計算
-            let starChance = baseStarRate + (starCardMod * (1 + cardBuff)) + firstCardStarBonus + Engine.getBuffTotal(attacker, 'star_gen_up') + (isOverkill ? 0.3 : 0);
+            let starChance = baseStarRate + enemyStarMod + (starCardMod * (1 + cardBuff)) + firstCardStarBonus + Engine.getBuffTotal(attacker, 'star_gen_up') + (isOverkill ? 0.3 : 0);
             if (isCrit) starChance += 0.2;
             
             let stars = 0;
@@ -423,16 +451,42 @@ const Engine = {
             if (Math.random() < starChance) stars++;
             generatedStars += stars;
 
-            currentEnemyHp -= hitDmg;
+            // Break 條鎖血判定
+            if (!isBreakLock) {
+                currentEnemyHp -= hitDmg;
+                // 若敵方資料庫中擁有 breakBars 且血量歸零，立刻鎖血
+                if (currentEnemyHp <= 0 && defender.breakBars && defender.breakBars.length > 0) {
+                    currentEnemyHp = 0;
+                    isBreakLock = true;
+                }
+            }
         }
 
         defender.currentHp = Math.max(0, currentEnemyHp);
+
+        // 戰鬥續行判定 (若未觸發轉階段且血量為0)
+        let triggeredGuts = false;
+        if (defender.currentHp <= 0 && !isBreakLock) {
+            let gutsBuff = defender.buffs ? defender.buffs.find(b => b.type === 'guts') : null;
+            if (gutsBuff) {
+                defender.currentHp = gutsBuff.val; // 以 Guts 指定血量復活
+                triggeredGuts = true;
+                if (gutsBuff.count !== null) {
+                    gutsBuff.count--;
+                    if (gutsBuff.count <= 0) defender.buffs = defender.buffs.filter(b => b !== gutsBuff);
+                } else {
+                    defender.buffs = defender.buffs.filter(b => b !== gutsBuff);
+                }
+            }
+        }
 
         return {
             damage: totalDamage,
             npGained: Math.floor(generatedNP * 100) / 100, 
             starsGained: generatedStars,
-            isEnemyDead: defender.currentHp <= 0
+            isEnemyDead: defender.currentHp <= 0,
+            triggeredBreak: isBreakLock, // UI 端可根據這個播放碎條動畫
+            triggeredGuts: triggeredGuts // UI 端可根據這個播放復活動畫
         };
     },
 
@@ -520,6 +574,33 @@ const Engine = {
     },
 
     applyBuff: (source, target, effect) => {
+        let isDebuff = effect.is_debuff || effect.isDebuff || false;
+        
+        // 弱化機率與免疫判定
+        if (isDebuff) {
+            // 判定弱化無效 (如 Boss 技能)
+            if (target.buffs && target.buffs.some(b => b.type === 'debuff_immune')) {
+                return; // 被阻擋，直接中斷賦予
+            }
+
+            // 若 JSON 中沒寫 chance，預設為 100% (1.0)
+            let baseChance = (effect.chance !== undefined) ? effect.chance : 1.0; 
+            
+            let successUp = Engine.getBuffTotal(source, 'debuff_success_up') - Engine.getBuffTotal(source, 'debuff_success_down');
+            let resistUp = Engine.getBuffTotal(target, 'debuff_resist_up') - Engine.getBuffTotal(target, 'debuff_resist_down');
+            
+            // 無視弱化耐性
+            let ignoreResist = source.buffs && source.buffs.some(b => b.type === 'ignore_debuff_resist');
+            if (ignoreResist) resistUp = 0; 
+
+            let finalChance = baseChance + successUp - resistUp;
+            
+            // 亂數骰大於成功率，代表 Miss
+            if (Math.random() > finalChance) {
+                return; 
+            }
+        }
+
         const buff = {
             id: Date.now() + Math.random(),
             name: Engine.BUFF_NAMES[effect.type] || effect.type, 
@@ -527,7 +608,7 @@ const Engine = {
             val: effect.val,
             turn: effect.turn || 0,
             count: effect.count || null,
-            isDebuff: effect.is_debuff || false,
+            isDebuff: isDebuff,
             unremovable: effect.unremovable || false, 
             
             sourceId: source.id,
